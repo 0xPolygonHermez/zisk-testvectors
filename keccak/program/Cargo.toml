@@ -7,6 +7,7 @@ default-run = "keccak_hasher"
 
 [dependencies]
 byteorder = "1.5.0"
-tiny-keccak = { version = "2.0.2", features = ["keccak"] }
+tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak.git", branch = "zisk", features = [ "keccak" ] }
+# tiny-keccak = { version = "2.0.2", features = ["keccak"] }
 ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
 #ziskos = { path = "../zisk/ziskos/entrypoint" }
