@@ -30,8 +30,11 @@ fn main() {
             set_output(i, val);
         }
     } else {
-        println!("Computing a single keccakf...");
-        keccakf_apply();
+        let num_keccaks = usize::from_le_bytes(input[9..17].try_into().expect("Input should be at least 8 bytes"));
+        println!("Number of keccakf to compute: {:?}", num_keccaks);
+        for _ in 0..num_keccaks {
+            keccakf_apply();
+        }
     }
 }
 

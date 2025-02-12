@@ -7,8 +7,9 @@ const OUTPUT_DIR: &str = "build/";
 const FILE_NAME: &str = "input.bin";
 
 fn main() -> io::Result<()> {
-    let number_to_hash: u64 = 20;
+    let number_to_hash: u64 = 0x17ef89033aa11845;
     let full_keccak: bool = false;
+    let num_keccaks: u64 = 1;
 
     // Ensure the output directory exists
     let output_dir = Path::new(OUTPUT_DIR);
@@ -21,6 +22,7 @@ fn main() -> io::Result<()> {
     let mut file = File::create(&file_path)?;
     file.write_all(&number_to_hash.to_le_bytes())?;
     file.write_all(&[full_keccak as u8])?;
+    file.write_all(&num_keccaks.to_le_bytes())?;
 
     Ok(())
 }
