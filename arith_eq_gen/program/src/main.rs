@@ -5046,5 +5046,7 @@ fn main() {
     syscall_arith256_mod(&mut params);
     let expected_d: [u64; 4] = [0, 0, 0, 0];
     assert_eq!(params.d, &expected_d);
+
+    println!("Success");
 }
 

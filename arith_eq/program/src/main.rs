@@ -155,5 +155,6 @@ fn main() {
     // // println!("p3:{:?}", p3);
     // assert_eq!(p1.x, p3.x);
     // assert_eq!(p1.y, p3.y);
+    println!("Success");
 }
 
