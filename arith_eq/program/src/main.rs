@@ -2,10 +2,8 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use ziskos::syscalls::{arith256::*, arith256_mod::*,secp256k1_add::*, secp256k1_dbl::*,point256::*};
-use rand::Rng;
-use std::convert::TryInto;
-use ziskos::{read_input, set_output};
+use ziskos::syscalls::{secp256k1_add::*,point256::*};
+use ziskos::read_input;
 
 
 // RUST_BACKTRACE=full ~/devel/zisk2/zisk/target/release/ziskemu -x -e target/riscv64ima-polygon-ziskos-elf/release/arith_eq -i ../inputs/input_arith_eq_1.bin

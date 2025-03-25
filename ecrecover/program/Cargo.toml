@@ -1,5 +1,5 @@
 [package]
-name = "arith_eq"
+name = "ecrecover"
 version = { workspace = true }
 edition = { workspace = true }
 
