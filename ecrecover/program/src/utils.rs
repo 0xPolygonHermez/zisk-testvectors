@@ -4,14 +4,15 @@ use ziskos::syscalls::{
     secp256k1_dbl::syscall_secp256k1_dbl,
 };
 
-// Secp256k1 generator
+/// Secp256k1 group of points generator
 const G_X: [u64; 4] =
     [0x59F2815B16F81798, 0x029BFCDB2DCE28D9, 0x55A06295CE870B07, 0x79BE667EF9DCBBAC];
 const G_Y: [u64; 4] =
     [0x9C47D08FFB10D4B8, 0xFD17B448A6855419, 0x5DA4FBFC0E1108A8, 0x483ADA7726A3C465];
 const G_Y_NEG: [u64; 4] =
-    [0x238A8DFCD5256C89, 0xBD97289E08C34C22, 0xA25B0403F1EEF755, 0xB7C52588D95C3B9A];
+    [0x63B82F6F04EF2777, 0x02E84BB7597AABE6, 0xA25B0403F1EEF757, 0xB7C52588D95C3B9A];
 
+/// Given two 256-bit unsigned integers `x` and `y`, returns the result of the subtraction `x - y`
 pub fn sub(x: &[u64; 4], y: &[u64; 4]) -> [u64; 4] {
     let mut result = [0u64; 4];
     let mut borrow = 0u64;
@@ -70,7 +71,7 @@ pub fn double_scalar_mul_with_g(
     p: &SyscallPoint256,
 ) -> (bool, SyscallPoint256) {
     // Start by precomputing g + p
-    let mut gp = SyscallPoint256 { x: G_X, y: G_Y };
+    let mut gp = SyscallPoint256 { x: [0u64; 4], y: [0u64; 4] };
     let mut gp_is_infinity = false;
     if p.x == G_X && p.y == G_Y_NEG {
         gp_is_infinity = true;
@@ -83,8 +84,8 @@ pub fn double_scalar_mul_with_g(
 
     // Perform the loop, based on the binary representation of k1 and k2
     // Start at 𝒪
-    let mut q = SyscallPoint256 { x: [0u64; 4], y: [0u64; 4] };
-    let mut q_is_infinity = true;
+    let mut res = SyscallPoint256 { x: [0u64; 4], y: [0u64; 4] };
+    let mut res_is_infinity = true;
     for i in (0..max_limb).rev() {
         let bit_len = if i == max_limb { max_bit } else { 64 };
         for j in (0..bit_len).rev() {
@@ -92,53 +93,56 @@ pub fn double_scalar_mul_with_g(
             let k2_bit = (k2[i] >> j) & 1;
 
             if (k1_bit == 0) && (k2_bit == 0) {
-                // If q is 𝒪, do nothing; otherwise, double
-                if q_is_infinity {
+                // If res is 𝒪, do nothing; otherwise, double
+                if res_is_infinity {
                     continue;
                 }
             } else if (k1_bit == 0) && (k2_bit == 1) {
-                // If q is 𝒪, set q = p; otherwise, add p
-                if q_is_infinity {
-                    q.x = p.x;
-                    q.y = p.y;
-                    q_is_infinity = false;
+                // If res is 𝒪, set res = p; otherwise, add p
+                if res_is_infinity {
+                    res.x = p.x;
+                    res.y = p.y;
+                    res_is_infinity = false;
                 } else {
-                    add_points_complete_assign(&mut q, &mut q_is_infinity, p);
+                    add_points_complete_assign(&mut res, &mut res_is_infinity, p);
                 }
             } else if (k1_bit == 1) && (k2_bit == 0) {
-                // If q is 𝒪, set q = g; otherwise, add g
-                if q_is_infinity {
-                    q.x = G_X;
-                    q.y = G_Y;
-                    q_is_infinity = false;
+                // If res is 𝒪, set res = g; otherwise, add g
+                if res_is_infinity {
+                    res.x = G_X;
+                    res.y = G_Y;
+                    res_is_infinity = false;
                 } else {
-                    let g = SyscallPoint256 { x: G_X, y: G_Y };
-                    add_points_complete_assign(&mut q, &mut q_is_infinity, &g);
+                    add_points_complete_assign(
+                        &mut res,
+                        &mut res_is_infinity,
+                        &SyscallPoint256 { x: G_X, y: G_Y },
+                    );
                 }
             } else if (k1_bit == 1) && (k2_bit == 1) {
-                if q_is_infinity {
-                    // If (g + p) is 𝒪, do nothing; otherwise set q = (g + p)
+                if res_is_infinity {
+                    // If (g + p) is 𝒪, do nothing; otherwise set res = (g + p)
                     if gp_is_infinity {
                         continue;
                     } else {
-                        q.x = gp.x;
-                        q.y = gp.y;
-                        q_is_infinity = false;
+                        res.x = gp.x;
+                        res.y = gp.y;
+                        res_is_infinity = false;
                     }
                 } else {
-                    // If (g + p) is 𝒪, simply double q; otherwise add (g + p)
+                    // If (g + p) is 𝒪, simply double res; otherwise add (g + p)
                     if !gp_is_infinity {
-                        add_points_complete_assign(&mut q, &mut q_is_infinity, &gp);
+                        add_points_complete_assign(&mut res, &mut res_is_infinity, &gp);
                     }
                 }
             }
 
-            // At the end of the loop, double q
-            double_point_assign(&mut q);
+            // Always double res
+            double_point_assign(&mut res);
         }
     }
 
-    (q_is_infinity, q)
+    (res_is_infinity, res)
 }
 
 // Q: Do we prefer constant time functions?
