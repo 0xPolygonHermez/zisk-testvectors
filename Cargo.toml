@@ -3,6 +3,7 @@ members = [
     "keccak/program",
     "arith_eq/program",
     "arith_eq_gen/program",
+    "ecrecover/program",
 ]
 resolver = "2"
 

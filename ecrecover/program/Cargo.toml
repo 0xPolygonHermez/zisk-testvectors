@@ -5,3 +5,4 @@ edition = { workspace = true }
 
 [dependencies]
 ziskos = { workspace = true }
+tiny-keccak = { workspace = true }
