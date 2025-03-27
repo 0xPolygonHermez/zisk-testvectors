@@ -86,9 +86,9 @@ pub fn double_scalar_mul_with_g(
     // Start at 𝒪
     let mut res = SyscallPoint256 { x: [0u64; 4], y: [0u64; 4] };
     let mut res_is_infinity = true;
-    for i in (0..max_limb).rev() {
-        let bit_len = if i == max_limb { max_bit } else { 64 };
-        for j in (0..bit_len).rev() {
+    for i in (0..=max_limb).rev() {
+        let bit_len = if i == max_limb { max_bit } else { 63 };
+        for j in (0..=bit_len).rev() {
             let k1_bit = (k1[i] >> j) & 1;
             let k2_bit = (k2[i] >> j) & 1;
 
@@ -96,23 +96,27 @@ pub fn double_scalar_mul_with_g(
                 // If res is 𝒪, do nothing; otherwise, double
                 if res_is_infinity {
                     continue;
+                } else {
+                    double_point_assign(&mut res);
                 }
             } else if (k1_bit == 0) && (k2_bit == 1) {
-                // If res is 𝒪, set res = p; otherwise, add p
+                // If res is 𝒪, set res = p; otherwise, double res and add p
                 if res_is_infinity {
                     res.x = p.x;
                     res.y = p.y;
                     res_is_infinity = false;
                 } else {
+                    double_point_assign(&mut res);
                     add_points_complete_assign(&mut res, &mut res_is_infinity, p);
                 }
             } else if (k1_bit == 1) && (k2_bit == 0) {
-                // If res is 𝒪, set res = g; otherwise, add g
+                // If res is 𝒪, set res = g; otherwise, double res and add g
                 if res_is_infinity {
                     res.x = G_X;
                     res.y = G_Y;
                     res_is_infinity = false;
                 } else {
+                    double_point_assign(&mut res);
                     add_points_complete_assign(
                         &mut res,
                         &mut res_is_infinity,
@@ -130,18 +134,15 @@ pub fn double_scalar_mul_with_g(
                         res_is_infinity = false;
                     }
                 } else {
-                    // If (g + p) is 𝒪, simply double res; otherwise add (g + p)
+                    // If (g + p) is 𝒪, simply double res; otherwise double res and add (g + p)
+                    double_point_assign(&mut res);
                     if !gp_is_infinity {
                         add_points_complete_assign(&mut res, &mut res_is_infinity, &gp);
                     }
                 }
             }
-
-            // Always double res
-            double_point_assign(&mut res);
         }
     }
-
     (res_is_infinity, res)
 }
 
