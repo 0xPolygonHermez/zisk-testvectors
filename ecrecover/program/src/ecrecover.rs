@@ -62,21 +62,20 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
 
     // In Ethereum, signatures where the x-coordinate of the resulting point is
     // greater than N are considered invalid. Hence, r = x as integers
-    let x = r;
 
     // Calculate the y-coordinate of the point: y = sqrt(x³ + 7)
-    let x_copy = r;
+    let r_copy = r;
     let mut params = SyscallArith256ModParams {
-        a: &x,
-        b: &x_copy,
+        a: &r,
+        b: &r_copy,
         c: &[0, 0, 0, 0],
         module: &P,
         d: &mut [0, 0, 0, 0],
     };
     syscall_arith256_mod(&mut params);
-    let x_sq = params.d.clone();
-    params.a = &x_sq;
-    params.b = &x;
+    let r_sq = params.d.clone();
+    params.a = &r_sq;
+    params.b = &r;
     params.c = &[7, 0, 0, 0];
     syscall_arith256_mod(&mut params);
     let y_sq = params.d.clone();
@@ -85,11 +84,12 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
     let y = match sqrt(y_sq, parity) {
         Some(y) => {
             // Check the recevied y is the sqrt
+            let y_copy = y;
             params.a = &y;
-            params.b = &y;
+            params.b = &y_copy;
             params.c = &[0, 0, 0, 0];
             syscall_arith256_mod(&mut params);
-            assert_eq!(params.d, &y_sq);
+            assert_eq!(*params.d, y_sq);
             y
         }
         None => {
@@ -111,14 +111,13 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
     // Calculate the public key
 
     // Hint the inverse and verify it
-    // let r_inv = inv_n(r);
-    // params.a = &r;
-    // params.b = &r_inv;
-    // params.c = &[0, 0, 0, 0];
-    // params.module = &N;
-    // syscall_arith256_mod(&mut params);
-    // assert_eq!(params.d, [0x1, 0x0, 0x0, 0x0]);
-    let r_inv = [0xc0b8d7a6dec520fe, 0xc115d26ccbe1f572, 0x0a95e8b9fd31f60a, 0x1dd887b3eaf15326];
+    let r_inv = inv_n(r);
+    params.a = &r;
+    params.b = &r_inv;
+    params.c = &[0, 0, 0, 0];
+    params.module = &N;
+    syscall_arith256_mod(&mut params);
+    assert_eq!(*params.d, [0x1, 0x0, 0x0, 0x0]);
 
     // Compute k1 = (-hash * r_inv) % N
     params.a = &hash;
@@ -134,7 +133,7 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
     let k2 = params.d;
 
     // Calculate the public key
-    let p = SyscallPoint256 { x: *x, y };
+    let p = SyscallPoint256 { x: *r, y };
     let (pk_is_infinity, pk) = double_scalar_mul_with_g(&k1, k2, &p);
     if pk_is_infinity {
         return ([064; 3], 7);
