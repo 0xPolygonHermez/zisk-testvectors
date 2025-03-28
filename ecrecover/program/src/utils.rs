@@ -1,19 +1,25 @@
 use ziskos::syscalls::{
+    arith256_mod::{syscall_arith256_mod, SyscallArith256ModParams},
     point256::SyscallPoint256,
     secp256k1_add::{syscall_secp256k1_add, SyscallSecp256k1AddParams},
     secp256k1_dbl::syscall_secp256k1_dbl,
 };
 
-/// Secp256k1 group of points generator
-const G_X: [u64; 4] =
-    [0x59F2815B16F81798, 0x029BFCDB2DCE28D9, 0x55A06295CE870B07, 0x79BE667EF9DCBBAC];
-const G_Y: [u64; 4] =
-    [0x9C47D08FFB10D4B8, 0xFD17B448A6855419, 0x5DA4FBFC0E1108A8, 0x483ADA7726A3C465];
-const G_Y_NEG: [u64; 4] =
-    [0x63B82F6F04EF2777, 0x02E84BB7597AABE6, 0xA25B0403F1EEF757, 0xB7C52588D95C3B9A];
+use crate::constants::{G_X, G_Y, G_Y_NEG, P, P_MINUS_ONE};
+
+pub(crate) fn geq(x: &[u64; 4], y: &[u64; 4]) -> bool {
+    for i in (0..4).rev() {
+        if x[i] > y[i] {
+            return true;
+        } else if x[i] < y[i] {
+            return false;
+        }
+    }
+    true
+}
 
 /// Given two 256-bit unsigned integers `x` and `y`, returns the result of the subtraction `x - y`
-pub fn sub(x: &[u64; 4], y: &[u64; 4]) -> [u64; 4] {
+pub(crate) fn sub(x: &[u64; 4], y: &[u64; 4]) -> [u64; 4] {
     let mut result = [0u64; 4];
     let mut borrow = 0u64;
     for i in 0..4 {
@@ -30,6 +36,89 @@ pub fn sub(x: &[u64; 4], y: &[u64; 4]) -> [u64; 4] {
     }
 
     result
+}
+
+/// Given a number 256-bit number `x`, uses the Euler's Criterion `x^{(p-1)/2} == -1 (mod p)` to assert it is not a quadratic residue.
+/// It assumes that `x` is a field element.
+pub(crate) fn assert_nqr_p(x: &[u64; 4]) {
+    // Note: (p-1)/2 = 2^255 - 2^32 + 2^31 - 2^9 + 2^4 + 2^3 - 1
+
+    //                x^(2^255) · x^(2^31) · x^(2^4) · x^(2^3)
+    // x^((p-1)/2) = ------------------------------------------
+    //                     x^(2^32) · x^(2^9) · x
+
+    // Costs: 253 squarings, 9 multiplications
+
+    // Compute the necessary powers of two
+    let exp_3 = exp_power_of_2(x, 3);
+    let mut params = SyscallArith256ModParams {
+        a: &exp_3,
+        b: &x,
+        c: &[0, 0, 0, 0],
+        module: &P,
+        d: &mut [0, 0, 0, 0],
+    };
+    syscall_arith256_mod(&mut params);
+    let exp_4 = params.d.clone();
+    let exp_9 = exp_power_of_2(&exp_4, 5);
+    let exp_31 = exp_power_of_2(&exp_9, 22);
+    params.a = &exp_31;
+    params.b = &x;
+    syscall_arith256_mod(&mut params);
+    let exp_32 = params.d.clone();
+    let exp_255 = exp_power_of_2(&exp_32, 223);
+
+    // --> Compute the numerator
+    params.a = &exp_255;
+    params.b = &exp_31;
+    syscall_arith256_mod(&mut params);
+    let _res = params.d.clone();
+    params.a = &_res;
+    params.b = &exp_4;
+    syscall_arith256_mod(&mut params);
+    let _res = params.d.clone();
+    params.a = &_res;
+    params.b = &exp_3;
+    syscall_arith256_mod(&mut params);
+    let num = params.d.clone();
+
+    // --> Compute the denominator
+    params.a = &exp_32;
+    params.b = &exp_9;
+    syscall_arith256_mod(&mut params);
+    let _res = params.d.clone();
+    params.a = &_res;
+    params.b = x;
+    syscall_arith256_mod(&mut params);
+    let den = params.d.clone();
+
+    // --> Compute the result
+    // Hint the inverse of the denominator and check it
+    let den_inv = inv_p(&den);
+    params.a = &den;
+    params.b = &den_inv;
+    syscall_arith256_mod(&mut params);
+    assert_eq!(*params.d, [0x1, 0x0, 0x0, 0x0]);
+
+    // Multiply and check the non-quadratic residue
+    params.a = &num;
+    params.b = &den_inv;
+    syscall_arith256_mod(&mut params);
+    assert_eq!(*params.d, P_MINUS_ONE);
+}
+
+fn exp_power_of_2(x: &[u64; 4], power_log: usize) -> [u64; 4] {
+    let mut res = *x;
+    let _c = [0, 0, 0, 0];
+    let mut _d = [0, 0, 0, 0];
+    for _ in 0..power_log {
+        let res_copy = res;
+        let mut params =
+            SyscallArith256ModParams { a: &res, b: &res_copy, c: &_c, module: &P, d: &mut _d };
+        syscall_arith256_mod(&mut params);
+        res = params.d.clone();
+    }
+    res
 }
 
 /// Given points `p1` and `p2`, performs the point addition `p1 + p2` and assigns the result to `p1`.
@@ -65,7 +154,7 @@ fn add_points_complete_assign(
 
 /// Given a point `p` and scalars `k1` and `k2`, computes the double scalar multiplication `k1·G + k2·p`
 /// It assumes that `k1,k2 ∈ [1, N-1]` and that `p != G,𝒪`
-pub fn double_scalar_mul_with_g(
+pub(crate) fn double_scalar_mul_with_g(
     k1: &[u64; 4],
     k2: &[u64; 4],
     p: &SyscallPoint256,

@@ -1,30 +1,23 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
+mod constants;
+mod ecrecover;
 mod utils;
 
-use tiny_keccak::{Hasher, Keccak};
-use utils::{double_scalar_mul_with_g, sub};
-use ziskos::syscalls::{
-    arith256_mod::{syscall_arith256_mod, SyscallArith256ModParams},
-    point256::SyscallPoint256,
-};
-
-/// Secp256k1 prime field size
-const P: [u64; 4] =
-    [0xFFFFFFFEFFFFFC2F, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF];
-
-/// Secp256k1 scalar field size
-const N: [u64; 4] =
-    [0xBFD25E8CD0364141, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
-const N_MINUS_ONE: [u64; 4] =
-    [0xBFD25E8CD0364140, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
-const N_HALF: [u64; 4] =
-    [0xDFE92F46681B20A0, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
+use ecrecover::ecrecover;
 
 // cargo-zisk build --release
 // RUST_BACKTRACE=full ../zisk/target/release/ziskemu -x -e target/riscv64ima-polygon-ziskos-elf/release/ecrecover
 fn main() {
+    // Run valid tests
+    // valid_tests();
+
+    // Run invalid tests
+    invalid_tests();
+}
+
+pub fn valid_tests() {
     // Test 1
     let hash = [0x6F365326CF807D68, 0x2BB4CC214D3220A3, 0x2B71FE008C98CC87, 0xD9EBA16ED0ECAE43];
     let r = [0x59F2815B16F81798, 0x029BFCDB2DCE28D9, 0x55A06295CE870B07, 0x79BE667EF9DCBBAC];
@@ -325,57 +318,7 @@ fn main() {
     assert_eq!(error_code, 0);
     assert_eq!(addr, addr_expected);
 
-    // Test 31
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
-    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
-    let v = 26;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 32
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
-    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
-    let v = 29;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 33
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
-    let v = 28;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 34
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0xBFD25E8CD0364141, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
-    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
-    let v = 28;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 35
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0xBFD25E8CD0364142, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
-    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
-    let v = 28;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 36
+    // Test 36 r == N - 1
     let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
     let r = [0xBFD25E8CD0364140, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
     let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
@@ -385,17 +328,7 @@ fn main() {
     assert_eq!(error_code, 0);
     assert_eq!(addr, addr_expected);
 
-    // Test 37
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
-    let s = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    let v = 28;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 38
+    // Test 38 s == (N-1)/2 + 1
     let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
     let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
     let s = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
@@ -432,16 +365,6 @@ fn main() {
     let v = 28;
     let (addr, error_code) = ecrecover(&hash, v, &r, &s, true);
     let addr_expected = [0xA8D995345432A60E, 0xAB85A761042265B9, 0x00000000C846E2E4];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
-    // Test 42
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
-    let s = [0xBFD25E8CD0364142, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
-    let v = 28;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
     assert_eq!(error_code, 0);
     assert_eq!(addr, addr_expected);
 
@@ -526,142 +449,129 @@ fn main() {
     assert_eq!(addr, addr_expected);
 }
 
-/// Given a hash `hash`, a recovery parity `v`, a signature (`r`, `s`), and a signature mode `mode`,
-/// this function computes the address that signed the hash.
-///
-/// It also returns an error code:
-/// - 0: No error
-/// - 1: r should be greater than 0
-/// - 2: r should be less than `N_MINUS_ONE`
-/// - 3: s should be greater than 0
-/// - 4: s should be less than `N_MINUS_ONE` or `N_HALF`
-/// - 5: v should be either 27 or 28
-/// - 6: No square root found for `y_sq`
-/// - 7: Invalid parity
-/// - 8: The public key is the point at infinity
-fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool) -> ([u64; 3], u8) {
-    // Check r is in the range [1, n-1]
-    if r == &[0, 0, 0, 0] {
-        #[cfg(debug_assertions)]
-        println!("r should be greater than 0");
+pub fn invalid_tests() {
+    // r == 0
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
+    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 1);
 
-        return ([064; 3], 1);
-    } else if r >= &N_MINUS_ONE {
-        #[cfg(debug_assertions)]
-        println!("r should be less than N_MINUS_ONE: {:?}, but got {:?}", N_MINUS_ONE, r);
+    // r == N
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0xBFD25E8CD0364141, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 2);
 
-        return ([064; 3], 2);
-    }
+    // r > N
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0xBFD25E8CD0364142, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 2);
 
-    // Check s is either in the range [1, n-1] or [1, (n-1)/2]
-    let s_limit = if mode { N_MINUS_ONE } else { N_HALF };
-    if s == &[0, 0, 0, 0] {
-        #[cfg(debug_assertions)]
-        println!("s should be greater than 0");
+    // s == 0 (precompiled and tx)
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, true);
+    assert_eq!(error_code, 3);
 
-        return ([064; 3], 3);
-    } else if s >= &s_limit {
-        #[cfg(debug_assertions)]
-        println!("s should be less than s_limit: {:?}, but got {:?}", s_limit, s);
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 3);
 
-        return ([064; 3], 4);
-    }
+    // s == (N-1)/2 (tx)
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
+    let s = [0xDFE92F46681B20A0, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 4);
 
-    // Check v is either 27 or 28
-    if v != 27 && v != 28 {
-        #[cfg(debug_assertions)]
-        println!("v should be either 27 or 28, but got {}", v);
+    // s == (N-1)/2 + 1 (tx)
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
+    let s = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 4);
 
-        return ([064; 3], 5);
-    }
+    // s == N - 1 (tx)
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0xBFD25E8CD0364140, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 4);
 
-    // Calculate the recovery id
-    let parity = v - 27;
+    // s == N (precompiled and tx)
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0xBFD25E8CD0364141, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, true);
+    assert_eq!(error_code, 4);
 
-    // In Ethereum, signatures where the x-coordinate of the resulting point is
-    // greater than N are considered invalid. Hence, r = x as integers
-    let x = r;
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0xBFD25E8CD0364141, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 4);
 
-    // Calculate the y-coordinate of the point: y = sqrt(x³ + 7)
-    let x_copy = r;
-    let mut params = SyscallArith256ModParams {
-        a: &x,
-        b: &x_copy,
-        c: &[0, 0, 0, 0],
-        module: &P,
-        d: &mut [0, 0, 0, 0],
-    };
-    syscall_arith256_mod(&mut params);
-    let x_sq = params.d.clone();
-    params.a = &x_sq;
-    params.b = &x;
-    params.c = &[7, 0, 0, 0];
-    syscall_arith256_mod(&mut params);
-    let y_sq = params.d.clone();
+    // s == N + 1 (precompiled and tx)
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0xBFD25E8CD0364142, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, true);
+    assert_eq!(error_code, 4);
 
-    // let y = match sqrt(y_sq, parity) {
-    //     Some(y) => y,
-    //     None => {
-    //         #[cfg(debug_assertions)]
-    //         println!("No square root found for y_sq: {:?}", y_sq);
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0xBFD25E8CD0364142, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 4);
 
-    //         return ([064; 3], 6);
-    //     }
-    // };
-    let y = [0x63b82f6f04ef2777,0x02e84bb7597aabe6,0xa25b0403f1eef757,0xb7c52588d95c3b9a];
+    // v < 27
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
+    let v = 26;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 5);
 
-    // Check the parity of the y-coordinate is correct
-    let y_parity = (y[0] & 1) as u8;
-    if parity != y_parity {
-        #[cfg(debug_assertions)]
-        println!("Invalid parity: expected {}, but got {}", parity, y_parity);
+    // v > 28
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
+    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
+    let v = 29;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 5);
 
-        return ([064; 3], 7);
-    }
+    // r is not a valid x-coordinate
+    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
+    let r = [0x0000000000000005, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
+    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
+    let v = 28;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
+    assert_eq!(error_code, 6);
 
-    // Calculate the public key
-    // let r_inv = inv_n(r);
-    let r_inv = [0xc0b8d7a6dec520fe, 0xc115d26ccbe1f572, 0x0a95e8b9fd31f60a, 0x1dd887b3eaf15326];
-
-    // Compute k1 = (-hash * r_inv) % N
-    params.a = &hash;
-    params.b = &r_inv;
-    params.c = &[0, 0, 0, 0];
-    params.module = &N;
-    syscall_arith256_mod(&mut params);
-    let k1 = sub(&N, params.d);
-
-    // Compute k2 = (s * r_inv) % N
-    params.a = &s;
-    params.b = &r_inv;
-    syscall_arith256_mod(&mut params);
-    let k2 = params.d;
-
-    // Calculate the public key
-    let p = SyscallPoint256 { x: *x, y };
-    let (pk_is_infinity, pk) = double_scalar_mul_with_g(&k1, k2, &p);
-    if pk_is_infinity {
-        return ([064; 3], 8);
-    }
-
-    // Compute the hash of the public key
-    // Q: Is it better to use a hash API that accepts u64 instead of u8?
-    // Q: Substitute the function by low-level stuff!
-    let mut buf = [0u8; 64];
-    for i in 0..4 {
-        buf[i * 8..(i + 1) * 8].copy_from_slice(&pk.x[3 - i].to_be_bytes());
-        buf[32 + i * 8..32 + (i + 1) * 8].copy_from_slice(&pk.y[3 - i].to_be_bytes());
-    }
-
-    let mut pk_hash = [0u8; 32];
-    let mut keccak = Keccak::v256();
-    keccak.update(&buf);
-    keccak.finalize(&mut pk_hash);
-
-    // Return the least significant 20 bytes of the hash
-    let mut addr = [0u64; 3];
-    for i in 0..20 {
-        addr[i / 8] |= (pk_hash[31 - i] as u64) << (8 * (i % 8));
-    }
-    (addr, 0)
+    // pk = point at infinity
+    let hash = [0x0000000000000001, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
+    let r = [0xABAC09B95C709EE5, 0x5C778E4B8CEF3CA7, 0x3045406E95C07CD8, 0xC6047F9441ED7D6D];
+    let s = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
+    let v = 27;
+    let (_, error_code) = ecrecover(&hash, v, &r, &s, true);
+    assert_eq!(error_code, 7)
 }
