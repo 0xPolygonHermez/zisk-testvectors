@@ -1,8 +1,8 @@
 [package]
-name = "arith_eq_gen"
+name = "arith_eq_pow"
 version = "0.1.0"
 edition = "2021"
-default-run = "arith_eq_gen"
+default-run = "arith_eq_pow"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
