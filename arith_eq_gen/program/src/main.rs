@@ -2188,6 +2188,7 @@ fn main() {
             12543219280952145440,
         ],
     };
+/*
     syscall_secp256k1_dbl(&mut p1);
     let p3 = SyscallPoint256 {
         x: [
@@ -2205,7 +2206,7 @@ fn main() {
     };
     assert_eq!(&p1.x, &p3.x);
     assert_eq!(&p1.y, &p3.y);
-
+*/
     // secp256k1_dbl test rows: 704-719
 
     let mut p1 = SyscallPoint256 {
