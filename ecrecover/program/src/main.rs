@@ -1,13 +1,9 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-mod constants;
-mod ecrecover;
-mod utils;
+use ziskos::ecrecover;
 
-use ecrecover::ecrecover;
-
-// cargo-zisk build --release
+// ../zisk/target/release/cargo-zisk build --release
 // RUST_BACKTRACE=full ../zisk/target/release/ziskemu -x -e target/riscv64ima-polygon-ziskos-elf/release/ecrecover
 fn main() {
     // Run valid tests
