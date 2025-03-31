@@ -1,12 +1,13 @@
 use tiny_keccak::{Hasher, Keccak};
-use ziskos::syscalls::{
+use ziskos::{
     arith256_mod::{syscall_arith256_mod, SyscallArith256ModParams},
+    fcall_secp256k1_fn_inv, fcall_secp256k1_fp_sqrt,
     point256::SyscallPoint256,
 };
 
 use crate::{
     constants::{N, N_HALF, N_MINUS_ONE, P},
-    utils::{assert_nqr_p, double_scalar_mul_with_g, geq, sub},
+    utils::{assert_nqr_p, double_scalar_mul_with_g, gt, sub},
 };
 
 /// Given a hash `hash`, a recovery parity `v`, a signature (`r`, `s`), and a signature mode `mode`,
@@ -21,18 +22,24 @@ use crate::{
 /// - 5: v should be either 27 or 28
 /// - 6: No square root found for `y_sq`
 /// - 7: The public key is the point at infinity
-pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool) -> ([u64; 3], u8) {
+pub fn ecrecover(
+    hash: &[u64; 4],
+    v: u64,
+    r: &[u64; 4],
+    s: &[u64; 4],
+    mode: bool,
+) -> ([u64; 3], u8) {
     // Check r is in the range [1, n-1]
     if r == &[0, 0, 0, 0] {
         #[cfg(debug_assertions)]
         println!("r should be greater than 0");
 
-        return ([064; 3], 1);
-    } else if geq(r, &N_MINUS_ONE) {
+        return ([0u64; 3], 1);
+    } else if gt(r, &N_MINUS_ONE) {
         #[cfg(debug_assertions)]
         println!("r should be less than N_MINUS_ONE: {:?}, but got {:?}", N_MINUS_ONE, r);
 
-        return ([064; 3], 2);
+        return ([0u64; 3], 2);
     }
 
     // Check s is either in the range [1, n-1] (precompiled) or [1, (n-1)/2] (tx):
@@ -41,12 +48,12 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
         #[cfg(debug_assertions)]
         println!("s should be greater than 0");
 
-        return ([064; 3], 3);
-    } else if geq(s, &s_limit) {
+        return ([0u64; 3], 3);
+    } else if gt(s, &s_limit) {
         #[cfg(debug_assertions)]
         println!("s should be less than s_limit: {:?}, but got {:?}", s_limit, s);
 
-        return ([064; 3], 4);
+        return ([0u64; 3], 4);
     }
 
     // Check v is either 27 or 28
@@ -54,7 +61,7 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
         #[cfg(debug_assertions)]
         println!("v should be either 27 or 28, but got {}", v);
 
-        return ([064; 3], 5);
+        return ([0u64; 3], 5);
     }
 
     // Calculate the recovery id
@@ -64,29 +71,27 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
     // greater than N are considered invalid. Hence, r = x as integers
 
     // Calculate the y-coordinate of the point: y = sqrt(x³ + 7)
-    let r_copy = r;
     let mut params = SyscallArith256ModParams {
-        a: &r,
-        b: &r_copy,
+        a: r,
+        b: r,
         c: &[0, 0, 0, 0],
         module: &P,
         d: &mut [0, 0, 0, 0],
     };
     syscall_arith256_mod(&mut params);
-    let r_sq = params.d.clone();
+    let r_sq = *params.d;
     params.a = &r_sq;
-    params.b = &r;
+    params.b = r;
     params.c = &[7, 0, 0, 0];
     syscall_arith256_mod(&mut params);
-    let y_sq = params.d.clone();
+    let y_sq = *params.d;
 
     // Hint the sqrt and verify it
-    let y = match sqrt(y_sq, parity) {
+    let y = match fcall_secp256k1_fp_sqrt(&y_sq, parity) {
         Some(y) => {
             // Check the recevied y is the sqrt
-            let y_copy = y;
             params.a = &y;
-            params.b = &y_copy;
+            params.b = &y;
             params.c = &[0, 0, 0, 0];
             syscall_arith256_mod(&mut params);
             assert_eq!(*params.d, y_sq);
@@ -99,35 +104,37 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
             // Check that y_sq is a non-quadratic residue
             assert_nqr_p(&y_sq);
 
-            return ([064; 3], 6);
+            return ([0u64; 3], 6);
         }
     };
-    let y = [0x63b82f6f04ef2777, 0x02e84bb7597aabe6, 0xa25b0403f1eef757, 0xb7c52588d95c3b9a];
 
     // Check the received parity of the y-coordinate is correct, otherwise MAP
-    let y_parity = (y[0] & 1) as u8;
+    let y_parity = y[0] & 1;
     assert_eq!(y_parity, parity);
 
     // Calculate the public key
 
     // Hint the inverse and verify it
-    let r_inv = inv_n(r);
-    params.a = &r;
-    params.b = &r_inv;
-    params.c = &[0, 0, 0, 0];
-    params.module = &N;
+    let r_inv = fcall_secp256k1_fn_inv(r);
+    let mut params = SyscallArith256ModParams {
+        a: r,
+        b: &r_inv,
+        c: &[0, 0, 0, 0],
+        module: &N,
+        d: &mut [0, 0, 0, 0],
+    };
     syscall_arith256_mod(&mut params);
     assert_eq!(*params.d, [0x1, 0x0, 0x0, 0x0]);
 
     // Compute k1 = (-hash * r_inv) % N
-    params.a = &hash;
+    params.a = hash;
     params.b = &r_inv;
     params.c = &[0, 0, 0, 0];
     syscall_arith256_mod(&mut params);
     let k1 = sub(&N, params.d);
 
     // Compute k2 = (s * r_inv) % N
-    params.a = &s;
+    params.a = s;
     params.b = &r_inv;
     syscall_arith256_mod(&mut params);
     let k2 = params.d;
@@ -136,7 +143,7 @@ pub fn ecrecover(hash: &[u64; 4], v: u8, r: &[u64; 4], s: &[u64; 4], mode: bool)
     let p = SyscallPoint256 { x: *r, y };
     let (pk_is_infinity, pk) = double_scalar_mul_with_g(&k1, k2, &p);
     if pk_is_infinity {
-        return ([064; 3], 7);
+        return ([0u64; 3], 7);
     }
 
     // Compute the hash of the public key

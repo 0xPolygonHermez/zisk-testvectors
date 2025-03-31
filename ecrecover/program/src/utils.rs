@@ -1,13 +1,14 @@
-use ziskos::syscalls::{
+use ziskos::{
     arith256_mod::{syscall_arith256_mod, SyscallArith256ModParams},
+    fcall_secp256k1_fp_inv,
     point256::SyscallPoint256,
     secp256k1_add::{syscall_secp256k1_add, SyscallSecp256k1AddParams},
     secp256k1_dbl::syscall_secp256k1_dbl,
 };
 
-use crate::constants::{G_X, G_Y, G_Y_NEG, P, P_MINUS_ONE};
+use crate::constants::{G_X, G_Y, P, P_MINUS_ONE};
 
-pub(crate) fn geq(x: &[u64; 4], y: &[u64; 4]) -> bool {
+pub(crate) fn gt(x: &[u64; 4], y: &[u64; 4]) -> bool {
     for i in (0..4).rev() {
         if x[i] > y[i] {
             return true;
@@ -15,7 +16,7 @@ pub(crate) fn geq(x: &[u64; 4], y: &[u64; 4]) -> bool {
             return false;
         }
     }
-    true
+    false
 }
 
 /// Given two 256-bit unsigned integers `x` and `y`, returns the result of the subtraction `x - y`
@@ -53,48 +54,48 @@ pub(crate) fn assert_nqr_p(x: &[u64; 4]) {
     let exp_3 = exp_power_of_2(x, 3);
     let mut params = SyscallArith256ModParams {
         a: &exp_3,
-        b: &x,
+        b: &exp_3,
         c: &[0, 0, 0, 0],
         module: &P,
         d: &mut [0, 0, 0, 0],
     };
     syscall_arith256_mod(&mut params);
-    let exp_4 = params.d.clone();
+    let exp_4 = *params.d;
     let exp_9 = exp_power_of_2(&exp_4, 5);
     let exp_31 = exp_power_of_2(&exp_9, 22);
     params.a = &exp_31;
-    params.b = &x;
+    params.b = &exp_31;
     syscall_arith256_mod(&mut params);
-    let exp_32 = params.d.clone();
+    let exp_32 = *params.d;
     let exp_255 = exp_power_of_2(&exp_32, 223);
 
     // --> Compute the numerator
     params.a = &exp_255;
     params.b = &exp_31;
     syscall_arith256_mod(&mut params);
-    let _res = params.d.clone();
+    let _res = *params.d;
     params.a = &_res;
     params.b = &exp_4;
     syscall_arith256_mod(&mut params);
-    let _res = params.d.clone();
+    let _res = *params.d;
     params.a = &_res;
     params.b = &exp_3;
     syscall_arith256_mod(&mut params);
-    let num = params.d.clone();
+    let num = *params.d;
 
     // --> Compute the denominator
     params.a = &exp_32;
     params.b = &exp_9;
     syscall_arith256_mod(&mut params);
-    let _res = params.d.clone();
+    let _res = *params.d;
     params.a = &_res;
     params.b = x;
     syscall_arith256_mod(&mut params);
-    let den = params.d.clone();
+    let den = *params.d;
 
     // --> Compute the result
     // Hint the inverse of the denominator and check it
-    let den_inv = inv_p(&den);
+    let den_inv = fcall_secp256k1_fp_inv(&den);
     params.a = &den;
     params.b = &den_inv;
     syscall_arith256_mod(&mut params);
@@ -116,7 +117,7 @@ fn exp_power_of_2(x: &[u64; 4], power_log: usize) -> [u64; 4] {
         let mut params =
             SyscallArith256ModParams { a: &res, b: &res_copy, c: &_c, module: &P, d: &mut _d };
         syscall_arith256_mod(&mut params);
-        res = params.d.clone();
+        res = *params.d;
     }
     res
 }
@@ -144,7 +145,7 @@ fn add_points_complete_assign(
     p2: &SyscallPoint256,
 ) {
     if p1.x != p2.x {
-        add_points_assign(p1, &p2);
+        add_points_assign(p1, p2);
     } else if p1.y == p2.y {
         double_point_assign(p1);
     } else {
@@ -153,20 +154,16 @@ fn add_points_complete_assign(
 }
 
 /// Given a point `p` and scalars `k1` and `k2`, computes the double scalar multiplication `k1·G + k2·p`
-/// It assumes that `k1,k2 ∈ [1, N-1]` and that `p != G,𝒪`
+/// It assumes that `k1,k2 ∈ [1, N-1]` and that `p != 𝒪`
 pub(crate) fn double_scalar_mul_with_g(
     k1: &[u64; 4],
     k2: &[u64; 4],
     p: &SyscallPoint256,
 ) -> (bool, SyscallPoint256) {
     // Start by precomputing g + p
-    let mut gp = SyscallPoint256 { x: [0u64; 4], y: [0u64; 4] };
+    let mut gp = SyscallPoint256 { x: G_X, y: G_Y };
     let mut gp_is_infinity = false;
-    if p.x == G_X && p.y == G_Y_NEG {
-        gp_is_infinity = true;
-    } else {
-        add_points_assign(&mut gp, &p);
-    }
+    add_points_complete_assign(&mut gp, &mut gp_is_infinity, p);
 
     // Get the the maximum length between the binary representations of k1 and k2
     let (max_limb, max_bit) = msb_pos_256(k1, k2);

@@ -2,9 +2,7 @@
 ziskos::entrypoint!(main);
 
 use ziskos::read_input;
-use ziskos::syscalls::{
-    arith256::*, arith256_mod::*, point256::*, secp256k1_add::*, secp256k1_dbl::*,
-};
+use ziskos::{arith256::*, arith256_mod::*, point256::*, secp256k1_add::*, secp256k1_dbl::*};
 
 fn main() {
     // Get the input from ziskos

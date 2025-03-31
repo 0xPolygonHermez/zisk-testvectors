@@ -2,7 +2,7 @@
 ziskos::entrypoint!(main);
 
 use ziskos::read_input;
-use ziskos::syscalls::{point256::*, secp256k1_add::*};
+use ziskos::{point256::*, secp256k1_add::*};
 
 // RUST_BACKTRACE=full ~/devel/zisk2/zisk/target/release/ziskemu -x -e target/riscv64ima-polygon-ziskos-elf/release/arith_eq -i ../inputs/input_arith_eq_1.bin
 fn main() {

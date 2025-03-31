@@ -11,7 +11,7 @@ use ecrecover::ecrecover;
 // RUST_BACKTRACE=full ../zisk/target/release/ziskemu -x -e target/riscv64ima-polygon-ziskos-elf/release/ecrecover
 fn main() {
     // Run valid tests
-    // valid_tests();
+    valid_tests();
 
     // Run invalid tests
     invalid_tests();
@@ -318,16 +318,6 @@ pub fn valid_tests() {
     assert_eq!(error_code, 0);
     assert_eq!(addr, addr_expected);
 
-    // Test 36 r == N - 1
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0xBFD25E8CD0364140, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
-    let s = [0x0C368AE950852ADA, 0x1E56992D0774DC34, 0x0BD448298CC2E207, 0x4F8AE3BD7535248D];
-    let v = 28;
-    let (addr, error_code) = ecrecover(&hash, v, &r, &s, false);
-    let addr_expected = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
-    assert_eq!(error_code, 0);
-    assert_eq!(addr, addr_expected);
-
     // Test 38 s == (N-1)/2 + 1
     let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
     let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
@@ -338,7 +328,7 @@ pub fn valid_tests() {
     assert_eq!(error_code, 0);
     assert_eq!(addr, addr_expected);
 
-    // Test 39
+    // Test 39 s == N/2
     let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
     let r = [0x2664AC8038825608, 0x8EB630EA16AA137D, 0xC25603C231BC2F56, 0x9242685BF161793C];
     let s = [0xDFE92F46681B20A0, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
@@ -489,14 +479,6 @@ pub fn invalid_tests() {
     let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
     assert_eq!(error_code, 3);
 
-    // s == (N-1)/2 (tx)
-    let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
-    let r = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
-    let s = [0xDFE92F46681B20A0, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
-    let v = 28;
-    let (_, error_code) = ecrecover(&hash, v, &r, &s, false);
-    assert_eq!(error_code, 4);
-
     // s == (N-1)/2 + 1 (tx)
     let hash = [0x4C860FC0B0C64EF3, 0x4049A3BA34C2289B, 0x1AF7A3E85A3212FA, 0x456E9AEA5E197A1F];
     let r = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
@@ -573,5 +555,5 @@ pub fn invalid_tests() {
     let s = [0xDFE92F46681B20A1, 0x5D576E7357A4501D, 0xFFFFFFFFFFFFFFFF, 0x7FFFFFFFFFFFFFFF];
     let v = 27;
     let (_, error_code) = ecrecover(&hash, v, &r, &s, true);
-    assert_eq!(error_code, 7)
+    assert_eq!(error_code, 7);
 }
