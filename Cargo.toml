@@ -1,9 +1,12 @@
 [workspace]
 members = [
-    "keccak/program",
     "arith_eq/program",
     "arith_eq_gen/program",
+    "arith_eq_pow/program",
     "ecrecover/program",
+    "fcall/program",
+    "fcall_msb/program",
+    "keccak/program",
 ]
 resolver = "2"
 
