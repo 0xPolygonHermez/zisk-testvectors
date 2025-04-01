@@ -1,0 +1,7 @@
+[package]
+name = "arith_eq_pow"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+ziskos = { workspace = true }
