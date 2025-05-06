@@ -157,6 +157,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "sha256"
+version = "0.1.0"
+dependencies = [
+ "ziskos",
+]
+
+[[package]]
 name = "static_assertions"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -216,7 +223,7 @@ dependencies = [
 
 [[package]]
 name = "ziskos"
-version = "0.5.0"
+version = "0.7.0"
 dependencies = [
  "cfg-if",
  "getrandom",
