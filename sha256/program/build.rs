@@ -6,6 +6,7 @@ use std::path::Path;
 const OUTPUT_DIR: &str = "build/";
 const FILE_NAME: &str = "input.bin";
 
+// Sha256fSM: circuit_size = 31488, num_available_circuits = 133, num_available_sha256fs = 7448
 fn main() -> io::Result<()> {
     let num_sha256fs: u64 = 1;
 

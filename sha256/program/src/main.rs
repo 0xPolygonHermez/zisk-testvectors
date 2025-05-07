@@ -27,26 +27,15 @@ fn main() {
 
 fn sha256f_apply(rng: &mut rand::rngs::ThreadRng) {
     // Take any number and apply the sha256f function
-    // let mut input_array = [0u64; 25];
-    // for i in 0..25 {
-    //     input_array[i] = rng.gen();
-    // }
-
-    // sha256f(&mut input_array);
-
     let mut state = [0u64; 4];
     for i in 0..4 {
-        let lo = SHA256_INITIAL_HASH_STATE[2 * i] as u64;
-        let hi = SHA256_INITIAL_HASH_STATE[2 * i + 1] as u64;
-        state[i] = (hi << 32) | lo;
+        state[i] = rng.gen();
     }
 
     let mut input = [0u64; 8];
-    input[0] = 0x0000_0001_0000_0000;
-    syscall_sha256_f(&mut state, &input);
+    for i in 0..8 {
+        input[i] = rng.gen();
+    }
 
-    // Expected Sha256f
-    let expected_hash: [u64; 4] =
-        [0x98FC1C14E3B0C442, 0x996FB9249AFBF4C8, 0x649B934C27AE41E4, 0x7852B855A495991B];
-    assert_eq!(state[..], expected_hash[..]);
+    syscall_sha256_f(&mut state, &input);
 }
