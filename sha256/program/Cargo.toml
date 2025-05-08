@@ -1,0 +1,8 @@
+[package]
+name = "sha256"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+ziskos = { workspace = true }
+rand = { workspace = true }

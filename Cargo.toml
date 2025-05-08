@@ -7,6 +7,7 @@ members = [
     "fcall/program",
     "fcall_msb/program",
     "keccak/program",
+    "sha256/program",
 ]
 resolver = "2"
 
@@ -23,8 +24,11 @@ opt-level = 3
 [workspace.dependencies]
 rand = "0.8"
 byteorder = "1.5.0"
-# tiny-keccak = { version = "2.0.2", features = ["keccak"] }
-tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak.git", branch = "zisk", features = [ "keccak" ] }
-#ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
+# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
 # Local development
 ziskos = { path = "../zisk/ziskos/entrypoint" }
+
+# Patched Libs
+tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak.git", branch = "zisk", features = [ "keccak" ] }
+# Non-Patched Libs
+# tiny-keccak = { version = "2.0.2", features = ["keccak"] }
