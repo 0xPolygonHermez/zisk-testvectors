@@ -1,14 +1,13 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use ziskos::read_input;
-use ziskos::{point256::*, secp256k1_add::*};
+use ziskos::{
+    bn254_complex_add::*, bn254_complex_mul::*, bn254_complex_sub::*, bn254_curve_add::*,
+    bn254_curve_dbl::*, complex256::*, point256::*, secp256k1_add::*,
+};
 
 // RUST_BACKTRACE=full ~/devel/zisk2/zisk/target/release/ziskemu -x -e target/riscv64ima-polygon-ziskos-elf/release/arith_eq -i ../inputs/input_arith_eq_1.bin
 fn main() {
-    // Get the input from ziskos
-    let input: Vec<u8> = read_input();
-
     //     // let a:[u64;4] = [2,4,8,16];
     //     // let b:[u64;4] = [3,9,27,81];
     //     // let c:[u64;4] = [7,49,345,2500];
@@ -144,5 +143,86 @@ fn main() {
     // // println!("p3:{:?}", p3);
     // assert_eq!(p1.x, p3.x);
     // assert_eq!(p1.y, p3.y);
+
+    let mut p1 = SyscallPoint256 {
+        x: [0x25644bb7851fdd34, 0x3829dcb1a319f21c, 0xa382ad690180acc7, 0x192d912ebe18e5d9],
+        y: [0xa56eb6e26f2d023a, 0xb9f46664a714fd64, 0x4f4e884ef99f45b5, 0x1b1f7b232e11653e],
+    };
+    let p2 = SyscallPoint256 {
+        x: [0xbccc4db219a9c508, 0x57794eef5c553934, 0x9a229dc8de4e49dc, 0x4f59fc896878cd6],
+        y: [0xd529624f5d58a8b, 0x1dd4fb9f45ba0db1, 0x4a7b41bc86cecd4b, 0x185cadf6a22f1975],
+    };
+    let p3 = SyscallPoint256 {
+        x: [0x3c29038cf2559d09, 0x4f6b80b4ab3caa39, 0xe40c5600dbcd9885, 0x285130f2f9e3c43b],
+        y: [0xc3a58470ee740ef6, 0x70eca178717743b5, 0x24b78c8bbbea3ac9, 0x12057e168a982fd8],
+    };
+    let mut params = SyscallBn254CurveAddParams { p1: &mut p1, p2: &p2 };
+    syscall_bn254_curve_add(&mut params);
+    assert_eq!(&p1.x, &p3.x);
+    assert_eq!(&p1.y, &p3.y);
+
+    let mut p = SyscallPoint256 {
+        x: [0x25644bb7851fdd34, 0x3829dcb1a319f21c, 0xa382ad690180acc7, 0x192d912ebe18e5d9],
+        y: [0xa56eb6e26f2d023a, 0xb9f46664a714fd64, 0x4f4e884ef99f45b5, 0x1b1f7b232e11653e],
+    };
+    let q = SyscallPoint256 {
+        x: [0xb2e4a3d6225fb9f5, 0xb869d0dc17bc31e5, 0x9615c21c187f19d4, 0x1551f932c86d1f7],
+        y: [0xd74c28e9fdf5bf6e, 0xdc1425d8302dadfe, 0x671971318d8dd89f, 0x2b9d949865492216],
+    };
+    syscall_bn254_curve_dbl(&mut p);
+    assert_eq!(p.x, q.x);
+    assert_eq!(p.y, q.y);
+
+    let mut f1 = SyscallComplex256 {
+        x: [0x3be482ececc3a2f8, 0x41249592a2ad0dbc, 0xfec43a58ca122e3c, 0x721b5222bf6346e],
+        y: [0x6c8f19c1aa52f36d, 0x1673fae81f0f62fc, 0x4b7c4f0f0bc5de8c, 0x1fd8bf6d0972ac88],
+    };
+    let f2 = SyscallComplex256 {
+        x: [0x2805ab20d11712bb, 0x3faabb9b8f9c76e7, 0x74c91bac1a106e09, 0x2b39586b5a504570],
+        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x16cde343a264bb9, 0x21a09446a4983214],
+    };
+    let f3 = SyscallComplex256 {
+        x: [0x27c9a1f6e55db86c, 0xe94de69cc9d7ba16, 0xbb3d104e62a143e7, 0x1f6bf1aa514d9b5],
+        y: [0x8b2269dd09a22b7f, 0x5b1a61f7b4b0b607, 0x9498e78cc46ad1e8, 0x11150540ccd93e72],
+    };
+    let mut params = SyscallBn254ComplexAddParams { f1: &mut f1, f2: &f2 };
+    syscall_bn254_complex_add(&mut params);
+    assert_eq!(&f1.x, &f3.x);
+    assert_eq!(&f1.y, &f3.y);
+
+    let mut f1 = SyscallComplex256 {
+        x: [0x3be482ececc3a2f8, 0x41249592a2ad0dbc, 0xfec43a58ca122e3c, 0x721b5222bf6346e],
+        y: [0x6c8f19c1aa52f36d, 0x1673fae81f0f62fc, 0x4b7c4f0f0bc5de8c, 0x1fd8bf6d0972ac88],
+    };
+    let f2 = SyscallComplex256 {
+        x: [0x2805ab20d11712bb, 0x3faabb9b8f9c76e7, 0x74c91bac1a106e09, 0x2b39586b5a504570],
+        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x16cde343a264bb9, 0x21a09446a4983214],
+    };
+    let f3 = SyscallComplex256 {
+        x: [0x4fff63e2f4298d84, 0x98fb44887b826162, 0x424b646331831890, 0xc4cab29b2d78f28],
+        y: [0x4dfbc9a64b03bb5b, 0xd1cd93d8896e0ff1, 0x25fb6915320eb2f, 0x2e9c7999460c1a9e],
+    };
+    let mut params = SyscallBn254ComplexSubParams { f1: &mut f1, f2: &f2 };
+    syscall_bn254_complex_sub(&mut params);
+    assert_eq!(&f1.x, &f3.x);
+    assert_eq!(&f1.y, &f3.y);
+
+    let mut f1 = SyscallComplex256 {
+        x: [0x3be482ececc3a2f8, 0x41249592a2ad0dbc, 0xfec43a58ca122e3c, 0x721b5222bf6346e],
+        y: [0x6c8f19c1aa52f36d, 0x1673fae81f0f62fc, 0x4b7c4f0f0bc5de8c, 0x1fd8bf6d0972ac88],
+    };
+    let f2 = SyscallComplex256 {
+        x: [0x2805ab20d11712bb, 0x3faabb9b8f9c76e7, 0x74c91bac1a106e09, 0x2b39586b5a504570],
+        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x16cde343a264bb9, 0x21a09446a4983214],
+    };
+    let f3 = SyscallComplex256 {
+        x: [0xeb2f7a4fd8520b3b, 0x8af9b4ac0e0c6d2d, 0xde28c2ae9d03baa2, 0xea2010ab05d8f33],
+        y: [0x6a58ffc04eae26d6, 0xe143334db72ae02, 0x89ba7d799f8a2ffe, 0x30237421f5ff13f2],
+    };
+    let mut params = SyscallBn254ComplexMulParams { f1: &mut f1, f2: &f2 };
+    syscall_bn254_complex_mul(&mut params);
+    assert_eq!(&f1.x, &f3.x);
+    assert_eq!(&f1.y, &f3.y);
+
     println!("Success");
 }

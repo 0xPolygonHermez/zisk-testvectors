@@ -1,13 +1,9 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use ziskos::read_input;
 use ziskos::{arith256::*, arith256_mod::*, point256::*, secp256k1_add::*, secp256k1_dbl::*};
 
 fn main() {
-    // Get the input from ziskos
-    let _input: Vec<u8> = read_input();
-
     let mut p1 = SyscallPoint256 { x: [0, 0, 0, 0], y: [0, 0, 0, 0] };
     let p2 = SyscallPoint256 { x: [0, 0, 0, 0], y: [0, 0, 0, 0] };
     let mut params = SyscallSecp256k1AddParams { p1: &mut p1, p2: &p2 };
@@ -877,7 +873,6 @@ fn main() {
         x: [3388248522597430614, 9436808338628714891, 2325328641075066323, 18444909905599983268],
         y: [4361468193159901847, 16033079614159971488, 17563640529965925728, 12543219280952145440],
     };
-/*
     syscall_secp256k1_dbl(&mut p1);
     let p3 = SyscallPoint256 {
         x: [14245154385136969818, 7529161239585360219, 1568254326717236787, 14992788640288429595],
@@ -885,7 +880,7 @@ fn main() {
     };
     assert_eq!(&p1.x, &p3.x);
     assert_eq!(&p1.y, &p3.y);
-*/
+
     // secp256k1_dbl test rows: 704-719
 
     let mut p1 = SyscallPoint256 {
