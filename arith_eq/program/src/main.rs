@@ -83,7 +83,7 @@ fn main() {
     };
     let p2 = SyscallPoint256 {
         x: [0xbccc4db219a9c508, 0x57794eef5c553934, 0x9a229dc8de4e49dc, 0x4f59fc896878cd6],
-        y: [0xd529624f5d58a8b, 0x1dd4fb9f45ba0db1, 0x4a7b41bc86cecd4b, 0x185cadf6a22f1975],
+        y: [0x0d529624f5d58a8b, 0x1dd4fb9f45ba0db1, 0x4a7b41bc86cecd4b, 0x185cadf6a22f1975],
     };
     let p3 = SyscallPoint256 {
         x: [0x3c29038cf2559d09, 0x4f6b80b4ab3caa39, 0xe40c5600dbcd9885, 0x285130f2f9e3c43b],
@@ -114,11 +114,11 @@ fn main() {
     };
     let f2 = SyscallComplex256 {
         x: [0x2805ab20d11712bb, 0x3faabb9b8f9c76e7, 0x74c91bac1a106e09, 0x2b39586b5a504570],
-        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x16cde343a264bb9, 0x21a09446a4983214],
+        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x416cde343a264bb9, 0x21a09446a498321],
     };
     let f3 = SyscallComplex256 {
         x: [0x27c9a1f6e55db86c, 0xe94de69cc9d7ba16, 0xbb3d104e62a143e7, 0x1f6bf1aa514d9b5],
-        y: [0x8b2269dd09a22b7f, 0x5b1a61f7b4b0b607, 0x9498e78cc46ad1e8, 0x11150540ccd93e72],
+        y: [0xc742f5f3e21f28c6, 0xf29bcc891d228094, 0x8ce92d4345ec2a45, 0x21f2c8b173bc2fa9],
     };
     let mut params = SyscallBn254ComplexAddParams { f1: &mut f1, f2: &f2 };
     syscall_bn254_complex_add(&mut params);
@@ -132,11 +132,11 @@ fn main() {
     };
     let f2 = SyscallComplex256 {
         x: [0x2805ab20d11712bb, 0x3faabb9b8f9c76e7, 0x74c91bac1a106e09, 0x2b39586b5a504570],
-        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x16cde343a264bb9, 0x21a09446a4983214],
+        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x416cde343a264bb9, 0x21a09446a498321],
     };
     let f3 = SyscallComplex256 {
         x: [0x4fff63e2f4298d84, 0x98fb44887b826162, 0x424b646331831890, 0xc4cab29b2d78f28],
-        y: [0x4dfbc9a64b03bb5b, 0xd1cd93d8896e0ff1, 0x25fb6915320eb2f, 0x2e9c7999460c1a9e],
+        y: [0x11db3d8f7286be14, 0x3a4c294720fc4564, 0x0a0f70dad19f92d2, 0x1dbeb6289f292967],
     };
     let mut params = SyscallBn254ComplexSubParams { f1: &mut f1, f2: &f2 };
     syscall_bn254_complex_sub(&mut params);
@@ -150,11 +150,11 @@ fn main() {
     };
     let f2 = SyscallComplex256 {
         x: [0x2805ab20d11712bb, 0x3faabb9b8f9c76e7, 0x74c91bac1a106e09, 0x2b39586b5a504570],
-        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x16cde343a264bb9, 0x21a09446a4983214],
+        y: [0x5ab3dc3237cc3559, 0xdc27d1a0fe131d98, 0x416cde343a264bb9, 0x21a09446a498321],
     };
     let f3 = SyscallComplex256 {
-        x: [0xeb2f7a4fd8520b3b, 0x8af9b4ac0e0c6d2d, 0xde28c2ae9d03baa2, 0xea2010ab05d8f33],
-        y: [0x6a58ffc04eae26d6, 0xe143334db72ae02, 0x89ba7d799f8a2ffe, 0x30237421f5ff13f2],
+        x: [0x9c987d93a0c5f370, 0x194e04d6a87ec666, 0x7b74faf8894b5912, 0x6ef8107208af4fb],
+        y: [0x0119214c22c9c304, 0x764ecfdbc2b2bc25, 0xf3ba47ddff2cdfb7, 0x2da47d9b545eb116],
     };
     let mut params = SyscallBn254ComplexMulParams { f1: &mut f1, f2: &f2 };
     syscall_bn254_complex_mul(&mut params);
