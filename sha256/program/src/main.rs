@@ -16,9 +16,8 @@ fn main() {
 
     let mut rng = rand::thread_rng();
 
-    let num_sha256fs = usize::from_le_bytes(
-        input[..8].try_into().expect("Input should be at least 8 bytes"),
-    );
+    let num_sha256fs =
+        usize::from_le_bytes(input[..8].try_into().expect("Input should be at least 8 bytes"));
     println!("Number of sha256f to compute: {:?}", num_sha256fs);
     for _ in 0..num_sha256fs {
         sha256f_apply(&mut rng);
