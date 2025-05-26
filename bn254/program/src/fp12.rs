@@ -968,7 +968,7 @@ pub fn fp12_tests() {
     one[0] = 1;
 
     let e = 0u64;
-    let mut a = one;
+    let a = one;
     let res = exp_fp12_bn254(e, &a);
     let res_exp = a;
     assert_eq!(res, res_exp);

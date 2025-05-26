@@ -1,6 +1,6 @@
 use ziskos::bn254::fp6::{
     add_fp6_bn254, dbl_fp6_bn254, inv_fp6_bn254, mul_fp6_bn254, neg_fp6_bn254,
-    sparse_mul_fp6_bn254, square_fp6_bn254, sub_fp6_bn254,
+    sparse_mula_fp6_bn254, square_fp6_bn254, sub_fp6_bn254,
 };
 
 pub fn fp6_tests() {
@@ -291,7 +291,7 @@ pub fn fp6_tests() {
     // Sparse multiplication
     let a = [10, 0, 0, 0, 2, 0, 0, 0, 5, 0, 0, 0, 13, 0, 0, 0, 7, 0, 0, 0, 5, 0, 0, 0];
     let b = [5, 0, 0, 0, 78, 0, 0, 0];
-    let res = sparse_mul_fp6_bn254(&a, &b);
+    let res = sparse_mula_fp6_bn254(&a, &b);
     let res_exp = [
         0x3C208C16D87CEE91,
         0x97816A916871CA8D,
