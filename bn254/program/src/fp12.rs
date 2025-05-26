@@ -1,6 +1,6 @@
-use ziskos::{
-    conjugate_fp12_bn254, frobenius1_fp12_bn254, frobenius2_fp12_bn254, frobenius3_fp12_bn254,
-    inv_fp12_bn254, mul_fp12_bn254, square_fp12_bn254,
+use ziskos::bn254::fp12::{
+    conjugate_fp12_bn254, exp_fp12_bn254, frobenius1_fp12_bn254, frobenius2_fp12_bn254,
+    frobenius3_fp12_bn254, inv_fp12_bn254, mul_fp12_bn254, square_fp12_bn254,
 };
 
 pub fn fp12_tests() {
@@ -948,6 +948,139 @@ pub fn fp12_tests() {
         0xDF13BB79839E87FA,
         0xE29B2D79D1CA4076,
         0x05CF43A43CD740EC,
+    ];
+    assert_eq!(res, res_exp);
+
+    // Exponentiation
+    let e = 0u64;
+    let a = [0; 48];
+    let res = exp_fp12_bn254(e, &a);
+    let res_exp = a;
+    assert_eq!(res, res_exp);
+
+    let e = 10u64;
+    let a = [0; 48];
+    let res = exp_fp12_bn254(e, &a);
+    let res_exp = a;
+    assert_eq!(res, res_exp);
+
+    let mut one = [0; 48];
+    one[0] = 1;
+
+    let e = 0u64;
+    let mut a = one;
+    let res = exp_fp12_bn254(e, &a);
+    let res_exp = a;
+    assert_eq!(res, res_exp);
+
+    let e = 0u64;
+    let mut a = [0; 48];
+    a[0] = 2;
+    let res = exp_fp12_bn254(e, &a);
+    let res_exp = one;
+    assert_eq!(res, res_exp);
+
+    let e = 0x44E992B44A6909F1;
+    let a = [
+        0x7085DE193B138426,
+        0xC1F75626D129BB9D,
+        0xF171A5964B4A73FC,
+        0x1C79A2B7E874428F,
+        0x9A4BD8B15FFFCAC6,
+        0x1B72528B54157232,
+        0x4C2E5F2DA100C8B9,
+        0x075AB44C97D1EEE9,
+        0x06D65CFFF8ECD53B,
+        0x850CFA3FAA2B6FF0,
+        0xE640E217E4EA51E3,
+        0x2C4B5C50BB0E0500,
+        0x5FF98BFC6420F102,
+        0xB15E8F84A1D9FD4D,
+        0x790AEEB5CB1B85D8,
+        0x283AB2523808F078,
+        0x2C95B3E5217D910D,
+        0x1E48A80FECF18466,
+        0xEEEEE24ADECDCB68,
+        0x05DC3C18107C1FA0,
+        0xE71ED1D2B7EFED2E,
+        0xA30C782FE6E4A035,
+        0x2D30EBD5043C6DA0,
+        0x03212A0434BD6D7E,
+        0x157673D3A1975EFB,
+        0x9768379537CAA262,
+        0x00F10AFC48A14223,
+        0x19E16F30945592CA,
+        0x69C8048AAD2DC026,
+        0xB07860CFFC55B9D0,
+        0x593534D0F4D63776,
+        0x1E06F68EC21E6B71,
+        0x94436E55D2AD8A6F,
+        0xF1A03FFB3CC9919C,
+        0x0EA42AC90778E6BB,
+        0x01E9F266D91EF4E2,
+        0x09AC1D4996D80AA9,
+        0xE1352C3622C0E05D,
+        0x7D0A84779BC0A069,
+        0x0BDC2CC4D585D479,
+        0xC35E88D1267354D6,
+        0x253292D914F2FBA5,
+        0x6BDAE62A12D9689A,
+        0x18B92E8A03207996,
+        0x66B0E885C52C7681,
+        0xD34DCE7958CE53F6,
+        0x7E5223D72CB1DC02,
+        0x1EA5A9B287822FE1,
+    ];
+    let res = exp_fp12_bn254(e, &a);
+    let res_exp = [
+        0xA339FC19399C8FCC,
+        0x1C3A9719D1CC373F,
+        0x4C1270DB9D45D256,
+        0x130FF2E6E85F8AC7,
+        0xE18A756C82DB8BF7,
+        0x2A5A608DA5865D83,
+        0x4A5168CD84528AD7,
+        0x132B6697FAD496AE,
+        0xD37EE7ED214D16DF,
+        0x0A8351EB44488EDE,
+        0xF4D5B82E43C2B339,
+        0x271547B5976B5473,
+        0x0E1C121F08CCD44B,
+        0x24F372B5C815C65F,
+        0x93D9D091717DE527,
+        0x124A43233B3E569D,
+        0xDB380FD5AB4A7770,
+        0xDD086C2E5AB15448,
+        0xA710D35F981C7BFB,
+        0x1451DF1F188D82A6,
+        0xAF76A9211EA1ADCD,
+        0x73CC965B956FFFCA,
+        0x34AC30ED233AFBB0,
+        0x2899B63798B1CB59,
+        0xE1AFAFC403939B1D,
+        0xCBAC0805E503FD63,
+        0x8692A057912D5D2F,
+        0x2AE88834EA26FB20,
+        0xE30DD06AC8DA1EB8,
+        0x990A77FE291D3BAC,
+        0x6882C88F5524E012,
+        0x22BC7AECD2F3BEB4,
+        0x9D054E3C6379BC20,
+        0x8B73EE50F7F68B22,
+        0xF1AE801590B1EA16,
+        0x245E99159B410E57,
+        0x0332679856928291,
+        0x0CE6662357B122F7,
+        0x21497855EF918598,
+        0x19CC97AF043FEB4B,
+        0xF3D2D11225E9BD82,
+        0xEA7E2103A4B69D34,
+        0x9C3456BFA96911B5,
+        0x1EF6A30FE3AFDF1E,
+        0xDEB4A4E48E77F734,
+        0x90BF91B925DF33D5,
+        0x3ED3C34E49161BDC,
+        0x2CBA6E19A3250365,
     ];
     assert_eq!(res, res_exp);
 }

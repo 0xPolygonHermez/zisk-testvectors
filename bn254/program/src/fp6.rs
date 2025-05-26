@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::bn254::fp6::{
     add_fp6_bn254, dbl_fp6_bn254, inv_fp6_bn254, mul_fp6_bn254, neg_fp6_bn254,
     sparse_mul_fp6_bn254, square_fp6_bn254, sub_fp6_bn254,
 };

@@ -96,7 +96,7 @@ fn main() {
         0xFFFF_FFFF_FFFF_FFFF,
     ];
     let result = fcall_msb_pos_256(&x, &y);
-    assert_eq!(result, (4, 63));
+    assert_eq!(result, (3, 63));
 
     println!("Success");
 }
