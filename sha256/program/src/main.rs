@@ -10,11 +10,6 @@ use generic_array::{typenum::U64, GenericArray};
 use rand::Rng;
 use sha2::compress256;
 
-// Initial hash values (first 32 bits of fractional parts of square roots of first 8 primes)
-pub const SHA256_INITIAL_HASH_STATE: [u32; 8] = [
-    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
-];
-
 fn main() {
     // Get the input from ziskos
     let input: Vec<u8> = read_input();
