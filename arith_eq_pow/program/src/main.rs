@@ -1,5 +1,4 @@
 #![no_main]
-#![feature(asm_const)]
 ziskos::entrypoint!(main);
 
 use ziskos::exp_power_of_two_self;
