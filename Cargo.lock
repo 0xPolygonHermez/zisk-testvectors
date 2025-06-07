@@ -153,6 +153,7 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 [[package]]
 name = "lib-c"
 version = "0.9.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feature%2Fsecp-bn#fc94b1e33c8d75d9a121259df93d2cb5c4264dc7"
 
 [[package]]
 name = "libc"
@@ -339,6 +340,7 @@ dependencies = [
 [[package]]
 name = "ziskos"
 version = "0.9.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feature%2Fsecp-bn#fc94b1e33c8d75d9a121259df93d2cb5c4264dc7"
 dependencies = [
  "cfg-if",
  "getrandom",
