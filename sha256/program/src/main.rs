@@ -13,6 +13,11 @@ use sha2::compress256;
 const ACTIVATE_CONSISTENCY_TEST: bool = false;
 
 fn main() {
+    if ACTIVATE_CONSISTENCY_TEST {
+        run_consistency_test();
+        return;
+    }
+
     // Get the input from ziskos
     let input: Vec<u8> = read_input();
 
@@ -23,10 +28,6 @@ fn main() {
     println!("Number of sha256f to compute: {:?}", num_sha256fs);
     for _ in 0..num_sha256fs {
         sha256f_apply(&mut rng);
-    }
-
-    if ACTIVATE_CONSISTENCY_TEST {
-        run_consistency_test();
     }
 }
 
@@ -57,6 +58,8 @@ fn sha256f_apply(rng: &mut rand::rngs::ThreadRng) {
 }
 
 fn run_consistency_test() {
+    println!("Running consistency test for SHA256F...");
+
     const SHA256_INITIAL_HASH_STATE: [u32; 8] = [
         0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
         0x5be0cd19,
