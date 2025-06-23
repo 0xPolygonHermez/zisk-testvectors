@@ -24,12 +24,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "autocfg"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
-
-[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -152,42 +146,14 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "lib-c"
-version = "0.9.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feature%2Fsecp-bn#fc94b1e33c8d75d9a121259df93d2cb5c4264dc7"
+version = "0.8.1"
+source = "git+https://github.com/0xPolygonHermez/zisk.git#f9ed98a2c65e255d76c9ad303d3b04fce95392ae"
 
 [[package]]
 name = "libc"
 version = "0.2.172"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d750af042f7ef4f724306de029d18836c26c1765a54a6a3f094cbd23a7267ffa"
-
-[[package]]
-name = "num-bigint"
-version = "0.4.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5e44f723f1133c9deac646763579fdb3ac745e418f2a7af9cd0c431da1f20b9"
-dependencies = [
- "num-integer",
- "num-traits",
-]
-
-[[package]]
-name = "num-integer"
-version = "0.1.46"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7969661fd2958a5cb096e56c8e1ad0444ac2bbcd0061bd28660485a44879858f"
-dependencies = [
- "num-traits",
-]
-
-[[package]]
-name = "num-traits"
-version = "0.2.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841"
-dependencies = [
- "autocfg",
-]
 
 [[package]]
 name = "ppv-lite86"
@@ -339,15 +305,13 @@ dependencies = [
 
 [[package]]
 name = "ziskos"
-version = "0.9.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feature%2Fsecp-bn#fc94b1e33c8d75d9a121259df93d2cb5c4264dc7"
+version = "0.8.1"
+source = "git+https://github.com/0xPolygonHermez/zisk.git#f9ed98a2c65e255d76c9ad303d3b04fce95392ae"
 dependencies = [
  "cfg-if",
  "getrandom",
  "lazy_static",
  "lib-c",
- "num-bigint",
- "num-traits",
  "rand",
  "static_assertions",
  "tiny-keccak",

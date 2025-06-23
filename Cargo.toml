@@ -25,7 +25,7 @@ opt-level = 3
 [workspace.dependencies]
 rand = "0.8"
 byteorder = "1.5.0"
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feature/secp-bn" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
 # Local development
 # ziskos = { path = "../zisk/ziskos/entrypoint" }
 
