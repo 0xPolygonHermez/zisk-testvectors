@@ -1,8 +1,7 @@
 #![no_main]
-#![feature(asm_const)]
 ziskos::entrypoint!(main);
 
-use ziskos::utils::exp_power_of_two_self;
+use ziskos::exp_power_of_two_self;
 
 fn main() {
     let mut x: [u64; 4] =

@@ -1,4 +1,4 @@
-use ziskos::bn254::{fp12::exp_fp12_bn254, pairing::pairing};
+use ziskos::bn254::{fp12::exp_fp12_bn254, pairing::pairing_bn254};
 
 use crate::constants::P;
 
@@ -26,7 +26,7 @@ pub fn pairing_valid_tests() {
         0x51704116523CBD21,
         0x1FA69C987C6371FF,
     ];
-    let (res, error_code) = pairing(&p, &q);
+    let (res, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
     assert_eq!(res, one);
 
@@ -41,13 +41,13 @@ pub fn pairing_valid_tests() {
         0x15ED738C0E0A7C92,
     ];
     let q = [0; 16];
-    let (res, error_code) = pairing(&p, &q);
+    let (res, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
     assert_eq!(res, one);
 
     let p = [0; 8];
     let q = [0; 16];
-    let (res, error_code) = pairing(&p, &q);
+    let (res, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
     assert_eq!(res, one);
 
@@ -132,7 +132,7 @@ pub fn pairing_valid_tests() {
         0x51704116523CBD21,
         0x1FA69C987C6371FF,
     ];
-    let (e1, error_code) = pairing(&p, &q);
+    let (e1, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
     assert_eq!(e1, answer);
 
@@ -165,7 +165,7 @@ pub fn pairing_valid_tests() {
         0x51704116523CBD21,
         0x1FA69C987C6371FF,
     ];
-    let (e2, error_code) = pairing(&p, &q);
+    let (e2, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
 
     // e(2P,Q)¹²
@@ -197,7 +197,7 @@ pub fn pairing_valid_tests() {
         0xEC9E99AD690C3395,
         0x090689D0585FF075,
     ];
-    let (e3, error_code) = pairing(&p, &q);
+    let (e3, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
 
     // e(P,Q)²⁴
@@ -229,7 +229,7 @@ pub fn pairing_valid_tests() {
         0xEC9E99AD690C3395,
         0x090689D0585FF075,
     ];
-    let (e4, error_code) = pairing(&p, &q);
+    let (e4, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
 
     // e(12P,2Q)
@@ -261,7 +261,7 @@ pub fn pairing_valid_tests() {
         0x722B8C153931579D,
         0x195E8AA5B7827463,
     ];
-    let (e5, error_code) = pairing(&p, &q);
+    let (e5, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 0);
 
     // e(2P,12Q) = e(P,12Q)² = e(2P,Q)¹² = e(P,Q)²⁴ = e(12P,2Q)
@@ -275,46 +275,46 @@ pub fn pairing_invalid_tests() {
     // P not in range
     let p = [P[0], P[1], P[2], P[3], 0, 0, 0, 0];
     let q = [0; 16];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 1);
 
     let p = [0, 0, 0, 0, P[0], P[1], P[2], P[3]];
     let q = [0; 16];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 2);
 
     // Q not in range
     let p = [0; 8];
     let q = [P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 3);
 
     let p = [0; 8];
     let q = [0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 4);
 
     let p = [0; 8];
     let q = [0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 5);
 
     let p = [0; 8];
     let q = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3]];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 6);
 
     // P not in E nor G1
     let p = [1, 0, 0, 0, 1, 0, 0, 0];
     let q = [0; 16];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 7);
 
     // Q not in E'
     let p = [0; 8];
     let mut q = [0; 16];
     q[0] = 1;
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 8);
 
     // Q not in G2
@@ -337,6 +337,6 @@ pub fn pairing_invalid_tests() {
         0x28D70CD532462E40,
         0x07D105D0066EC703,
     ];
-    let (_, error_code) = pairing(&p, &q);
+    let (_, error_code) = pairing_bn254(&p, &q);
     assert_eq!(error_code, 9);
 }
