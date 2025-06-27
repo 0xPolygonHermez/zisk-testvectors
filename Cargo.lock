@@ -87,13 +87,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ecrecover"
-version = "0.1.0"
-dependencies = [
- "ziskos",
-]
-
-[[package]]
 name = "fcall"
 version = "0.1.0"
 dependencies = [
