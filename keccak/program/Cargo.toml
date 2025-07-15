@@ -1,5 +1,5 @@
 [package]
-name = "keccak_hasher"
+name = "keccak"
 version = { workspace = true }
 edition = { workspace = true }
 
