@@ -103,8 +103,8 @@ Disassembly of section .text.init:
 0000000080000178 <rvtest_code_begin>:
     80000178:	00000013          	nop
     8000017c:	00000013          	nop
-    80000180:	00004197          	auipc	gp,0x4
-    80000184:	f9818193          	addi	gp,gp,-104 # 80004118 <signature_x3_0>
+    80000180:	00003197          	auipc	gp,0x3
+    80000184:	f9818193          	addi	gp,gp,-104 # 80003118 <signature_x3_0>
     80000188:	00000013          	nop
     8000018c:	00000013          	nop
     80000190:	00000013          	nop
@@ -215,8 +215,8 @@ Disassembly of section .text.init:
     800002b4:	00400413          	li	s0,4
     800002b8:	408ade3b          	sraw	t3,s5,s0
     800002bc:	07c1bc23          	sd	t3,120(gp)
-    800002c0:	00004317          	auipc	t1,0x4
-    800002c4:	ed830313          	addi	t1,t1,-296 # 80004198 <signature_x6_0>
+    800002c0:	00003317          	auipc	t1,0x3
+    800002c4:	ed830313          	addi	t1,t1,-296 # 80003198 <signature_x6_0>
     800002c8:	00000013          	nop
     800002cc:	00000013          	nop
     800002d0:	00000013          	nop
@@ -1342,375 +1342,376 @@ Disassembly of section .text.init:
     80000fe8:	00100093          	li	ra,1
 
 0000000080000fec <write_tohost>:
-    80000fec:	00001f17          	auipc	t5,0x1
-    80000ff0:	001f2a23          	sw	ra,20(t5) # 80002000 <tohost>
+    80000fec:	00000f17          	auipc	t5,0x0
+    80000ff0:	001f2a23          	sw	ra,20(t5) # 80001000 <tohost>
     80000ff4:	ff9ff06f          	j	80000fec <write_tohost>
-	...
+    80000ff8:	00000013          	nop
+    80000ffc:	00000013          	nop
 
 Disassembly of section .tohost:
 
-0000000080002000 <tohost>:
+0000000080001000 <tohost>:
 	...
 
-0000000080002100 <fromhost>:
+0000000080001100 <fromhost>:
 	...
 
 Disassembly of section .data:
 
-0000000080003000 <rvtest_data_begin>:
-    80003000:	cafe                	sw	t6,84(sp)
-    80003002:	babe                	.insn	2, 0xbabe
-    80003004:	cafe                	sw	t6,84(sp)
-    80003006:	babe                	.insn	2, 0xbabe
-    80003008:	cafe                	sw	t6,84(sp)
-    8000300a:	babe                	.insn	2, 0xbabe
-    8000300c:	cafe                	sw	t6,84(sp)
-    8000300e:	babe                	.insn	2, 0xbabe
+0000000080002000 <rvtest_data_begin>:
+    80002000:	cafe                	.insn	2, 0xcafe
+    80002002:	babe                	.insn	2, 0xbabe
+    80002004:	cafe                	.insn	2, 0xcafe
+    80002006:	babe                	.insn	2, 0xbabe
+    80002008:	cafe                	.insn	2, 0xcafe
+    8000200a:	babe                	.insn	2, 0xbabe
+    8000200c:	cafe                	.insn	2, 0xcafe
+    8000200e:	babe                	.insn	2, 0xbabe
 	...
 
-0000000080004000 <begin_regstate>:
-    80004000:	0080                	addi	s0,sp,64
+0000000080003000 <begin_regstate>:
+    80003000:	0080                	.insn	2, 0x0080
 	...
 
-0000000080004100 <end_regstate>:
-    80004100:	0004                	.insn	2, 0x0004
+0000000080003100 <end_regstate>:
+    80003100:	0004                	.insn	2, 0x0004
 	...
 
-0000000080004110 <begin_signature>:
-    80004110:	b281                	j	80003a50 <rvtest_data_begin+0xa50>
-    80004112:	e7d4                	sd	a3,136(a5)
-    80004114:	a309                	j	80004616 <_end+0x26>
-    80004116:	6f5c                	ld	a5,152(a4)
+0000000080003110 <begin_signature>:
+    80003110:	b281                	.insn	2, 0xb281
+    80003112:	e7d4                	.insn	2, 0xe7d4
+    80003114:	a309                	.insn	2, 0xa309
+    80003116:	6f5c                	.insn	2, 0x6f5c
 
-0000000080004118 <signature_x3_0>:
-    80004118:	deadbeef          	jal	t4,7ffdf702 <absimmsh+0x7450e955>
-    8000411c:	deadbeef          	jal	t4,7ffdf706 <absimmsh+0x7450e959>
-    80004120:	deadbeef          	jal	t4,7ffdf70a <absimmsh+0x7450e95d>
-    80004124:	deadbeef          	jal	t4,7ffdf70e <absimmsh+0x7450e961>
-    80004128:	deadbeef          	jal	t4,7ffdf712 <absimmsh+0x7450e965>
-    8000412c:	deadbeef          	jal	t4,7ffdf716 <absimmsh+0x7450e969>
-    80004130:	deadbeef          	jal	t4,7ffdf71a <absimmsh+0x7450e96d>
-    80004134:	deadbeef          	jal	t4,7ffdf71e <absimmsh+0x7450e971>
-    80004138:	deadbeef          	jal	t4,7ffdf722 <absimmsh+0x7450e975>
-    8000413c:	deadbeef          	jal	t4,7ffdf726 <absimmsh+0x7450e979>
-    80004140:	deadbeef          	jal	t4,7ffdf72a <absimmsh+0x7450e97d>
-    80004144:	deadbeef          	jal	t4,7ffdf72e <absimmsh+0x7450e981>
-    80004148:	deadbeef          	jal	t4,7ffdf732 <absimmsh+0x7450e985>
-    8000414c:	deadbeef          	jal	t4,7ffdf736 <absimmsh+0x7450e989>
-    80004150:	deadbeef          	jal	t4,7ffdf73a <absimmsh+0x7450e98d>
-    80004154:	deadbeef          	jal	t4,7ffdf73e <absimmsh+0x7450e991>
-    80004158:	deadbeef          	jal	t4,7ffdf742 <absimmsh+0x7450e995>
-    8000415c:	deadbeef          	jal	t4,7ffdf746 <absimmsh+0x7450e999>
-    80004160:	deadbeef          	jal	t4,7ffdf74a <absimmsh+0x7450e99d>
-    80004164:	deadbeef          	jal	t4,7ffdf74e <absimmsh+0x7450e9a1>
-    80004168:	deadbeef          	jal	t4,7ffdf752 <absimmsh+0x7450e9a5>
-    8000416c:	deadbeef          	jal	t4,7ffdf756 <absimmsh+0x7450e9a9>
-    80004170:	deadbeef          	jal	t4,7ffdf75a <absimmsh+0x7450e9ad>
-    80004174:	deadbeef          	jal	t4,7ffdf75e <absimmsh+0x7450e9b1>
-    80004178:	deadbeef          	jal	t4,7ffdf762 <absimmsh+0x7450e9b5>
-    8000417c:	deadbeef          	jal	t4,7ffdf766 <absimmsh+0x7450e9b9>
-    80004180:	deadbeef          	jal	t4,7ffdf76a <absimmsh+0x7450e9bd>
-    80004184:	deadbeef          	jal	t4,7ffdf76e <absimmsh+0x7450e9c1>
-    80004188:	deadbeef          	jal	t4,7ffdf772 <absimmsh+0x7450e9c5>
-    8000418c:	deadbeef          	jal	t4,7ffdf776 <absimmsh+0x7450e9c9>
-    80004190:	deadbeef          	jal	t4,7ffdf77a <absimmsh+0x7450e9cd>
-    80004194:	deadbeef          	jal	t4,7ffdf77e <absimmsh+0x7450e9d1>
+0000000080003118 <signature_x3_0>:
+    80003118:	deadbeef          	jal	t4,7ffde702 <absimmsh+0x7450d955>
+    8000311c:	deadbeef          	jal	t4,7ffde706 <absimmsh+0x7450d959>
+    80003120:	deadbeef          	jal	t4,7ffde70a <absimmsh+0x7450d95d>
+    80003124:	deadbeef          	jal	t4,7ffde70e <absimmsh+0x7450d961>
+    80003128:	deadbeef          	jal	t4,7ffde712 <absimmsh+0x7450d965>
+    8000312c:	deadbeef          	jal	t4,7ffde716 <absimmsh+0x7450d969>
+    80003130:	deadbeef          	jal	t4,7ffde71a <absimmsh+0x7450d96d>
+    80003134:	deadbeef          	jal	t4,7ffde71e <absimmsh+0x7450d971>
+    80003138:	deadbeef          	jal	t4,7ffde722 <absimmsh+0x7450d975>
+    8000313c:	deadbeef          	jal	t4,7ffde726 <absimmsh+0x7450d979>
+    80003140:	deadbeef          	jal	t4,7ffde72a <absimmsh+0x7450d97d>
+    80003144:	deadbeef          	jal	t4,7ffde72e <absimmsh+0x7450d981>
+    80003148:	deadbeef          	jal	t4,7ffde732 <absimmsh+0x7450d985>
+    8000314c:	deadbeef          	jal	t4,7ffde736 <absimmsh+0x7450d989>
+    80003150:	deadbeef          	jal	t4,7ffde73a <absimmsh+0x7450d98d>
+    80003154:	deadbeef          	jal	t4,7ffde73e <absimmsh+0x7450d991>
+    80003158:	deadbeef          	jal	t4,7ffde742 <absimmsh+0x7450d995>
+    8000315c:	deadbeef          	jal	t4,7ffde746 <absimmsh+0x7450d999>
+    80003160:	deadbeef          	jal	t4,7ffde74a <absimmsh+0x7450d99d>
+    80003164:	deadbeef          	jal	t4,7ffde74e <absimmsh+0x7450d9a1>
+    80003168:	deadbeef          	jal	t4,7ffde752 <absimmsh+0x7450d9a5>
+    8000316c:	deadbeef          	jal	t4,7ffde756 <absimmsh+0x7450d9a9>
+    80003170:	deadbeef          	jal	t4,7ffde75a <absimmsh+0x7450d9ad>
+    80003174:	deadbeef          	jal	t4,7ffde75e <absimmsh+0x7450d9b1>
+    80003178:	deadbeef          	jal	t4,7ffde762 <absimmsh+0x7450d9b5>
+    8000317c:	deadbeef          	jal	t4,7ffde766 <absimmsh+0x7450d9b9>
+    80003180:	deadbeef          	jal	t4,7ffde76a <absimmsh+0x7450d9bd>
+    80003184:	deadbeef          	jal	t4,7ffde76e <absimmsh+0x7450d9c1>
+    80003188:	deadbeef          	jal	t4,7ffde772 <absimmsh+0x7450d9c5>
+    8000318c:	deadbeef          	jal	t4,7ffde776 <absimmsh+0x7450d9c9>
+    80003190:	deadbeef          	jal	t4,7ffde77a <absimmsh+0x7450d9cd>
+    80003194:	deadbeef          	jal	t4,7ffde77e <absimmsh+0x7450d9d1>
 
-0000000080004198 <signature_x6_0>:
-    80004198:	deadbeef          	jal	t4,7ffdf782 <absimmsh+0x7450e9d5>
-    8000419c:	deadbeef          	jal	t4,7ffdf786 <absimmsh+0x7450e9d9>
-    800041a0:	deadbeef          	jal	t4,7ffdf78a <absimmsh+0x7450e9dd>
-    800041a4:	deadbeef          	jal	t4,7ffdf78e <absimmsh+0x7450e9e1>
-    800041a8:	deadbeef          	jal	t4,7ffdf792 <absimmsh+0x7450e9e5>
-    800041ac:	deadbeef          	jal	t4,7ffdf796 <absimmsh+0x7450e9e9>
-    800041b0:	deadbeef          	jal	t4,7ffdf79a <absimmsh+0x7450e9ed>
-    800041b4:	deadbeef          	jal	t4,7ffdf79e <absimmsh+0x7450e9f1>
-    800041b8:	deadbeef          	jal	t4,7ffdf7a2 <absimmsh+0x7450e9f5>
-    800041bc:	deadbeef          	jal	t4,7ffdf7a6 <absimmsh+0x7450e9f9>
-    800041c0:	deadbeef          	jal	t4,7ffdf7aa <absimmsh+0x7450e9fd>
-    800041c4:	deadbeef          	jal	t4,7ffdf7ae <absimmsh+0x7450ea01>
-    800041c8:	deadbeef          	jal	t4,7ffdf7b2 <absimmsh+0x7450ea05>
-    800041cc:	deadbeef          	jal	t4,7ffdf7b6 <absimmsh+0x7450ea09>
-    800041d0:	deadbeef          	jal	t4,7ffdf7ba <absimmsh+0x7450ea0d>
-    800041d4:	deadbeef          	jal	t4,7ffdf7be <absimmsh+0x7450ea11>
-    800041d8:	deadbeef          	jal	t4,7ffdf7c2 <absimmsh+0x7450ea15>
-    800041dc:	deadbeef          	jal	t4,7ffdf7c6 <absimmsh+0x7450ea19>
-    800041e0:	deadbeef          	jal	t4,7ffdf7ca <absimmsh+0x7450ea1d>
-    800041e4:	deadbeef          	jal	t4,7ffdf7ce <absimmsh+0x7450ea21>
-    800041e8:	deadbeef          	jal	t4,7ffdf7d2 <absimmsh+0x7450ea25>
-    800041ec:	deadbeef          	jal	t4,7ffdf7d6 <absimmsh+0x7450ea29>
-    800041f0:	deadbeef          	jal	t4,7ffdf7da <absimmsh+0x7450ea2d>
-    800041f4:	deadbeef          	jal	t4,7ffdf7de <absimmsh+0x7450ea31>
-    800041f8:	deadbeef          	jal	t4,7ffdf7e2 <absimmsh+0x7450ea35>
-    800041fc:	deadbeef          	jal	t4,7ffdf7e6 <absimmsh+0x7450ea39>
-    80004200:	deadbeef          	jal	t4,7ffdf7ea <absimmsh+0x7450ea3d>
-    80004204:	deadbeef          	jal	t4,7ffdf7ee <absimmsh+0x7450ea41>
-    80004208:	deadbeef          	jal	t4,7ffdf7f2 <absimmsh+0x7450ea45>
-    8000420c:	deadbeef          	jal	t4,7ffdf7f6 <absimmsh+0x7450ea49>
-    80004210:	deadbeef          	jal	t4,7ffdf7fa <absimmsh+0x7450ea4d>
-    80004214:	deadbeef          	jal	t4,7ffdf7fe <absimmsh+0x7450ea51>
-    80004218:	deadbeef          	jal	t4,7ffdf802 <absimmsh+0x7450ea55>
-    8000421c:	deadbeef          	jal	t4,7ffdf806 <absimmsh+0x7450ea59>
-    80004220:	deadbeef          	jal	t4,7ffdf80a <absimmsh+0x7450ea5d>
-    80004224:	deadbeef          	jal	t4,7ffdf80e <absimmsh+0x7450ea61>
-    80004228:	deadbeef          	jal	t4,7ffdf812 <absimmsh+0x7450ea65>
-    8000422c:	deadbeef          	jal	t4,7ffdf816 <absimmsh+0x7450ea69>
-    80004230:	deadbeef          	jal	t4,7ffdf81a <absimmsh+0x7450ea6d>
-    80004234:	deadbeef          	jal	t4,7ffdf81e <absimmsh+0x7450ea71>
-    80004238:	deadbeef          	jal	t4,7ffdf822 <absimmsh+0x7450ea75>
-    8000423c:	deadbeef          	jal	t4,7ffdf826 <absimmsh+0x7450ea79>
-    80004240:	deadbeef          	jal	t4,7ffdf82a <absimmsh+0x7450ea7d>
-    80004244:	deadbeef          	jal	t4,7ffdf82e <absimmsh+0x7450ea81>
-    80004248:	deadbeef          	jal	t4,7ffdf832 <absimmsh+0x7450ea85>
-    8000424c:	deadbeef          	jal	t4,7ffdf836 <absimmsh+0x7450ea89>
-    80004250:	deadbeef          	jal	t4,7ffdf83a <absimmsh+0x7450ea8d>
-    80004254:	deadbeef          	jal	t4,7ffdf83e <absimmsh+0x7450ea91>
-    80004258:	deadbeef          	jal	t4,7ffdf842 <absimmsh+0x7450ea95>
-    8000425c:	deadbeef          	jal	t4,7ffdf846 <absimmsh+0x7450ea99>
-    80004260:	deadbeef          	jal	t4,7ffdf84a <absimmsh+0x7450ea9d>
-    80004264:	deadbeef          	jal	t4,7ffdf84e <absimmsh+0x7450eaa1>
-    80004268:	deadbeef          	jal	t4,7ffdf852 <absimmsh+0x7450eaa5>
-    8000426c:	deadbeef          	jal	t4,7ffdf856 <absimmsh+0x7450eaa9>
-    80004270:	deadbeef          	jal	t4,7ffdf85a <absimmsh+0x7450eaad>
-    80004274:	deadbeef          	jal	t4,7ffdf85e <absimmsh+0x7450eab1>
-    80004278:	deadbeef          	jal	t4,7ffdf862 <absimmsh+0x7450eab5>
-    8000427c:	deadbeef          	jal	t4,7ffdf866 <absimmsh+0x7450eab9>
-    80004280:	deadbeef          	jal	t4,7ffdf86a <absimmsh+0x7450eabd>
-    80004284:	deadbeef          	jal	t4,7ffdf86e <absimmsh+0x7450eac1>
-    80004288:	deadbeef          	jal	t4,7ffdf872 <absimmsh+0x7450eac5>
-    8000428c:	deadbeef          	jal	t4,7ffdf876 <absimmsh+0x7450eac9>
-    80004290:	deadbeef          	jal	t4,7ffdf87a <absimmsh+0x7450eacd>
-    80004294:	deadbeef          	jal	t4,7ffdf87e <absimmsh+0x7450ead1>
-    80004298:	deadbeef          	jal	t4,7ffdf882 <absimmsh+0x7450ead5>
-    8000429c:	deadbeef          	jal	t4,7ffdf886 <absimmsh+0x7450ead9>
-    800042a0:	deadbeef          	jal	t4,7ffdf88a <absimmsh+0x7450eadd>
-    800042a4:	deadbeef          	jal	t4,7ffdf88e <absimmsh+0x7450eae1>
-    800042a8:	deadbeef          	jal	t4,7ffdf892 <absimmsh+0x7450eae5>
-    800042ac:	deadbeef          	jal	t4,7ffdf896 <absimmsh+0x7450eae9>
-    800042b0:	deadbeef          	jal	t4,7ffdf89a <absimmsh+0x7450eaed>
-    800042b4:	deadbeef          	jal	t4,7ffdf89e <absimmsh+0x7450eaf1>
-    800042b8:	deadbeef          	jal	t4,7ffdf8a2 <absimmsh+0x7450eaf5>
-    800042bc:	deadbeef          	jal	t4,7ffdf8a6 <absimmsh+0x7450eaf9>
-    800042c0:	deadbeef          	jal	t4,7ffdf8aa <absimmsh+0x7450eafd>
-    800042c4:	deadbeef          	jal	t4,7ffdf8ae <absimmsh+0x7450eb01>
-    800042c8:	deadbeef          	jal	t4,7ffdf8b2 <absimmsh+0x7450eb05>
-    800042cc:	deadbeef          	jal	t4,7ffdf8b6 <absimmsh+0x7450eb09>
-    800042d0:	deadbeef          	jal	t4,7ffdf8ba <absimmsh+0x7450eb0d>
-    800042d4:	deadbeef          	jal	t4,7ffdf8be <absimmsh+0x7450eb11>
-    800042d8:	deadbeef          	jal	t4,7ffdf8c2 <absimmsh+0x7450eb15>
-    800042dc:	deadbeef          	jal	t4,7ffdf8c6 <absimmsh+0x7450eb19>
-    800042e0:	deadbeef          	jal	t4,7ffdf8ca <absimmsh+0x7450eb1d>
-    800042e4:	deadbeef          	jal	t4,7ffdf8ce <absimmsh+0x7450eb21>
-    800042e8:	deadbeef          	jal	t4,7ffdf8d2 <absimmsh+0x7450eb25>
-    800042ec:	deadbeef          	jal	t4,7ffdf8d6 <absimmsh+0x7450eb29>
-    800042f0:	deadbeef          	jal	t4,7ffdf8da <absimmsh+0x7450eb2d>
-    800042f4:	deadbeef          	jal	t4,7ffdf8de <absimmsh+0x7450eb31>
-    800042f8:	deadbeef          	jal	t4,7ffdf8e2 <absimmsh+0x7450eb35>
-    800042fc:	deadbeef          	jal	t4,7ffdf8e6 <absimmsh+0x7450eb39>
-    80004300:	deadbeef          	jal	t4,7ffdf8ea <absimmsh+0x7450eb3d>
-    80004304:	deadbeef          	jal	t4,7ffdf8ee <absimmsh+0x7450eb41>
-    80004308:	deadbeef          	jal	t4,7ffdf8f2 <absimmsh+0x7450eb45>
-    8000430c:	deadbeef          	jal	t4,7ffdf8f6 <absimmsh+0x7450eb49>
-    80004310:	deadbeef          	jal	t4,7ffdf8fa <absimmsh+0x7450eb4d>
-    80004314:	deadbeef          	jal	t4,7ffdf8fe <absimmsh+0x7450eb51>
-    80004318:	deadbeef          	jal	t4,7ffdf902 <absimmsh+0x7450eb55>
-    8000431c:	deadbeef          	jal	t4,7ffdf906 <absimmsh+0x7450eb59>
-    80004320:	deadbeef          	jal	t4,7ffdf90a <absimmsh+0x7450eb5d>
-    80004324:	deadbeef          	jal	t4,7ffdf90e <absimmsh+0x7450eb61>
-    80004328:	deadbeef          	jal	t4,7ffdf912 <absimmsh+0x7450eb65>
-    8000432c:	deadbeef          	jal	t4,7ffdf916 <absimmsh+0x7450eb69>
-    80004330:	deadbeef          	jal	t4,7ffdf91a <absimmsh+0x7450eb6d>
-    80004334:	deadbeef          	jal	t4,7ffdf91e <absimmsh+0x7450eb71>
-    80004338:	deadbeef          	jal	t4,7ffdf922 <absimmsh+0x7450eb75>
-    8000433c:	deadbeef          	jal	t4,7ffdf926 <absimmsh+0x7450eb79>
-    80004340:	deadbeef          	jal	t4,7ffdf92a <absimmsh+0x7450eb7d>
-    80004344:	deadbeef          	jal	t4,7ffdf92e <absimmsh+0x7450eb81>
-    80004348:	deadbeef          	jal	t4,7ffdf932 <absimmsh+0x7450eb85>
-    8000434c:	deadbeef          	jal	t4,7ffdf936 <absimmsh+0x7450eb89>
-    80004350:	deadbeef          	jal	t4,7ffdf93a <absimmsh+0x7450eb8d>
-    80004354:	deadbeef          	jal	t4,7ffdf93e <absimmsh+0x7450eb91>
-    80004358:	deadbeef          	jal	t4,7ffdf942 <absimmsh+0x7450eb95>
-    8000435c:	deadbeef          	jal	t4,7ffdf946 <absimmsh+0x7450eb99>
-    80004360:	deadbeef          	jal	t4,7ffdf94a <absimmsh+0x7450eb9d>
-    80004364:	deadbeef          	jal	t4,7ffdf94e <absimmsh+0x7450eba1>
-    80004368:	deadbeef          	jal	t4,7ffdf952 <absimmsh+0x7450eba5>
-    8000436c:	deadbeef          	jal	t4,7ffdf956 <absimmsh+0x7450eba9>
-    80004370:	deadbeef          	jal	t4,7ffdf95a <absimmsh+0x7450ebad>
-    80004374:	deadbeef          	jal	t4,7ffdf95e <absimmsh+0x7450ebb1>
-    80004378:	deadbeef          	jal	t4,7ffdf962 <absimmsh+0x7450ebb5>
-    8000437c:	deadbeef          	jal	t4,7ffdf966 <absimmsh+0x7450ebb9>
-    80004380:	deadbeef          	jal	t4,7ffdf96a <absimmsh+0x7450ebbd>
-    80004384:	deadbeef          	jal	t4,7ffdf96e <absimmsh+0x7450ebc1>
-    80004388:	deadbeef          	jal	t4,7ffdf972 <absimmsh+0x7450ebc5>
-    8000438c:	deadbeef          	jal	t4,7ffdf976 <absimmsh+0x7450ebc9>
-    80004390:	deadbeef          	jal	t4,7ffdf97a <absimmsh+0x7450ebcd>
-    80004394:	deadbeef          	jal	t4,7ffdf97e <absimmsh+0x7450ebd1>
-    80004398:	deadbeef          	jal	t4,7ffdf982 <absimmsh+0x7450ebd5>
-    8000439c:	deadbeef          	jal	t4,7ffdf986 <absimmsh+0x7450ebd9>
-    800043a0:	deadbeef          	jal	t4,7ffdf98a <absimmsh+0x7450ebdd>
-    800043a4:	deadbeef          	jal	t4,7ffdf98e <absimmsh+0x7450ebe1>
-    800043a8:	deadbeef          	jal	t4,7ffdf992 <absimmsh+0x7450ebe5>
-    800043ac:	deadbeef          	jal	t4,7ffdf996 <absimmsh+0x7450ebe9>
-    800043b0:	deadbeef          	jal	t4,7ffdf99a <absimmsh+0x7450ebed>
-    800043b4:	deadbeef          	jal	t4,7ffdf99e <absimmsh+0x7450ebf1>
-    800043b8:	deadbeef          	jal	t4,7ffdf9a2 <absimmsh+0x7450ebf5>
-    800043bc:	deadbeef          	jal	t4,7ffdf9a6 <absimmsh+0x7450ebf9>
-    800043c0:	deadbeef          	jal	t4,7ffdf9aa <absimmsh+0x7450ebfd>
-    800043c4:	deadbeef          	jal	t4,7ffdf9ae <absimmsh+0x7450ec01>
-    800043c8:	deadbeef          	jal	t4,7ffdf9b2 <absimmsh+0x7450ec05>
-    800043cc:	deadbeef          	jal	t4,7ffdf9b6 <absimmsh+0x7450ec09>
-    800043d0:	deadbeef          	jal	t4,7ffdf9ba <absimmsh+0x7450ec0d>
-    800043d4:	deadbeef          	jal	t4,7ffdf9be <absimmsh+0x7450ec11>
-    800043d8:	deadbeef          	jal	t4,7ffdf9c2 <absimmsh+0x7450ec15>
-    800043dc:	deadbeef          	jal	t4,7ffdf9c6 <absimmsh+0x7450ec19>
-    800043e0:	deadbeef          	jal	t4,7ffdf9ca <absimmsh+0x7450ec1d>
-    800043e4:	deadbeef          	jal	t4,7ffdf9ce <absimmsh+0x7450ec21>
-    800043e8:	deadbeef          	jal	t4,7ffdf9d2 <absimmsh+0x7450ec25>
-    800043ec:	deadbeef          	jal	t4,7ffdf9d6 <absimmsh+0x7450ec29>
-    800043f0:	deadbeef          	jal	t4,7ffdf9da <absimmsh+0x7450ec2d>
-    800043f4:	deadbeef          	jal	t4,7ffdf9de <absimmsh+0x7450ec31>
-    800043f8:	deadbeef          	jal	t4,7ffdf9e2 <absimmsh+0x7450ec35>
-    800043fc:	deadbeef          	jal	t4,7ffdf9e6 <absimmsh+0x7450ec39>
-    80004400:	deadbeef          	jal	t4,7ffdf9ea <absimmsh+0x7450ec3d>
-    80004404:	deadbeef          	jal	t4,7ffdf9ee <absimmsh+0x7450ec41>
-    80004408:	deadbeef          	jal	t4,7ffdf9f2 <absimmsh+0x7450ec45>
-    8000440c:	deadbeef          	jal	t4,7ffdf9f6 <absimmsh+0x7450ec49>
-    80004410:	deadbeef          	jal	t4,7ffdf9fa <absimmsh+0x7450ec4d>
-    80004414:	deadbeef          	jal	t4,7ffdf9fe <absimmsh+0x7450ec51>
-    80004418:	deadbeef          	jal	t4,7ffdfa02 <absimmsh+0x7450ec55>
-    8000441c:	deadbeef          	jal	t4,7ffdfa06 <absimmsh+0x7450ec59>
-    80004420:	deadbeef          	jal	t4,7ffdfa0a <absimmsh+0x7450ec5d>
-    80004424:	deadbeef          	jal	t4,7ffdfa0e <absimmsh+0x7450ec61>
-    80004428:	deadbeef          	jal	t4,7ffdfa12 <absimmsh+0x7450ec65>
-    8000442c:	deadbeef          	jal	t4,7ffdfa16 <absimmsh+0x7450ec69>
-    80004430:	deadbeef          	jal	t4,7ffdfa1a <absimmsh+0x7450ec6d>
-    80004434:	deadbeef          	jal	t4,7ffdfa1e <absimmsh+0x7450ec71>
-    80004438:	deadbeef          	jal	t4,7ffdfa22 <absimmsh+0x7450ec75>
-    8000443c:	deadbeef          	jal	t4,7ffdfa26 <absimmsh+0x7450ec79>
-    80004440:	deadbeef          	jal	t4,7ffdfa2a <absimmsh+0x7450ec7d>
-    80004444:	deadbeef          	jal	t4,7ffdfa2e <absimmsh+0x7450ec81>
-    80004448:	deadbeef          	jal	t4,7ffdfa32 <absimmsh+0x7450ec85>
-    8000444c:	deadbeef          	jal	t4,7ffdfa36 <absimmsh+0x7450ec89>
-    80004450:	deadbeef          	jal	t4,7ffdfa3a <absimmsh+0x7450ec8d>
-    80004454:	deadbeef          	jal	t4,7ffdfa3e <absimmsh+0x7450ec91>
-    80004458:	deadbeef          	jal	t4,7ffdfa42 <absimmsh+0x7450ec95>
-    8000445c:	deadbeef          	jal	t4,7ffdfa46 <absimmsh+0x7450ec99>
-    80004460:	deadbeef          	jal	t4,7ffdfa4a <absimmsh+0x7450ec9d>
-    80004464:	deadbeef          	jal	t4,7ffdfa4e <absimmsh+0x7450eca1>
-    80004468:	deadbeef          	jal	t4,7ffdfa52 <absimmsh+0x7450eca5>
-    8000446c:	deadbeef          	jal	t4,7ffdfa56 <absimmsh+0x7450eca9>
-    80004470:	deadbeef          	jal	t4,7ffdfa5a <absimmsh+0x7450ecad>
-    80004474:	deadbeef          	jal	t4,7ffdfa5e <absimmsh+0x7450ecb1>
-    80004478:	deadbeef          	jal	t4,7ffdfa62 <absimmsh+0x7450ecb5>
-    8000447c:	deadbeef          	jal	t4,7ffdfa66 <absimmsh+0x7450ecb9>
-    80004480:	deadbeef          	jal	t4,7ffdfa6a <absimmsh+0x7450ecbd>
-    80004484:	deadbeef          	jal	t4,7ffdfa6e <absimmsh+0x7450ecc1>
-    80004488:	deadbeef          	jal	t4,7ffdfa72 <absimmsh+0x7450ecc5>
-    8000448c:	deadbeef          	jal	t4,7ffdfa76 <absimmsh+0x7450ecc9>
-    80004490:	deadbeef          	jal	t4,7ffdfa7a <absimmsh+0x7450eccd>
-    80004494:	deadbeef          	jal	t4,7ffdfa7e <absimmsh+0x7450ecd1>
-    80004498:	deadbeef          	jal	t4,7ffdfa82 <absimmsh+0x7450ecd5>
-    8000449c:	deadbeef          	jal	t4,7ffdfa86 <absimmsh+0x7450ecd9>
-    800044a0:	deadbeef          	jal	t4,7ffdfa8a <absimmsh+0x7450ecdd>
-    800044a4:	deadbeef          	jal	t4,7ffdfa8e <absimmsh+0x7450ece1>
-    800044a8:	deadbeef          	jal	t4,7ffdfa92 <absimmsh+0x7450ece5>
-    800044ac:	deadbeef          	jal	t4,7ffdfa96 <absimmsh+0x7450ece9>
-    800044b0:	deadbeef          	jal	t4,7ffdfa9a <absimmsh+0x7450eced>
-    800044b4:	deadbeef          	jal	t4,7ffdfa9e <absimmsh+0x7450ecf1>
-    800044b8:	deadbeef          	jal	t4,7ffdfaa2 <absimmsh+0x7450ecf5>
-    800044bc:	deadbeef          	jal	t4,7ffdfaa6 <absimmsh+0x7450ecf9>
-    800044c0:	deadbeef          	jal	t4,7ffdfaaa <absimmsh+0x7450ecfd>
-    800044c4:	deadbeef          	jal	t4,7ffdfaae <absimmsh+0x7450ed01>
-    800044c8:	deadbeef          	jal	t4,7ffdfab2 <absimmsh+0x7450ed05>
-    800044cc:	deadbeef          	jal	t4,7ffdfab6 <absimmsh+0x7450ed09>
-    800044d0:	deadbeef          	jal	t4,7ffdfaba <absimmsh+0x7450ed0d>
-    800044d4:	deadbeef          	jal	t4,7ffdfabe <absimmsh+0x7450ed11>
-    800044d8:	deadbeef          	jal	t4,7ffdfac2 <absimmsh+0x7450ed15>
-    800044dc:	deadbeef          	jal	t4,7ffdfac6 <absimmsh+0x7450ed19>
-    800044e0:	deadbeef          	jal	t4,7ffdfaca <absimmsh+0x7450ed1d>
-    800044e4:	deadbeef          	jal	t4,7ffdface <absimmsh+0x7450ed21>
-    800044e8:	deadbeef          	jal	t4,7ffdfad2 <absimmsh+0x7450ed25>
-    800044ec:	deadbeef          	jal	t4,7ffdfad6 <absimmsh+0x7450ed29>
-    800044f0:	deadbeef          	jal	t4,7ffdfada <absimmsh+0x7450ed2d>
-    800044f4:	deadbeef          	jal	t4,7ffdfade <absimmsh+0x7450ed31>
-    800044f8:	deadbeef          	jal	t4,7ffdfae2 <absimmsh+0x7450ed35>
-    800044fc:	deadbeef          	jal	t4,7ffdfae6 <absimmsh+0x7450ed39>
-    80004500:	deadbeef          	jal	t4,7ffdfaea <absimmsh+0x7450ed3d>
-    80004504:	deadbeef          	jal	t4,7ffdfaee <absimmsh+0x7450ed41>
-    80004508:	deadbeef          	jal	t4,7ffdfaf2 <absimmsh+0x7450ed45>
-    8000450c:	deadbeef          	jal	t4,7ffdfaf6 <absimmsh+0x7450ed49>
-    80004510:	deadbeef          	jal	t4,7ffdfafa <absimmsh+0x7450ed4d>
-    80004514:	deadbeef          	jal	t4,7ffdfafe <absimmsh+0x7450ed51>
-    80004518:	deadbeef          	jal	t4,7ffdfb02 <absimmsh+0x7450ed55>
-    8000451c:	deadbeef          	jal	t4,7ffdfb06 <absimmsh+0x7450ed59>
-    80004520:	deadbeef          	jal	t4,7ffdfb0a <absimmsh+0x7450ed5d>
-    80004524:	deadbeef          	jal	t4,7ffdfb0e <absimmsh+0x7450ed61>
-    80004528:	deadbeef          	jal	t4,7ffdfb12 <absimmsh+0x7450ed65>
-    8000452c:	deadbeef          	jal	t4,7ffdfb16 <absimmsh+0x7450ed69>
-    80004530:	deadbeef          	jal	t4,7ffdfb1a <absimmsh+0x7450ed6d>
-    80004534:	deadbeef          	jal	t4,7ffdfb1e <absimmsh+0x7450ed71>
-    80004538:	deadbeef          	jal	t4,7ffdfb22 <absimmsh+0x7450ed75>
-    8000453c:	deadbeef          	jal	t4,7ffdfb26 <absimmsh+0x7450ed79>
-    80004540:	deadbeef          	jal	t4,7ffdfb2a <absimmsh+0x7450ed7d>
-    80004544:	deadbeef          	jal	t4,7ffdfb2e <absimmsh+0x7450ed81>
-    80004548:	deadbeef          	jal	t4,7ffdfb32 <absimmsh+0x7450ed85>
-    8000454c:	deadbeef          	jal	t4,7ffdfb36 <absimmsh+0x7450ed89>
-    80004550:	deadbeef          	jal	t4,7ffdfb3a <absimmsh+0x7450ed8d>
-    80004554:	deadbeef          	jal	t4,7ffdfb3e <absimmsh+0x7450ed91>
-    80004558:	deadbeef          	jal	t4,7ffdfb42 <absimmsh+0x7450ed95>
-    8000455c:	deadbeef          	jal	t4,7ffdfb46 <absimmsh+0x7450ed99>
-    80004560:	deadbeef          	jal	t4,7ffdfb4a <absimmsh+0x7450ed9d>
-    80004564:	deadbeef          	jal	t4,7ffdfb4e <absimmsh+0x7450eda1>
-    80004568:	deadbeef          	jal	t4,7ffdfb52 <absimmsh+0x7450eda5>
-    8000456c:	deadbeef          	jal	t4,7ffdfb56 <absimmsh+0x7450eda9>
-    80004570:	deadbeef          	jal	t4,7ffdfb5a <absimmsh+0x7450edad>
-    80004574:	deadbeef          	jal	t4,7ffdfb5e <absimmsh+0x7450edb1>
-    80004578:	deadbeef          	jal	t4,7ffdfb62 <absimmsh+0x7450edb5>
-    8000457c:	deadbeef          	jal	t4,7ffdfb66 <absimmsh+0x7450edb9>
-    80004580:	deadbeef          	jal	t4,7ffdfb6a <absimmsh+0x7450edbd>
-    80004584:	deadbeef          	jal	t4,7ffdfb6e <absimmsh+0x7450edc1>
-    80004588:	deadbeef          	jal	t4,7ffdfb72 <absimmsh+0x7450edc5>
-    8000458c:	deadbeef          	jal	t4,7ffdfb76 <absimmsh+0x7450edc9>
-    80004590:	deadbeef          	jal	t4,7ffdfb7a <absimmsh+0x7450edcd>
-    80004594:	deadbeef          	jal	t4,7ffdfb7e <absimmsh+0x7450edd1>
-    80004598:	deadbeef          	jal	t4,7ffdfb82 <absimmsh+0x7450edd5>
-    8000459c:	deadbeef          	jal	t4,7ffdfb86 <absimmsh+0x7450edd9>
-    800045a0:	deadbeef          	jal	t4,7ffdfb8a <absimmsh+0x7450eddd>
-    800045a4:	deadbeef          	jal	t4,7ffdfb8e <absimmsh+0x7450ede1>
-    800045a8:	deadbeef          	jal	t4,7ffdfb92 <absimmsh+0x7450ede5>
-    800045ac:	deadbeef          	jal	t4,7ffdfb96 <absimmsh+0x7450ede9>
-    800045b0:	deadbeef          	jal	t4,7ffdfb9a <absimmsh+0x7450eded>
-    800045b4:	deadbeef          	jal	t4,7ffdfb9e <absimmsh+0x7450edf1>
-    800045b8:	deadbeef          	jal	t4,7ffdfba2 <absimmsh+0x7450edf5>
-    800045bc:	deadbeef          	jal	t4,7ffdfba6 <absimmsh+0x7450edf9>
-    800045c0:	deadbeef          	jal	t4,7ffdfbaa <absimmsh+0x7450edfd>
-    800045c4:	deadbeef          	jal	t4,7ffdfbae <absimmsh+0x7450ee01>
-    800045c8:	deadbeef          	jal	t4,7ffdfbb2 <absimmsh+0x7450ee05>
-    800045cc:	deadbeef          	jal	t4,7ffdfbb6 <absimmsh+0x7450ee09>
-    800045d0:	deadbeef          	jal	t4,7ffdfbba <absimmsh+0x7450ee0d>
-    800045d4:	deadbeef          	jal	t4,7ffdfbbe <absimmsh+0x7450ee11>
-    800045d8:	deadbeef          	jal	t4,7ffdfbc2 <absimmsh+0x7450ee15>
-    800045dc:	deadbeef          	jal	t4,7ffdfbc6 <absimmsh+0x7450ee19>
-    800045e0:	deadbeef          	jal	t4,7ffdfbca <absimmsh+0x7450ee1d>
-    800045e4:	deadbeef          	jal	t4,7ffdfbce <absimmsh+0x7450ee21>
+0000000080003198 <signature_x6_0>:
+    80003198:	deadbeef          	jal	t4,7ffde782 <absimmsh+0x7450d9d5>
+    8000319c:	deadbeef          	jal	t4,7ffde786 <absimmsh+0x7450d9d9>
+    800031a0:	deadbeef          	jal	t4,7ffde78a <absimmsh+0x7450d9dd>
+    800031a4:	deadbeef          	jal	t4,7ffde78e <absimmsh+0x7450d9e1>
+    800031a8:	deadbeef          	jal	t4,7ffde792 <absimmsh+0x7450d9e5>
+    800031ac:	deadbeef          	jal	t4,7ffde796 <absimmsh+0x7450d9e9>
+    800031b0:	deadbeef          	jal	t4,7ffde79a <absimmsh+0x7450d9ed>
+    800031b4:	deadbeef          	jal	t4,7ffde79e <absimmsh+0x7450d9f1>
+    800031b8:	deadbeef          	jal	t4,7ffde7a2 <absimmsh+0x7450d9f5>
+    800031bc:	deadbeef          	jal	t4,7ffde7a6 <absimmsh+0x7450d9f9>
+    800031c0:	deadbeef          	jal	t4,7ffde7aa <absimmsh+0x7450d9fd>
+    800031c4:	deadbeef          	jal	t4,7ffde7ae <absimmsh+0x7450da01>
+    800031c8:	deadbeef          	jal	t4,7ffde7b2 <absimmsh+0x7450da05>
+    800031cc:	deadbeef          	jal	t4,7ffde7b6 <absimmsh+0x7450da09>
+    800031d0:	deadbeef          	jal	t4,7ffde7ba <absimmsh+0x7450da0d>
+    800031d4:	deadbeef          	jal	t4,7ffde7be <absimmsh+0x7450da11>
+    800031d8:	deadbeef          	jal	t4,7ffde7c2 <absimmsh+0x7450da15>
+    800031dc:	deadbeef          	jal	t4,7ffde7c6 <absimmsh+0x7450da19>
+    800031e0:	deadbeef          	jal	t4,7ffde7ca <absimmsh+0x7450da1d>
+    800031e4:	deadbeef          	jal	t4,7ffde7ce <absimmsh+0x7450da21>
+    800031e8:	deadbeef          	jal	t4,7ffde7d2 <absimmsh+0x7450da25>
+    800031ec:	deadbeef          	jal	t4,7ffde7d6 <absimmsh+0x7450da29>
+    800031f0:	deadbeef          	jal	t4,7ffde7da <absimmsh+0x7450da2d>
+    800031f4:	deadbeef          	jal	t4,7ffde7de <absimmsh+0x7450da31>
+    800031f8:	deadbeef          	jal	t4,7ffde7e2 <absimmsh+0x7450da35>
+    800031fc:	deadbeef          	jal	t4,7ffde7e6 <absimmsh+0x7450da39>
+    80003200:	deadbeef          	jal	t4,7ffde7ea <absimmsh+0x7450da3d>
+    80003204:	deadbeef          	jal	t4,7ffde7ee <absimmsh+0x7450da41>
+    80003208:	deadbeef          	jal	t4,7ffde7f2 <absimmsh+0x7450da45>
+    8000320c:	deadbeef          	jal	t4,7ffde7f6 <absimmsh+0x7450da49>
+    80003210:	deadbeef          	jal	t4,7ffde7fa <absimmsh+0x7450da4d>
+    80003214:	deadbeef          	jal	t4,7ffde7fe <absimmsh+0x7450da51>
+    80003218:	deadbeef          	jal	t4,7ffde802 <absimmsh+0x7450da55>
+    8000321c:	deadbeef          	jal	t4,7ffde806 <absimmsh+0x7450da59>
+    80003220:	deadbeef          	jal	t4,7ffde80a <absimmsh+0x7450da5d>
+    80003224:	deadbeef          	jal	t4,7ffde80e <absimmsh+0x7450da61>
+    80003228:	deadbeef          	jal	t4,7ffde812 <absimmsh+0x7450da65>
+    8000322c:	deadbeef          	jal	t4,7ffde816 <absimmsh+0x7450da69>
+    80003230:	deadbeef          	jal	t4,7ffde81a <absimmsh+0x7450da6d>
+    80003234:	deadbeef          	jal	t4,7ffde81e <absimmsh+0x7450da71>
+    80003238:	deadbeef          	jal	t4,7ffde822 <absimmsh+0x7450da75>
+    8000323c:	deadbeef          	jal	t4,7ffde826 <absimmsh+0x7450da79>
+    80003240:	deadbeef          	jal	t4,7ffde82a <absimmsh+0x7450da7d>
+    80003244:	deadbeef          	jal	t4,7ffde82e <absimmsh+0x7450da81>
+    80003248:	deadbeef          	jal	t4,7ffde832 <absimmsh+0x7450da85>
+    8000324c:	deadbeef          	jal	t4,7ffde836 <absimmsh+0x7450da89>
+    80003250:	deadbeef          	jal	t4,7ffde83a <absimmsh+0x7450da8d>
+    80003254:	deadbeef          	jal	t4,7ffde83e <absimmsh+0x7450da91>
+    80003258:	deadbeef          	jal	t4,7ffde842 <absimmsh+0x7450da95>
+    8000325c:	deadbeef          	jal	t4,7ffde846 <absimmsh+0x7450da99>
+    80003260:	deadbeef          	jal	t4,7ffde84a <absimmsh+0x7450da9d>
+    80003264:	deadbeef          	jal	t4,7ffde84e <absimmsh+0x7450daa1>
+    80003268:	deadbeef          	jal	t4,7ffde852 <absimmsh+0x7450daa5>
+    8000326c:	deadbeef          	jal	t4,7ffde856 <absimmsh+0x7450daa9>
+    80003270:	deadbeef          	jal	t4,7ffde85a <absimmsh+0x7450daad>
+    80003274:	deadbeef          	jal	t4,7ffde85e <absimmsh+0x7450dab1>
+    80003278:	deadbeef          	jal	t4,7ffde862 <absimmsh+0x7450dab5>
+    8000327c:	deadbeef          	jal	t4,7ffde866 <absimmsh+0x7450dab9>
+    80003280:	deadbeef          	jal	t4,7ffde86a <absimmsh+0x7450dabd>
+    80003284:	deadbeef          	jal	t4,7ffde86e <absimmsh+0x7450dac1>
+    80003288:	deadbeef          	jal	t4,7ffde872 <absimmsh+0x7450dac5>
+    8000328c:	deadbeef          	jal	t4,7ffde876 <absimmsh+0x7450dac9>
+    80003290:	deadbeef          	jal	t4,7ffde87a <absimmsh+0x7450dacd>
+    80003294:	deadbeef          	jal	t4,7ffde87e <absimmsh+0x7450dad1>
+    80003298:	deadbeef          	jal	t4,7ffde882 <absimmsh+0x7450dad5>
+    8000329c:	deadbeef          	jal	t4,7ffde886 <absimmsh+0x7450dad9>
+    800032a0:	deadbeef          	jal	t4,7ffde88a <absimmsh+0x7450dadd>
+    800032a4:	deadbeef          	jal	t4,7ffde88e <absimmsh+0x7450dae1>
+    800032a8:	deadbeef          	jal	t4,7ffde892 <absimmsh+0x7450dae5>
+    800032ac:	deadbeef          	jal	t4,7ffde896 <absimmsh+0x7450dae9>
+    800032b0:	deadbeef          	jal	t4,7ffde89a <absimmsh+0x7450daed>
+    800032b4:	deadbeef          	jal	t4,7ffde89e <absimmsh+0x7450daf1>
+    800032b8:	deadbeef          	jal	t4,7ffde8a2 <absimmsh+0x7450daf5>
+    800032bc:	deadbeef          	jal	t4,7ffde8a6 <absimmsh+0x7450daf9>
+    800032c0:	deadbeef          	jal	t4,7ffde8aa <absimmsh+0x7450dafd>
+    800032c4:	deadbeef          	jal	t4,7ffde8ae <absimmsh+0x7450db01>
+    800032c8:	deadbeef          	jal	t4,7ffde8b2 <absimmsh+0x7450db05>
+    800032cc:	deadbeef          	jal	t4,7ffde8b6 <absimmsh+0x7450db09>
+    800032d0:	deadbeef          	jal	t4,7ffde8ba <absimmsh+0x7450db0d>
+    800032d4:	deadbeef          	jal	t4,7ffde8be <absimmsh+0x7450db11>
+    800032d8:	deadbeef          	jal	t4,7ffde8c2 <absimmsh+0x7450db15>
+    800032dc:	deadbeef          	jal	t4,7ffde8c6 <absimmsh+0x7450db19>
+    800032e0:	deadbeef          	jal	t4,7ffde8ca <absimmsh+0x7450db1d>
+    800032e4:	deadbeef          	jal	t4,7ffde8ce <absimmsh+0x7450db21>
+    800032e8:	deadbeef          	jal	t4,7ffde8d2 <absimmsh+0x7450db25>
+    800032ec:	deadbeef          	jal	t4,7ffde8d6 <absimmsh+0x7450db29>
+    800032f0:	deadbeef          	jal	t4,7ffde8da <absimmsh+0x7450db2d>
+    800032f4:	deadbeef          	jal	t4,7ffde8de <absimmsh+0x7450db31>
+    800032f8:	deadbeef          	jal	t4,7ffde8e2 <absimmsh+0x7450db35>
+    800032fc:	deadbeef          	jal	t4,7ffde8e6 <absimmsh+0x7450db39>
+    80003300:	deadbeef          	jal	t4,7ffde8ea <absimmsh+0x7450db3d>
+    80003304:	deadbeef          	jal	t4,7ffde8ee <absimmsh+0x7450db41>
+    80003308:	deadbeef          	jal	t4,7ffde8f2 <absimmsh+0x7450db45>
+    8000330c:	deadbeef          	jal	t4,7ffde8f6 <absimmsh+0x7450db49>
+    80003310:	deadbeef          	jal	t4,7ffde8fa <absimmsh+0x7450db4d>
+    80003314:	deadbeef          	jal	t4,7ffde8fe <absimmsh+0x7450db51>
+    80003318:	deadbeef          	jal	t4,7ffde902 <absimmsh+0x7450db55>
+    8000331c:	deadbeef          	jal	t4,7ffde906 <absimmsh+0x7450db59>
+    80003320:	deadbeef          	jal	t4,7ffde90a <absimmsh+0x7450db5d>
+    80003324:	deadbeef          	jal	t4,7ffde90e <absimmsh+0x7450db61>
+    80003328:	deadbeef          	jal	t4,7ffde912 <absimmsh+0x7450db65>
+    8000332c:	deadbeef          	jal	t4,7ffde916 <absimmsh+0x7450db69>
+    80003330:	deadbeef          	jal	t4,7ffde91a <absimmsh+0x7450db6d>
+    80003334:	deadbeef          	jal	t4,7ffde91e <absimmsh+0x7450db71>
+    80003338:	deadbeef          	jal	t4,7ffde922 <absimmsh+0x7450db75>
+    8000333c:	deadbeef          	jal	t4,7ffde926 <absimmsh+0x7450db79>
+    80003340:	deadbeef          	jal	t4,7ffde92a <absimmsh+0x7450db7d>
+    80003344:	deadbeef          	jal	t4,7ffde92e <absimmsh+0x7450db81>
+    80003348:	deadbeef          	jal	t4,7ffde932 <absimmsh+0x7450db85>
+    8000334c:	deadbeef          	jal	t4,7ffde936 <absimmsh+0x7450db89>
+    80003350:	deadbeef          	jal	t4,7ffde93a <absimmsh+0x7450db8d>
+    80003354:	deadbeef          	jal	t4,7ffde93e <absimmsh+0x7450db91>
+    80003358:	deadbeef          	jal	t4,7ffde942 <absimmsh+0x7450db95>
+    8000335c:	deadbeef          	jal	t4,7ffde946 <absimmsh+0x7450db99>
+    80003360:	deadbeef          	jal	t4,7ffde94a <absimmsh+0x7450db9d>
+    80003364:	deadbeef          	jal	t4,7ffde94e <absimmsh+0x7450dba1>
+    80003368:	deadbeef          	jal	t4,7ffde952 <absimmsh+0x7450dba5>
+    8000336c:	deadbeef          	jal	t4,7ffde956 <absimmsh+0x7450dba9>
+    80003370:	deadbeef          	jal	t4,7ffde95a <absimmsh+0x7450dbad>
+    80003374:	deadbeef          	jal	t4,7ffde95e <absimmsh+0x7450dbb1>
+    80003378:	deadbeef          	jal	t4,7ffde962 <absimmsh+0x7450dbb5>
+    8000337c:	deadbeef          	jal	t4,7ffde966 <absimmsh+0x7450dbb9>
+    80003380:	deadbeef          	jal	t4,7ffde96a <absimmsh+0x7450dbbd>
+    80003384:	deadbeef          	jal	t4,7ffde96e <absimmsh+0x7450dbc1>
+    80003388:	deadbeef          	jal	t4,7ffde972 <absimmsh+0x7450dbc5>
+    8000338c:	deadbeef          	jal	t4,7ffde976 <absimmsh+0x7450dbc9>
+    80003390:	deadbeef          	jal	t4,7ffde97a <absimmsh+0x7450dbcd>
+    80003394:	deadbeef          	jal	t4,7ffde97e <absimmsh+0x7450dbd1>
+    80003398:	deadbeef          	jal	t4,7ffde982 <absimmsh+0x7450dbd5>
+    8000339c:	deadbeef          	jal	t4,7ffde986 <absimmsh+0x7450dbd9>
+    800033a0:	deadbeef          	jal	t4,7ffde98a <absimmsh+0x7450dbdd>
+    800033a4:	deadbeef          	jal	t4,7ffde98e <absimmsh+0x7450dbe1>
+    800033a8:	deadbeef          	jal	t4,7ffde992 <absimmsh+0x7450dbe5>
+    800033ac:	deadbeef          	jal	t4,7ffde996 <absimmsh+0x7450dbe9>
+    800033b0:	deadbeef          	jal	t4,7ffde99a <absimmsh+0x7450dbed>
+    800033b4:	deadbeef          	jal	t4,7ffde99e <absimmsh+0x7450dbf1>
+    800033b8:	deadbeef          	jal	t4,7ffde9a2 <absimmsh+0x7450dbf5>
+    800033bc:	deadbeef          	jal	t4,7ffde9a6 <absimmsh+0x7450dbf9>
+    800033c0:	deadbeef          	jal	t4,7ffde9aa <absimmsh+0x7450dbfd>
+    800033c4:	deadbeef          	jal	t4,7ffde9ae <absimmsh+0x7450dc01>
+    800033c8:	deadbeef          	jal	t4,7ffde9b2 <absimmsh+0x7450dc05>
+    800033cc:	deadbeef          	jal	t4,7ffde9b6 <absimmsh+0x7450dc09>
+    800033d0:	deadbeef          	jal	t4,7ffde9ba <absimmsh+0x7450dc0d>
+    800033d4:	deadbeef          	jal	t4,7ffde9be <absimmsh+0x7450dc11>
+    800033d8:	deadbeef          	jal	t4,7ffde9c2 <absimmsh+0x7450dc15>
+    800033dc:	deadbeef          	jal	t4,7ffde9c6 <absimmsh+0x7450dc19>
+    800033e0:	deadbeef          	jal	t4,7ffde9ca <absimmsh+0x7450dc1d>
+    800033e4:	deadbeef          	jal	t4,7ffde9ce <absimmsh+0x7450dc21>
+    800033e8:	deadbeef          	jal	t4,7ffde9d2 <absimmsh+0x7450dc25>
+    800033ec:	deadbeef          	jal	t4,7ffde9d6 <absimmsh+0x7450dc29>
+    800033f0:	deadbeef          	jal	t4,7ffde9da <absimmsh+0x7450dc2d>
+    800033f4:	deadbeef          	jal	t4,7ffde9de <absimmsh+0x7450dc31>
+    800033f8:	deadbeef          	jal	t4,7ffde9e2 <absimmsh+0x7450dc35>
+    800033fc:	deadbeef          	jal	t4,7ffde9e6 <absimmsh+0x7450dc39>
+    80003400:	deadbeef          	jal	t4,7ffde9ea <absimmsh+0x7450dc3d>
+    80003404:	deadbeef          	jal	t4,7ffde9ee <absimmsh+0x7450dc41>
+    80003408:	deadbeef          	jal	t4,7ffde9f2 <absimmsh+0x7450dc45>
+    8000340c:	deadbeef          	jal	t4,7ffde9f6 <absimmsh+0x7450dc49>
+    80003410:	deadbeef          	jal	t4,7ffde9fa <absimmsh+0x7450dc4d>
+    80003414:	deadbeef          	jal	t4,7ffde9fe <absimmsh+0x7450dc51>
+    80003418:	deadbeef          	jal	t4,7ffdea02 <absimmsh+0x7450dc55>
+    8000341c:	deadbeef          	jal	t4,7ffdea06 <absimmsh+0x7450dc59>
+    80003420:	deadbeef          	jal	t4,7ffdea0a <absimmsh+0x7450dc5d>
+    80003424:	deadbeef          	jal	t4,7ffdea0e <absimmsh+0x7450dc61>
+    80003428:	deadbeef          	jal	t4,7ffdea12 <absimmsh+0x7450dc65>
+    8000342c:	deadbeef          	jal	t4,7ffdea16 <absimmsh+0x7450dc69>
+    80003430:	deadbeef          	jal	t4,7ffdea1a <absimmsh+0x7450dc6d>
+    80003434:	deadbeef          	jal	t4,7ffdea1e <absimmsh+0x7450dc71>
+    80003438:	deadbeef          	jal	t4,7ffdea22 <absimmsh+0x7450dc75>
+    8000343c:	deadbeef          	jal	t4,7ffdea26 <absimmsh+0x7450dc79>
+    80003440:	deadbeef          	jal	t4,7ffdea2a <absimmsh+0x7450dc7d>
+    80003444:	deadbeef          	jal	t4,7ffdea2e <absimmsh+0x7450dc81>
+    80003448:	deadbeef          	jal	t4,7ffdea32 <absimmsh+0x7450dc85>
+    8000344c:	deadbeef          	jal	t4,7ffdea36 <absimmsh+0x7450dc89>
+    80003450:	deadbeef          	jal	t4,7ffdea3a <absimmsh+0x7450dc8d>
+    80003454:	deadbeef          	jal	t4,7ffdea3e <absimmsh+0x7450dc91>
+    80003458:	deadbeef          	jal	t4,7ffdea42 <absimmsh+0x7450dc95>
+    8000345c:	deadbeef          	jal	t4,7ffdea46 <absimmsh+0x7450dc99>
+    80003460:	deadbeef          	jal	t4,7ffdea4a <absimmsh+0x7450dc9d>
+    80003464:	deadbeef          	jal	t4,7ffdea4e <absimmsh+0x7450dca1>
+    80003468:	deadbeef          	jal	t4,7ffdea52 <absimmsh+0x7450dca5>
+    8000346c:	deadbeef          	jal	t4,7ffdea56 <absimmsh+0x7450dca9>
+    80003470:	deadbeef          	jal	t4,7ffdea5a <absimmsh+0x7450dcad>
+    80003474:	deadbeef          	jal	t4,7ffdea5e <absimmsh+0x7450dcb1>
+    80003478:	deadbeef          	jal	t4,7ffdea62 <absimmsh+0x7450dcb5>
+    8000347c:	deadbeef          	jal	t4,7ffdea66 <absimmsh+0x7450dcb9>
+    80003480:	deadbeef          	jal	t4,7ffdea6a <absimmsh+0x7450dcbd>
+    80003484:	deadbeef          	jal	t4,7ffdea6e <absimmsh+0x7450dcc1>
+    80003488:	deadbeef          	jal	t4,7ffdea72 <absimmsh+0x7450dcc5>
+    8000348c:	deadbeef          	jal	t4,7ffdea76 <absimmsh+0x7450dcc9>
+    80003490:	deadbeef          	jal	t4,7ffdea7a <absimmsh+0x7450dccd>
+    80003494:	deadbeef          	jal	t4,7ffdea7e <absimmsh+0x7450dcd1>
+    80003498:	deadbeef          	jal	t4,7ffdea82 <absimmsh+0x7450dcd5>
+    8000349c:	deadbeef          	jal	t4,7ffdea86 <absimmsh+0x7450dcd9>
+    800034a0:	deadbeef          	jal	t4,7ffdea8a <absimmsh+0x7450dcdd>
+    800034a4:	deadbeef          	jal	t4,7ffdea8e <absimmsh+0x7450dce1>
+    800034a8:	deadbeef          	jal	t4,7ffdea92 <absimmsh+0x7450dce5>
+    800034ac:	deadbeef          	jal	t4,7ffdea96 <absimmsh+0x7450dce9>
+    800034b0:	deadbeef          	jal	t4,7ffdea9a <absimmsh+0x7450dced>
+    800034b4:	deadbeef          	jal	t4,7ffdea9e <absimmsh+0x7450dcf1>
+    800034b8:	deadbeef          	jal	t4,7ffdeaa2 <absimmsh+0x7450dcf5>
+    800034bc:	deadbeef          	jal	t4,7ffdeaa6 <absimmsh+0x7450dcf9>
+    800034c0:	deadbeef          	jal	t4,7ffdeaaa <absimmsh+0x7450dcfd>
+    800034c4:	deadbeef          	jal	t4,7ffdeaae <absimmsh+0x7450dd01>
+    800034c8:	deadbeef          	jal	t4,7ffdeab2 <absimmsh+0x7450dd05>
+    800034cc:	deadbeef          	jal	t4,7ffdeab6 <absimmsh+0x7450dd09>
+    800034d0:	deadbeef          	jal	t4,7ffdeaba <absimmsh+0x7450dd0d>
+    800034d4:	deadbeef          	jal	t4,7ffdeabe <absimmsh+0x7450dd11>
+    800034d8:	deadbeef          	jal	t4,7ffdeac2 <absimmsh+0x7450dd15>
+    800034dc:	deadbeef          	jal	t4,7ffdeac6 <absimmsh+0x7450dd19>
+    800034e0:	deadbeef          	jal	t4,7ffdeaca <absimmsh+0x7450dd1d>
+    800034e4:	deadbeef          	jal	t4,7ffdeace <absimmsh+0x7450dd21>
+    800034e8:	deadbeef          	jal	t4,7ffdead2 <absimmsh+0x7450dd25>
+    800034ec:	deadbeef          	jal	t4,7ffdead6 <absimmsh+0x7450dd29>
+    800034f0:	deadbeef          	jal	t4,7ffdeada <absimmsh+0x7450dd2d>
+    800034f4:	deadbeef          	jal	t4,7ffdeade <absimmsh+0x7450dd31>
+    800034f8:	deadbeef          	jal	t4,7ffdeae2 <absimmsh+0x7450dd35>
+    800034fc:	deadbeef          	jal	t4,7ffdeae6 <absimmsh+0x7450dd39>
+    80003500:	deadbeef          	jal	t4,7ffdeaea <absimmsh+0x7450dd3d>
+    80003504:	deadbeef          	jal	t4,7ffdeaee <absimmsh+0x7450dd41>
+    80003508:	deadbeef          	jal	t4,7ffdeaf2 <absimmsh+0x7450dd45>
+    8000350c:	deadbeef          	jal	t4,7ffdeaf6 <absimmsh+0x7450dd49>
+    80003510:	deadbeef          	jal	t4,7ffdeafa <absimmsh+0x7450dd4d>
+    80003514:	deadbeef          	jal	t4,7ffdeafe <absimmsh+0x7450dd51>
+    80003518:	deadbeef          	jal	t4,7ffdeb02 <absimmsh+0x7450dd55>
+    8000351c:	deadbeef          	jal	t4,7ffdeb06 <absimmsh+0x7450dd59>
+    80003520:	deadbeef          	jal	t4,7ffdeb0a <absimmsh+0x7450dd5d>
+    80003524:	deadbeef          	jal	t4,7ffdeb0e <absimmsh+0x7450dd61>
+    80003528:	deadbeef          	jal	t4,7ffdeb12 <absimmsh+0x7450dd65>
+    8000352c:	deadbeef          	jal	t4,7ffdeb16 <absimmsh+0x7450dd69>
+    80003530:	deadbeef          	jal	t4,7ffdeb1a <absimmsh+0x7450dd6d>
+    80003534:	deadbeef          	jal	t4,7ffdeb1e <absimmsh+0x7450dd71>
+    80003538:	deadbeef          	jal	t4,7ffdeb22 <absimmsh+0x7450dd75>
+    8000353c:	deadbeef          	jal	t4,7ffdeb26 <absimmsh+0x7450dd79>
+    80003540:	deadbeef          	jal	t4,7ffdeb2a <absimmsh+0x7450dd7d>
+    80003544:	deadbeef          	jal	t4,7ffdeb2e <absimmsh+0x7450dd81>
+    80003548:	deadbeef          	jal	t4,7ffdeb32 <absimmsh+0x7450dd85>
+    8000354c:	deadbeef          	jal	t4,7ffdeb36 <absimmsh+0x7450dd89>
+    80003550:	deadbeef          	jal	t4,7ffdeb3a <absimmsh+0x7450dd8d>
+    80003554:	deadbeef          	jal	t4,7ffdeb3e <absimmsh+0x7450dd91>
+    80003558:	deadbeef          	jal	t4,7ffdeb42 <absimmsh+0x7450dd95>
+    8000355c:	deadbeef          	jal	t4,7ffdeb46 <absimmsh+0x7450dd99>
+    80003560:	deadbeef          	jal	t4,7ffdeb4a <absimmsh+0x7450dd9d>
+    80003564:	deadbeef          	jal	t4,7ffdeb4e <absimmsh+0x7450dda1>
+    80003568:	deadbeef          	jal	t4,7ffdeb52 <absimmsh+0x7450dda5>
+    8000356c:	deadbeef          	jal	t4,7ffdeb56 <absimmsh+0x7450dda9>
+    80003570:	deadbeef          	jal	t4,7ffdeb5a <absimmsh+0x7450ddad>
+    80003574:	deadbeef          	jal	t4,7ffdeb5e <absimmsh+0x7450ddb1>
+    80003578:	deadbeef          	jal	t4,7ffdeb62 <absimmsh+0x7450ddb5>
+    8000357c:	deadbeef          	jal	t4,7ffdeb66 <absimmsh+0x7450ddb9>
+    80003580:	deadbeef          	jal	t4,7ffdeb6a <absimmsh+0x7450ddbd>
+    80003584:	deadbeef          	jal	t4,7ffdeb6e <absimmsh+0x7450ddc1>
+    80003588:	deadbeef          	jal	t4,7ffdeb72 <absimmsh+0x7450ddc5>
+    8000358c:	deadbeef          	jal	t4,7ffdeb76 <absimmsh+0x7450ddc9>
+    80003590:	deadbeef          	jal	t4,7ffdeb7a <absimmsh+0x7450ddcd>
+    80003594:	deadbeef          	jal	t4,7ffdeb7e <absimmsh+0x7450ddd1>
+    80003598:	deadbeef          	jal	t4,7ffdeb82 <absimmsh+0x7450ddd5>
+    8000359c:	deadbeef          	jal	t4,7ffdeb86 <absimmsh+0x7450ddd9>
+    800035a0:	deadbeef          	jal	t4,7ffdeb8a <absimmsh+0x7450dddd>
+    800035a4:	deadbeef          	jal	t4,7ffdeb8e <absimmsh+0x7450dde1>
+    800035a8:	deadbeef          	jal	t4,7ffdeb92 <absimmsh+0x7450dde5>
+    800035ac:	deadbeef          	jal	t4,7ffdeb96 <absimmsh+0x7450dde9>
+    800035b0:	deadbeef          	jal	t4,7ffdeb9a <absimmsh+0x7450dded>
+    800035b4:	deadbeef          	jal	t4,7ffdeb9e <absimmsh+0x7450ddf1>
+    800035b8:	deadbeef          	jal	t4,7ffdeba2 <absimmsh+0x7450ddf5>
+    800035bc:	deadbeef          	jal	t4,7ffdeba6 <absimmsh+0x7450ddf9>
+    800035c0:	deadbeef          	jal	t4,7ffdebaa <absimmsh+0x7450ddfd>
+    800035c4:	deadbeef          	jal	t4,7ffdebae <absimmsh+0x7450de01>
+    800035c8:	deadbeef          	jal	t4,7ffdebb2 <absimmsh+0x7450de05>
+    800035cc:	deadbeef          	jal	t4,7ffdebb6 <absimmsh+0x7450de09>
+    800035d0:	deadbeef          	jal	t4,7ffdebba <absimmsh+0x7450de0d>
+    800035d4:	deadbeef          	jal	t4,7ffdebbe <absimmsh+0x7450de11>
+    800035d8:	deadbeef          	jal	t4,7ffdebc2 <absimmsh+0x7450de15>
+    800035dc:	deadbeef          	jal	t4,7ffdebc6 <absimmsh+0x7450de19>
+    800035e0:	deadbeef          	jal	t4,7ffdebca <absimmsh+0x7450de1d>
+    800035e4:	deadbeef          	jal	t4,7ffdebce <absimmsh+0x7450de21>
 
-00000000800045e8 <sig_end_canary>:
-    800045e8:	b281                	j	80003f28 <rvtest_data_begin+0xf28>
-    800045ea:	e7d4                	sd	a3,136(a5)
-    800045ec:	a309                	j	80004aee <_end+0x4fe>
-    800045ee:	6f5c                	ld	a5,152(a4)
+00000000800035e8 <sig_end_canary>:
+    800035e8:	b281                	.insn	2, 0xb281
+    800035ea:	e7d4                	.insn	2, 0xe7d4
+    800035ec:	a309                	.insn	2, 0xa309
+    800035ee:	6f5c                	.insn	2, 0x6f5c
 
 Disassembly of section .riscv.attributes:
 
 0000000000000000 <.riscv.attributes>:
-   0:	1941                	addi	s2,s2,-16
-   2:	0000                	unimp
-   4:	7200                	ld	s0,32(a2)
-   6:	7369                	lui	t1,0xffffa
+   0:	1941                	.insn	2, 0x1941
+   2:	0000                	.insn	2, 0x0000
+   4:	7200                	.insn	2, 0x7200
+   6:	7369                	.insn	2, 0x7369
    8:	01007663          	bgeu	zero,a6,14 <edge2+0xf>
    c:	0000000f          	fence	unknown,unknown
-  10:	7205                	lui	tp,0xfffe1
+  10:	7205                	.insn	2, 0x7205
   12:	3676                	.insn	2, 0x3676
-  14:	6934                	ld	a3,80(a0)
+  14:	6934                	.insn	2, 0x6934
   16:	7032                	.insn	2, 0x7032
-  18:	0031                	c.nop	12
+  18:	0031                	.insn	2, 0x0031
