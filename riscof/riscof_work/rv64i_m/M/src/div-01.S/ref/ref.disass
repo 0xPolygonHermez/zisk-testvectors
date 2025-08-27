@@ -11667,7 +11667,6 @@ Disassembly of section .text.init:
     80009ed4:	00000f17          	auipc	t5,0x0
     80009ed8:	121f2623          	sw	ra,300(t5) # 8000a000 <tohost>
     80009edc:	ff9ff06f          	j	80009ed4 <write_tohost>
-	...
 
 Disassembly of section .tohost:
 
@@ -13204,12 +13203,12 @@ Disassembly of section .riscv.attributes:
 
 0000000000000000 <.riscv.attributes>:
    0:	2741                	.insn	2, 0x2741
-   2:	0000                	.insn	2, 0x
+   2:	0000                	.insn	2, 0x0000
    4:	7200                	.insn	2, 0x7200
    6:	7369                	.insn	2, 0x7369
    8:	01007663          	bgeu	zero,a6,14 <edge2+0xf>
    c:	001d                	.insn	2, 0x001d
-   e:	0000                	.insn	2, 0x
+   e:	0000                	.insn	2, 0x0000
   10:	7205                	.insn	2, 0x7205
   12:	3676                	.insn	2, 0x3676
   14:	6934                	.insn	2, 0x6934
