@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "arith_eq"
+name = "arith_eq_384_gen"
 version = "0.1.0"
 dependencies = [
  "ziskos",
@@ -36,6 +36,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "bls12_381"
+version = "0.1.0"
+dependencies = [
+ "ziskos",
 ]
 
 [[package]]
@@ -152,8 +159,7 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "lib-c"
-version = "0.9.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git#efbcdd4dddb39cf410d496358d01ee133a484780"
+version = "0.12.0"
 
 [[package]]
 name = "libc"
@@ -348,8 +354,7 @@ dependencies = [
 
 [[package]]
 name = "ziskos"
-version = "0.9.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git#efbcdd4dddb39cf410d496358d01ee133a484780"
+version = "0.12.0"
 dependencies = [
  "cfg-if",
  "getrandom",
