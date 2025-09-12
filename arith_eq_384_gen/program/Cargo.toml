@@ -1,5 +1,5 @@
 [package]
-name = "arith_eq"
+name = "arith_eq_384_gen"
 version = { workspace = true }
 edition = { workspace = true }
 
