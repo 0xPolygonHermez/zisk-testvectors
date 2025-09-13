@@ -1,0 +1,83 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /tmp/ccz9lV0f.o
+                0x0000000080000000                . = 0x80000000
+
+.text.init      0x0000000080000000     0x3800
+ *(.text.init)
+ .text.init     0x0000000080000000     0x3800 /tmp/ccz9lV0f.o
+                0x0000000080000000                rvtest_entry_point
+                0x0000000080000000                rvtest_init
+                0x0000000080000178                rvtest_code_begin
+                0x000000008000373c                rvtest_code_end
+                0x000000008000373c                cleanup_epilogs
+                0x0000000080004000                . = ALIGN (0x1000)
+
+.text           0x0000000080004000        0x0
+ *(.text)
+ .text          0x0000000080004000        0x0 /tmp/ccz9lV0f.o
+
+.rodata
+ *(.rodata .rodata.*)
+                0x00000000a0010000                . = 0xa0010000
+                0x00000000a0010000                . = ALIGN (0x1000)
+
+.tohost         0x00000000a0010000      0x108
+ *(.tohost)
+ .tohost        0x00000000a0010000      0x108 /tmp/ccz9lV0f.o
+                0x00000000a0010000                tohost
+                0x00000000a0010100                fromhost
+                0x00000000a0011000                . = ALIGN (0x1000)
+
+.data           0x00000000a0011000     0x2e50
+ *(.data)
+ .data          0x00000000a0011000     0x2e50 /tmp/ccz9lV0f.o
+                0x00000000a0011000                rvtest_data_begin
+                0x00000000a0013000                begin_regstate
+                0x00000000a0013000                rvtest_data_end
+                0x00000000a0013100                end_regstate
+                0x00000000a0013110                begin_signature
+                0x00000000a0013e50                end_signature
+
+.data.string
+ *(.data.string)
+
+.bss            0x00000000a0013e50        0x0
+ *(.bss)
+ .bss           0x00000000a0013e50        0x0 /tmp/ccz9lV0f.o
+                0x00000000a0013e50                _end = .
+OUTPUT(my.elf elf64-littleriscv)
+
+.riscv.attributes
+                0x0000000000000000       0x31
+ .riscv.attributes
+                0x0000000000000000       0x31 /tmp/ccz9lV0f.o
+
+.debug_line     0x0000000000000000      0x564
+ .debug_line    0x0000000000000000      0x564 /tmp/ccz9lV0f.o
+
+.debug_line_str
+                0x0000000000000000       0x8c
+ .debug_line_str
+                0x0000000000000000       0x8c /tmp/ccz9lV0f.o
+
+.debug_info     0x0000000000000000       0x29
+ .debug_info    0x0000000000000000       0x29 /tmp/ccz9lV0f.o
+
+.debug_abbrev   0x0000000000000000       0x14
+ .debug_abbrev  0x0000000000000000       0x14 /tmp/ccz9lV0f.o
+
+.debug_aranges  0x0000000000000000       0x30
+ .debug_aranges
+                0x0000000000000000       0x30 /tmp/ccz9lV0f.o
+
+.debug_str      0x0000000000000000       0x98
+ .debug_str     0x0000000000000000       0x98 /tmp/ccz9lV0f.o

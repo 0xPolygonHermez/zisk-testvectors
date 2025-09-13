@@ -1,0 +1,83 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /tmp/ccmopMvH.o
+                0x0000000080000000                . = 0x80000000
+
+.text.init      0x0000000080000000    0x706a0
+ *(.text.init)
+ .text.init     0x0000000080000000    0x706a0 /tmp/ccmopMvH.o
+                0x0000000080000000                rvtest_entry_point
+                0x0000000080000000                rvtest_init
+                0x0000000080000178                rvtest_code_begin
+                0x00000000800705e0                rvtest_code_end
+                0x00000000800705e0                cleanup_epilogs
+                0x0000000080071000                . = ALIGN (0x1000)
+
+.text           0x0000000080071000        0x0
+ *(.text)
+ .text          0x0000000080071000        0x0 /tmp/ccmopMvH.o
+
+.rodata
+ *(.rodata .rodata.*)
+                0x00000000a0010000                . = 0xa0010000
+                0x00000000a0010000                . = ALIGN (0x1000)
+
+.tohost         0x00000000a0010000      0x108
+ *(.tohost)
+ .tohost        0x00000000a0010000      0x108 /tmp/ccmopMvH.o
+                0x00000000a0010000                tohost
+                0x00000000a0010100                fromhost
+                0x00000000a0011000                . = ALIGN (0x1000)
+
+.data           0x00000000a0011000    0x297a0
+ *(.data)
+ .data          0x00000000a0011000    0x297a0 /tmp/ccmopMvH.o
+                0x00000000a0011000                rvtest_data_begin
+                0x00000000a001f000                begin_regstate
+                0x00000000a001f000                rvtest_data_end
+                0x00000000a001f100                end_regstate
+                0x00000000a001f110                begin_signature
+                0x00000000a003a7a0                end_signature
+
+.data.string
+ *(.data.string)
+
+.bss            0x00000000a003a7a0        0x0
+ *(.bss)
+ .bss           0x00000000a003a7a0        0x0 /tmp/ccmopMvH.o
+                0x00000000a003a7a0                _end = .
+OUTPUT(my.elf elf64-littleriscv)
+
+.riscv.attributes
+                0x0000000000000000       0x2c
+ .riscv.attributes
+                0x0000000000000000       0x2c /tmp/ccmopMvH.o
+
+.debug_line     0x0000000000000000     0xa620
+ .debug_line    0x0000000000000000     0xa620 /tmp/ccmopMvH.o
+
+.debug_line_str
+                0x0000000000000000       0x86
+ .debug_line_str
+                0x0000000000000000       0x86 /tmp/ccmopMvH.o
+
+.debug_info     0x0000000000000000       0x2a
+ .debug_info    0x0000000000000000       0x2a /tmp/ccmopMvH.o
+
+.debug_abbrev   0x0000000000000000       0x14
+ .debug_abbrev  0x0000000000000000       0x14 /tmp/ccmopMvH.o
+
+.debug_aranges  0x0000000000000000       0x30
+ .debug_aranges
+                0x0000000000000000       0x30 /tmp/ccmopMvH.o
+
+.debug_str      0x0000000000000000       0x92
+ .debug_str     0x0000000000000000       0x92 /tmp/ccmopMvH.o
