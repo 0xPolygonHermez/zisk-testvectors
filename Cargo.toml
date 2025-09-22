@@ -4,6 +4,7 @@ members = [
     "arith_eq_gen/program",
     "arith_eq_pow/program",
     "bn254/program",
+    "bls12_381/program",
     "ecrecover/program",
     "fcall/program",
     "fcall_msb/program",
