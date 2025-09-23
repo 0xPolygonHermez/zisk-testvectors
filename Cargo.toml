@@ -26,9 +26,9 @@ opt-level = 3
 [workspace.dependencies]
 rand = "0.8"
 byteorder = "1.5.0"
-# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.12.0" }
 # Local development
-ziskos = { path = "../zisk/ziskos/entrypoint" }
+# ziskos = { path = "../zisk/ziskos/entrypoint" }
 
 # Patched Libs
 tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak.git", branch = "zisk", features = [ "keccak" ] }
