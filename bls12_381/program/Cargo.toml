@@ -1,5 +1,5 @@
 [package]
-name = "arith_eq"
+name = "bls12_381"
 version = { workspace = true }
 edition = { workspace = true }
 
