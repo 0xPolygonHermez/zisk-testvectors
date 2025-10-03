@@ -33,16 +33,16 @@ fn main() {
 fn sha256f_apply(rng: &mut rand::rngs::ThreadRng) {
     // Take any number and apply the sha256f function
     let mut state = [0u64; 4];
-    for i in 0..4 {
-        state[i] = rng.gen();
+    for x in state.iter_mut() {
+        *x = rng.gen();
     }
 
     let mut input = [0u64; 8];
-    for i in 0..8 {
-        input[i] = rng.gen();
+    for x in input.iter_mut() {
+        *x = rng.gen();
     }
 
-    let state_copy = state.clone();
+    let state_copy = state;
 
     let mut params = SyscallSha256Params { state: &mut state, input: &input };
     syscall_sha256_f(&mut params);

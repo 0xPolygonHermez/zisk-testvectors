@@ -160,13 +160,19 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 [[package]]
 name = "lib-c"
 version = "0.12.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.12.0#c5205f11fb3286ea3185d241fe6f039e62ae90ab"
 
 [[package]]
 name = "libc"
 version = "0.2.175"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a82ae493e598baaea5209805c49bbf2ea7de956d50d7da0da1164f9c6d28543"
+
+[[package]]
+name = "modexp"
+version = "0.1.0"
+dependencies = [
+ "ziskos",
+]
 
 [[package]]
 name = "num-bigint"
@@ -356,13 +362,13 @@ dependencies = [
 [[package]]
 name = "ziskos"
 version = "0.12.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.12.0#c5205f11fb3286ea3185d241fe6f039e62ae90ab"
 dependencies = [
  "cfg-if",
  "getrandom",
  "lazy_static",
  "lib-c",
  "num-bigint",
+ "num-integer",
  "num-traits",
  "rand",
  "static_assertions",
