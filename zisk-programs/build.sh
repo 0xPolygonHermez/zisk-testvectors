@@ -43,6 +43,7 @@ PROGRAMS=(
     "fcall_msb"
     "keccak"
     "modexp"
+    "prover_killers"
     "sha256"
 )
 

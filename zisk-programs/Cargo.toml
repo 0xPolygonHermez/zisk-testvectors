@@ -14,6 +14,7 @@ members = [
     "fcall_msb/program",
     "keccak/program",
     "modexp/program",
+    "prover_killers/program",
     "sha256/program",
 ]
 resolver = "2"
