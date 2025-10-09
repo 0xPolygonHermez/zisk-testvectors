@@ -8,12 +8,12 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-LOAD /tmp/ccHRXTlm.o
+LOAD /tmp/cc1D509L.o
                 0x0000000080000000                . = 0x80000000
 
 .text.init      0x0000000080000000    0x16ea0
  *(.text.init)
- .text.init     0x0000000080000000    0x16ea0 /tmp/ccHRXTlm.o
+ .text.init     0x0000000080000000    0x16ea0 /tmp/cc1D509L.o
                 0x0000000080000000                rvtest_entry_point
                 0x0000000080000000                rvtest_init
                 0x0000000080000178                rvtest_code_begin
@@ -23,7 +23,7 @@ LOAD /tmp/ccHRXTlm.o
 
 .text           0x0000000080017000        0x0
  *(.text)
- .text          0x0000000080017000        0x0 /tmp/ccHRXTlm.o
+ .text          0x0000000080017000        0x0 /tmp/cc1D509L.o
 
 .rodata
  *(.rodata .rodata.*)
@@ -32,14 +32,14 @@ LOAD /tmp/ccHRXTlm.o
 
 .tohost         0x00000000a0010000      0x108
  *(.tohost)
- .tohost        0x00000000a0010000      0x108 /tmp/ccHRXTlm.o
+ .tohost        0x00000000a0010000      0x108 /tmp/cc1D509L.o
                 0x00000000a0010000                tohost
                 0x00000000a0010100                fromhost
                 0x00000000a0011000                . = ALIGN (0x1000)
 
 .data           0x00000000a0011000     0xbd40
  *(.data)
- .data          0x00000000a0011000     0xbd40 /tmp/ccHRXTlm.o
+ .data          0x00000000a0011000     0xbd40 /tmp/cc1D509L.o
                 0x00000000a0011000                rvtest_data_begin
                 0x00000000a0017000                begin_regstate
                 0x00000000a0017000                rvtest_data_end
@@ -52,32 +52,32 @@ LOAD /tmp/ccHRXTlm.o
 
 .bss            0x00000000a001cd40        0x0
  *(.bss)
- .bss           0x00000000a001cd40        0x0 /tmp/ccHRXTlm.o
+ .bss           0x00000000a001cd40        0x0 /tmp/cc1D509L.o
                 0x00000000a001cd40                _end = .
 OUTPUT(my.elf elf64-littleriscv)
 
 .riscv.attributes
                 0x0000000000000000       0x31
  .riscv.attributes
-                0x0000000000000000       0x31 /tmp/ccHRXTlm.o
+                0x0000000000000000       0x31 /tmp/cc1D509L.o
 
 .debug_line     0x0000000000000000     0x233a
- .debug_line    0x0000000000000000     0x233a /tmp/ccHRXTlm.o
+ .debug_line    0x0000000000000000     0x233a /tmp/cc1D509L.o
 
 .debug_line_str
                 0x0000000000000000       0x88
  .debug_line_str
-                0x0000000000000000       0x88 /tmp/ccHRXTlm.o
+                0x0000000000000000       0x88 /tmp/cc1D509L.o
 
 .debug_info     0x0000000000000000       0x2a
- .debug_info    0x0000000000000000       0x2a /tmp/ccHRXTlm.o
+ .debug_info    0x0000000000000000       0x2a /tmp/cc1D509L.o
 
 .debug_abbrev   0x0000000000000000       0x14
- .debug_abbrev  0x0000000000000000       0x14 /tmp/ccHRXTlm.o
+ .debug_abbrev  0x0000000000000000       0x14 /tmp/cc1D509L.o
 
 .debug_aranges  0x0000000000000000       0x30
  .debug_aranges
-                0x0000000000000000       0x30 /tmp/ccHRXTlm.o
+                0x0000000000000000       0x30 /tmp/cc1D509L.o
 
 .debug_str      0x0000000000000000       0x94
- .debug_str     0x0000000000000000       0x94 /tmp/ccHRXTlm.o
+ .debug_str     0x0000000000000000       0x94 /tmp/cc1D509L.o
