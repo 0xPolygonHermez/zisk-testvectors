@@ -88974,9 +88974,7 @@ Disassembly of section .text.init:
     80055448:	00001f17          	auipc	t5,0x1
     8005544c:	ba1f2c23          	sw	ra,-1096(t5) # 80056000 <tohost>
     80055450:	ff9ff06f          	j	80055448 <write_tohost>
-    80055454:	00000013          	nop
-    80055458:	00000013          	nop
-    8005545c:	00000013          	nop
+	...
 
 Disassembly of section .tohost:
 
@@ -88989,18 +88987,18 @@ Disassembly of section .tohost:
 Disassembly of section .data:
 
 0000000080057000 <rvtest_data_begin>:
-    80057000:	cafe                	.insn	2, 0xcafe
+    80057000:	cafe                	sw	t6,84(sp)
     80057002:	babe                	.insn	2, 0xbabe
-    80057004:	cafe                	.insn	2, 0xcafe
+    80057004:	cafe                	sw	t6,84(sp)
     80057006:	babe                	.insn	2, 0xbabe
-    80057008:	cafe                	.insn	2, 0xcafe
+    80057008:	cafe                	sw	t6,84(sp)
     8005700a:	babe                	.insn	2, 0xbabe
-    8005700c:	cafe                	.insn	2, 0xcafe
+    8005700c:	cafe                	sw	t6,84(sp)
     8005700e:	babe                	.insn	2, 0xbabe
 	...
 
 0000000080058000 <begin_regstate>:
-    80058000:	0080                	.insn	2, 0x0080
+    80058000:	0080                	addi	s0,sp,64
 	...
 
 0000000080058100 <end_regstate>:
@@ -89008,10 +89006,10 @@ Disassembly of section .data:
 	...
 
 0000000080058110 <begin_signature>:
-    80058110:	b281                	.insn	2, 0xb281
-    80058112:	e7d4                	.insn	2, 0xe7d4
-    80058114:	a309                	.insn	2, 0xa309
-    80058116:	6f5c                	.insn	2, 0x6f5c
+    80058110:	b281                	j	80057a50 <rvtest_data_begin+0xa50>
+    80058112:	e7d4                	sd	a3,136(a5)
+    80058114:	a309                	j	80058616 <signature_x7_0+0x44e>
+    80058116:	6f5c                	ld	a5,152(a4)
 
 0000000080058118 <signature_x6_0>:
     80058118:	deadbeef          	jal	t4,80033702 <inst_463+0x302>
@@ -90666,10 +90664,10 @@ Disassembly of section .data:
     80059abc:	deadbeef          	jal	t4,800350a6 <inst_483+0x18a>
 
 0000000080059ac0 <sig_end_canary>:
-    80059ac0:	b281                	.insn	2, 0xb281
-    80059ac2:	e7d4                	.insn	2, 0xe7d4
-    80059ac4:	a309                	.insn	2, 0xa309
-    80059ac6:	6f5c                	.insn	2, 0x6f5c
+    80059ac0:	b281                	j	80059400 <signature_x7_2+0x238>
+    80059ac2:	e7d4                	sd	a3,136(a5)
+    80059ac4:	a309                	j	80059fc6 <_end+0x4f6>
+    80059ac6:	6f5c                	ld	a5,152(a4)
 
 0000000080059ac8 <rvtest_sig_end>:
 	...
@@ -90677,14 +90675,14 @@ Disassembly of section .data:
 Disassembly of section .riscv.attributes:
 
 0000000000000000 <.riscv.attributes>:
-   0:	1941                	.insn	2, 0x1941
-   2:	0000                	.insn	2, 0x0000
-   4:	7200                	.insn	2, 0x7200
-   6:	7369                	.insn	2, 0x7369
+   0:	1941                	addi	s2,s2,-16
+   2:	0000                	unimp
+   4:	7200                	ld	s0,32(a2)
+   6:	7369                	lui	t1,0xffffa
    8:	01007663          	bgeu	zero,a6,14 <edge2+0xf>
    c:	0000000f          	fence	unknown,unknown
-  10:	7205                	.insn	2, 0x7205
+  10:	7205                	lui	tp,0xfffe1
   12:	3676                	.insn	2, 0x3676
-  14:	6934                	.insn	2, 0x6934
+  14:	6934                	ld	a3,80(a0)
   16:	7032                	.insn	2, 0x7032
-  18:	0031                	.insn	2, 0x0031
+  18:	0031                	c.nop	12

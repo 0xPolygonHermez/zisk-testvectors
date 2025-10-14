@@ -1175,6 +1175,9 @@ Disassembly of section .text.init:
     80000d54:	00000f17          	auipc	t5,0x0
     80000d58:	2a1f2623          	sw	ra,684(t5) # 80001000 <tohost>
     80000d5c:	ff9ff06f          	j	80000d54 <write_tohost>
+    80000d60:	0000                	unimp
+    80000d62:	0000                	unimp
+	...
 
 Disassembly of section .tohost:
 
@@ -1187,18 +1190,18 @@ Disassembly of section .tohost:
 Disassembly of section .data:
 
 0000000080002000 <rvtest_data_begin>:
-    80002000:	cafe                	.insn	2, 0xcafe
+    80002000:	cafe                	sw	t6,84(sp)
     80002002:	babe                	.insn	2, 0xbabe
-    80002004:	cafe                	.insn	2, 0xcafe
+    80002004:	cafe                	sw	t6,84(sp)
     80002006:	babe                	.insn	2, 0xbabe
-    80002008:	cafe                	.insn	2, 0xcafe
+    80002008:	cafe                	sw	t6,84(sp)
     8000200a:	babe                	.insn	2, 0xbabe
-    8000200c:	cafe                	.insn	2, 0xcafe
+    8000200c:	cafe                	sw	t6,84(sp)
     8000200e:	babe                	.insn	2, 0xbabe
 	...
 
 0000000080003000 <begin_regstate>:
-    80003000:	0080                	.insn	2, 0x0080
+    80003000:	0080                	addi	s0,sp,64
 	...
 
 0000000080003100 <end_regstate>:
@@ -1206,10 +1209,10 @@ Disassembly of section .data:
 	...
 
 0000000080003110 <begin_signature>:
-    80003110:	b281                	.insn	2, 0xb281
-    80003112:	e7d4                	.insn	2, 0xe7d4
-    80003114:	a309                	.insn	2, 0xa309
-    80003116:	6f5c                	.insn	2, 0x6f5c
+    80003110:	b281                	j	80002a50 <rvtest_data_begin+0xa50>
+    80003112:	e7d4                	sd	a3,136(a5)
+    80003114:	a309                	j	80003616 <_end+0x36>
+    80003116:	6f5c                	ld	a5,152(a4)
 
 0000000080003118 <signature_x7_0>:
     80003118:	deadbeef          	jal	t4,7ffde702 <absimmsh+0x7450d955>
@@ -1520,22 +1523,22 @@ Disassembly of section .data:
     800035d4:	deadbeef          	jal	t4,7ffdebbe <absimmsh+0x7450de11>
 
 00000000800035d8 <sig_end_canary>:
-    800035d8:	b281                	.insn	2, 0xb281
-    800035da:	e7d4                	.insn	2, 0xe7d4
-    800035dc:	a309                	.insn	2, 0xa309
-    800035de:	6f5c                	.insn	2, 0x6f5c
+    800035d8:	b281                	j	80002f18 <rvtest_data_begin+0xf18>
+    800035da:	e7d4                	sd	a3,136(a5)
+    800035dc:	a309                	j	80003ade <_end+0x4fe>
+    800035de:	6f5c                	ld	a5,152(a4)
 
 Disassembly of section .riscv.attributes:
 
 0000000000000000 <.riscv.attributes>:
-   0:	1941                	.insn	2, 0x1941
-   2:	0000                	.insn	2, 0x0000
-   4:	7200                	.insn	2, 0x7200
-   6:	7369                	.insn	2, 0x7369
+   0:	1941                	addi	s2,s2,-16
+   2:	0000                	unimp
+   4:	7200                	ld	s0,32(a2)
+   6:	7369                	lui	t1,0xffffa
    8:	01007663          	bgeu	zero,a6,14 <edge2+0xf>
    c:	0000000f          	fence	unknown,unknown
-  10:	7205                	.insn	2, 0x7205
+  10:	7205                	lui	tp,0xfffe1
   12:	3676                	.insn	2, 0x3676
-  14:	6934                	.insn	2, 0x6934
+  14:	6934                	ld	a3,80(a0)
   16:	7032                	.insn	2, 0x7032
-  18:	0031                	.insn	2, 0x0031
+  18:	0031                	c.nop	12
