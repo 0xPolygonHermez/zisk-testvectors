@@ -1,0 +1,6 @@
+using /workspace/output/riscof_work/rv32i_m/D/src/fnmsub.d_b15-01.S/ref/Reference-sail_c_simulator.signature for test-signature output.
+HTIF located at 0x80844000
+begin_signature: 0x80a9b110
+end_signature: 0x80c29870
+Entry point: 0x80000000
+SUCCESS

@@ -1,12 +1,12 @@
 hart_ids: [0]
 hart0:
-    ISA: RV64IMA
+    ISA: RV64IMAFDCZicsr
     physical_addr_sz: 32
     User_Spec_Version: '2.3'
     supported_xlen:
       - 64
     misa:
-        reset-val: 0x80001101
+        reset-val: 0x8000112D
         rv64:
             accessible: true
             mxl:
@@ -29,11 +29,11 @@ hart0:
                     warl:
                         dependency_fields: []
                         legal:
-                          - extensions[25:0] bitmask [0x0000000, 0x0001101]
+                          - extensions[25:0] bitmask [0x0000000, 0x000112D]
                         wr_illegal:
                           - Unchanged
-                description: Encodes the presence of the standard extensions, with
-                    a single bit per letter of the alphabet.
+                description: Encodes the presence of the standard extensions, 
+                    with a single bit per letter of the alphabet.
                 shadow:
                 shadow_type: rw
                 msb: 25
@@ -47,8 +47,8 @@ hart0:
                       - 61
         rv32:
             accessible: false
-        description: misa is a read-write register reporting the ISA supported by
-            the hart.
+        description: misa is a read-write register reporting the ISA supported 
+            by the hart.
         address: 769
         priv_mode: M
     Privilege_Spec_Version: '1.10'
@@ -132,24 +132,24 @@ hart0:
                       - 0:1
             upie:
                 implemented: false
-                description: Stores the state of the user mode interrupts prior to
-                    the trap.
+                description: Stores the state of the user mode interrupts prior 
+                    to the trap.
                 shadow:
                 shadow_type: rw
                 msb: 4
                 lsb: 4
             spie:
                 implemented: false
-                description: Stores the state of the supervisor mode interrupts prior
-                    to the trap.
+                description: Stores the state of the supervisor mode interrupts 
+                    prior to the trap.
                 shadow:
                 shadow_type: rw
                 msb: 5
                 lsb: 5
             mpie:
                 implemented: true
-                description: Stores the state of the machine mode interrupts prior
-                    to the trap.
+                description: Stores the state of the machine mode interrupts 
+                    prior to the trap.
                 shadow:
                 shadow_type: rw
                 msb: 7
@@ -173,49 +173,56 @@ hart0:
                 lsb: 11
                 type: {ro_constant: 0}
             fs:
-                implemented: false
-                description: Encodes the status of the floating-point unit, including
-                    the CSR fcsr and floating-point data registers.
+                implemented: true
+                description: Encodes the status of the floating-point unit, 
+                    including the CSR fcsr and floating-point data registers.
                 shadow:
                 shadow_type: rw
                 msb: 14
                 lsb: 13
+                type:
+                    warl:
+                        dependency_fields: []
+                        legal:
+                          - fs[1:0] in [0x0:0x3]
+                        wr_illegal:
+                          - unchanged
             xs:
                 implemented: false
-                description: Encodes the status of additional user-mode extensions
-                    and associated state.
+                description: Encodes the status of additional user-mode 
+                    extensions and associated state.
                 shadow:
                 shadow_type: rw
                 msb: 16
                 lsb: 15
             mprv:
                 implemented: false
-                description: Modifies the privilege level at which loads and stores
-                    execute in all privilege modes.
+                description: Modifies the privilege level at which loads and 
+                    stores execute in all privilege modes.
                 shadow:
                 shadow_type: rw
                 msb: 17
                 lsb: 17
             sum:
                 implemented: false
-                description: Modifies the privilege with which S-mode loads and stores
-                    access virtual memory.
+                description: Modifies the privilege with which S-mode loads and 
+                    stores access virtual memory.
                 shadow:
                 shadow_type: rw
                 msb: 18
                 lsb: 18
             mxr:
                 implemented: false
-                description: Modifies the privilege with which loads access virtual
-                    memory.
+                description: Modifies the privilege with which loads access 
+                    virtual memory.
                 shadow:
                 shadow_type: rw
                 msb: 19
                 lsb: 19
             tvm:
                 implemented: false
-                description: Supports intercepting supervisor virtual-memory management
-                    operations.
+                description: Supports intercepting supervisor virtual-memory 
+                    management operations.
                 shadow:
                 shadow_type: rw
                 msb: 20
@@ -229,15 +236,16 @@ hart0:
                 lsb: 21
             tsr:
                 implemented: false
-                description: Supports intercepting the supervisor exception return
-                    instruction.
+                description: Supports intercepting the supervisor exception 
+                    return instruction.
                 shadow:
                 shadow_type: rw
                 msb: 22
                 lsb: 22
             spelp:
                 implemented: false
-                description: Supervisor mode previous expected-landing-pad (ELP) state.
+                description: Supervisor mode previous expected-landing-pad (ELP)
+                    state.
                 shadow:
                 shadow_type: rw
                 msb: 23
@@ -258,38 +266,42 @@ hart0:
                 lsb: 32
             gva:
                 implemented: false
-                description: For any trap (access fault, page fault, or guest-page
-                    fault) that writes a guest virtual address to mtval, GVA is set
-                    to 1.
+                description: For any trap (access fault, page fault, or 
+                    guest-page fault) that writes a guest virtual address to 
+                    mtval, GVA is set to 1.
                 shadow:
                 shadow_type: rw
                 msb: 38
                 lsb: 38
             mpv:
                 implemented: false
-                description: Machine Previous Virtualization Mode is written by the
-                    implementation whenever a trap is taken into M-mode.
+                description: Machine Previous Virtualization Mode is written by 
+                    the implementation whenever a trap is taken into M-mode.
                 shadow:
                 shadow_type: rw
                 msb: 39
                 lsb: 39
             mpelp:
                 implemented: false
-                description: Machine mode previous expected-landing-pad (ELP) state.
+                description: Machine mode previous expected-landing-pad (ELP) 
+                    state.
                 shadow:
                 shadow_type: rw
                 msb: 41
                 lsb: 41
             sd:
-                implemented: false
-                description: Read-only bit that summarizes whether either the FS field
-                    or XS field signals the presence of some dirty state.
+                implemented: true
+                description: Read-only bit that summarizes whether either the FS
+                    field or XS field signals the presence of some dirty state.
                 shadow:
                 shadow_type: rw
                 msb: 63
                 lsb: 63
-        description: The mstatus register keeps track of and controls the hart’s current
-            operating state.
+                type:
+                    wlrl:
+                      - 0:1
+        description: The mstatus register keeps track of and controls the hart’s
+            current operating state.
         address: 768
         priv_mode: M
         reset-val: 0
@@ -298,8 +310,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mstatush register keeps track of and controls the hart’s
-            current operating state.
+        description: The mstatush register keeps track of and controls the 
+            hart’s current operating state.
         address: 768
         priv_mode: M
         reset-val: 0
@@ -315,8 +327,8 @@ hart0:
             lsb: 0
             type:
                 ro_constant: 0
-        description: 32-bit read-only register providing the JEDEC manufacturer ID
-            of the provider of the core.
+        description: 32-bit read-only register providing the JEDEC manufacturer 
+            ID of the provider of the core.
         address: 3857
         priv_mode: M
         reset-val: 0
@@ -332,8 +344,8 @@ hart0:
             lsb: 0
             type:
                 ro_constant: 0
-        description: MXLEN-bit read-only register encoding the base microarchitecture
-            of the hart.
+        description: MXLEN-bit read-only register encoding the base 
+            microarchitecture of the hart.
         address: 3858
         priv_mode: M
         reset-val: 0
@@ -349,7 +361,8 @@ hart0:
             lsb: 0
             type:
                 ro_constant: 0
-        description: Provides a unique encoding of the version of the processor implementation.
+        description: Provides a unique encoding of the version of the processor 
+            implementation.
         address: 3859
         priv_mode: M
         reset-val: 0
@@ -365,8 +378,8 @@ hart0:
             lsb: 0
             type:
                 ro_constant: 0
-        description: MXLEN-bit read-only register containing the integer ID of the
-            hardware thread running the code.
+        description: MXLEN-bit read-only register containing the integer ID of 
+            the hardware thread running the code.
         address: 3860
         priv_mode: M
         reset-val: 0
@@ -389,7 +402,8 @@ hart0:
                     warl:
                         dependency_fields: []
                         legal:
-                          - base[61:0] bitmask [0x3FFFFFFFFFFFFFFF, 0x0000000000000000]
+                          - base[61:0] bitmask [0x3FFFFFFFFFFFFFFF, 
+                            0x0000000000000000]
                         wr_illegal:
                           - Unchanged
             mode:
@@ -406,7 +420,8 @@ hart0:
                           - mode[1:0] in [0x0:0x1]
                         wr_illegal:
                           - Unchanged
-        description: MXLEN-bit read/write register that holds trap vector configuration.
+        description: MXLEN-bit read/write register that holds trap vector 
+            configuration.
         address: 773
         priv_mode: M
         reset-val: 0
@@ -548,8 +563,8 @@ hart0:
                 shadow_type: rw
                 msb: 12
                 lsb: 12
-        description: The mip register is an MXLEN-bit read/write register containing
-            information on pending interrupts.
+        description: The mip register is an MXLEN-bit read/write register 
+            containing information on pending interrupts.
         address: 836
         priv_mode: M
         reset-val: 0
@@ -558,8 +573,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hie register is an HSXLEN-bit read/write register containing
-            interrupt enable bits.
+        description: The hie register is an HSXLEN-bit read/write register 
+            containing interrupt enable bits.
         address: 0x604
         priv_mode: H
         reset-val: 0
@@ -686,8 +701,8 @@ hart0:
                 shadow_type: rw
                 msb: 12
                 lsb: 12
-        description: The mie register is an MXLEN-bit read/write register containing
-            interrupt enable bits.
+        description: The mie register is an MXLEN-bit read/write register 
+            containing interrupt enable bits.
         address: 772
         priv_mode: M
         reset-val: 0
@@ -709,8 +724,8 @@ hart0:
                     wr_illegal:
                       - unchanged
 
-        description: The mscratch register is an MXLEN-bit read/write register dedicated
-            for use by machine mode.
+        description: The mscratch register is an MXLEN-bit read/write register 
+            dedicated for use by machine mode.
         address: 832
         priv_mode: M
         reset-val: 0
@@ -731,8 +746,8 @@ hart0:
                       - mepc[63:0] in [0x00000000:0xFFFFFFFFFFFFFFFF]
                     wr_illegal:
                       - unchanged
-        description: The mepc is a warl register that must be able to hold all valid
-            physical and virtual addresses.
+        description: The mepc is a warl register that must be able to hold all 
+            valid physical and virtual addresses.
         address: 0x341
         priv_mode: M
         reset-val: 0
@@ -753,8 +768,8 @@ hart0:
                       - mtval[63:0] in [0x00000000:0xFFFFFFFFFFFFFFFF]
                     wr_illegal:
                       - unchanged
-        description: The mtval is a warl register that holds the address of the instruction
-            which caused the exception.
+        description: The mtval is a warl register that holds the address of the 
+            instruction which caused the exception.
         address: 835
         priv_mode: M
         reset-val: 0
@@ -786,7 +801,8 @@ hart0:
                 type:
                     wlrl:
                       - 0:15
-        description: The mcause register stores the information regarding the trap.
+        description: The mcause register stores the information regarding the 
+            trap.
         address: 834
         priv_mode: M
         reset-val: 0
@@ -1515,9 +1531,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mcounteren is a 32-bit register that controls the availability
-            of the hardware performance-monitoring counters to the next-lowest privileged
-            mode.
+        description: The mcounteren is a 32-bit register that controls the 
+            availability of the hardware performance-monitoring counters to the 
+            next-lowest privileged mode.
         address: 0x306
         priv_mode: M
         reset-val: 0
@@ -1533,8 +1549,8 @@ hart0:
             lsb: 0
             type:
                 ro_constant: 0
-        description: The mcountinhibit is a 32-bit WARL register that controls which
-            of the hardware performance-monitoring counters increment.
+        description: The mcountinhibit is a 32-bit WARL register that controls 
+            which of the hardware performance-monitoring counters increment.
         address: 0x320
         priv_mode: M
         reset-val: 0
@@ -1555,8 +1571,8 @@ hart0:
                       - mcycle[63:0] in [0x0000000000000000:0xFFFFFFFFFFFFFFFF]
                     wr_illegal:
                       - Unchanged
-        description: Counts the number of clock cycles executed from an arbitrary
-            point in time.
+        description: Counts the number of clock cycles executed from an 
+            arbitrary point in time.
         address: 0xB00
         priv_mode: M
         reset-val: 0
@@ -1583,11 +1599,12 @@ hart0:
                 warl:
                     dependency_fields: []
                     legal:
-                      - minstret[63:0] in [0x0000000000000000:0xFFFFFFFFFFFFFFFF]
+                      - minstret[63:0] in 
+                        [0x0000000000000000:0xFFFFFFFFFFFFFFFF]
                     wr_illegal:
                       - Unchanged
-        description: Counts the number of instructions completed from an arbitrary
-            point in time.
+        description: Counts the number of instructions completed from an 
+            arbitrary point in time.
         address: 0xB02
         priv_mode: M
         reset-val: 0
@@ -1612,7 +1629,8 @@ hart0:
             lsb: 0
             type: &id001
                 ro_constant: 0
-        description: The mhpmevent3 is a MXLEN-bit event register which controls mhpmcounter3.
+        description: The mhpmevent3 is a MXLEN-bit event register which controls
+            mhpmcounter3.
         address: 0x323
         priv_mode: M
         reset-val: 0
@@ -1627,8 +1645,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter3 is a 64-bit counter. Returns lower 32 bits in
-            RV32I mode.
+        description: The mhpmcounter3 is a 64-bit counter. Returns lower 32 bits
+            in RV32I mode.
         address: 0xB03
         priv_mode: M
         reset-val: 0
@@ -1637,7 +1655,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter3h returns the upper half word in RV32I systems.
+        description: The mhpmcounter3h returns the upper half word in RV32I 
+            systems.
         address: 0xB83
         priv_mode: M
         reset-val: 0
@@ -1652,7 +1671,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent4 is a MXLEN-bit event register which controls mhpmcounter4.
+        description: The mhpmevent4 is a MXLEN-bit event register which controls
+            mhpmcounter4.
         address: 0x324
         priv_mode: M
         reset-val: 0
@@ -1667,8 +1687,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter4 is a 64-bit counter. Returns lower 42 bits in
-            RV42I mode.
+        description: The mhpmcounter4 is a 64-bit counter. Returns lower 42 bits
+            in RV42I mode.
         address: 0xB04
         priv_mode: M
         reset-val: 0
@@ -1677,7 +1697,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter4h returns the upper half word in RV42I systems.
+        description: The mhpmcounter4h returns the upper half word in RV42I 
+            systems.
         address: 0xB84
         priv_mode: M
         reset-val: 0
@@ -1692,7 +1713,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent5 is a MXLEN-bit event register which controls mhpmcounter5.
+        description: The mhpmevent5 is a MXLEN-bit event register which controls
+            mhpmcounter5.
         address: 0x325
         priv_mode: M
         reset-val: 0
@@ -1707,8 +1729,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter5 is a 64-bit counter. Returns lower 52 bits in
-            RV52I mode.
+        description: The mhpmcounter5 is a 64-bit counter. Returns lower 52 bits
+            in RV52I mode.
         address: 0xB05
         priv_mode: M
         reset-val: 0
@@ -1717,7 +1739,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter5h returns the upper half word in RV52I systems.
+        description: The mhpmcounter5h returns the upper half word in RV52I 
+            systems.
         address: 0xB85
         priv_mode: M
         reset-val: 0
@@ -1732,7 +1755,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent6 is a MXLEN-bit event register which controls mhpmcounter6.
+        description: The mhpmevent6 is a MXLEN-bit event register which controls
+            mhpmcounter6.
         address: 0x326
         priv_mode: M
         reset-val: 0
@@ -1747,8 +1771,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter6 is a 64-bit counter. Returns lower 62 bits in
-            RV62I mode.
+        description: The mhpmcounter6 is a 64-bit counter. Returns lower 62 bits
+            in RV62I mode.
         address: 0xB06
         priv_mode: M
         reset-val: 0
@@ -1757,7 +1781,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter6h returns the upper half word in RV62I systems.
+        description: The mhpmcounter6h returns the upper half word in RV62I 
+            systems.
         address: 0xB86
         priv_mode: M
         reset-val: 0
@@ -1772,7 +1797,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent7 is a MXLEN-bit event register which controls mhpmcounter7.
+        description: The mhpmevent7 is a MXLEN-bit event register which controls
+            mhpmcounter7.
         address: 0x327
         priv_mode: M
         reset-val: 0
@@ -1787,8 +1813,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter7 is a 64-bit counter. Returns lower 72 bits in
-            RV72I mode.
+        description: The mhpmcounter7 is a 64-bit counter. Returns lower 72 bits
+            in RV72I mode.
         address: 0xB07
         priv_mode: M
         reset-val: 0
@@ -1797,7 +1823,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter7h returns the upper half word in RV72I systems.
+        description: The mhpmcounter7h returns the upper half word in RV72I 
+            systems.
         address: 0xB87
         priv_mode: M
         reset-val: 0
@@ -1812,7 +1839,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent8 is a MXLEN-bit event register which controls mhpmcounter8.
+        description: The mhpmevent8 is a MXLEN-bit event register which controls
+            mhpmcounter8.
         address: 0x328
         priv_mode: M
         reset-val: 0
@@ -1827,8 +1855,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter8 is a 64-bit counter. Returns lower 82 bits in
-            RV82I mode.
+        description: The mhpmcounter8 is a 64-bit counter. Returns lower 82 bits
+            in RV82I mode.
         address: 0xB08
         priv_mode: M
         reset-val: 0
@@ -1837,7 +1865,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter8h returns the upper half word in RV82I systems.
+        description: The mhpmcounter8h returns the upper half word in RV82I 
+            systems.
         address: 0xB88
         priv_mode: M
         reset-val: 0
@@ -1852,7 +1881,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent9 is a MXLEN-bit event register which controls mhpmcounter9.
+        description: The mhpmevent9 is a MXLEN-bit event register which controls
+            mhpmcounter9.
         address: 0x329
         priv_mode: M
         reset-val: 0
@@ -1867,8 +1897,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter9 is a 64-bit counter. Returns lower 32 bits in
-            RV32I mode.
+        description: The mhpmcounter9 is a 64-bit counter. Returns lower 32 bits
+            in RV32I mode.
         address: 0xB09
         priv_mode: M
         reset-val: 0
@@ -1877,7 +1907,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter9h returns the upper half word in RV32I systems.
+        description: The mhpmcounter9h returns the upper half word in RV32I 
+            systems.
         address: 0xB89
         priv_mode: M
         reset-val: 0
@@ -1892,8 +1923,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent10 is a MXLEN-bit event register which controls
-            mhpmcounter10.
+        description: The mhpmevent10 is a MXLEN-bit event register which 
+            controls mhpmcounter10.
         address: 0x32a
         priv_mode: M
         reset-val: 0
@@ -1908,8 +1939,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter10 is a 64-bit counter. Returns lower 102 bits
-            in RV102I mode.
+        description: The mhpmcounter10 is a 64-bit counter. Returns lower 102 
+            bits in RV102I mode.
         address: 0xB0A
         priv_mode: M
         reset-val: 0
@@ -1918,7 +1949,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter10h returns the upper half word in RV102I systems.
+        description: The mhpmcounter10h returns the upper half word in RV102I 
+            systems.
         address: 0xB8A
         priv_mode: M
         reset-val: 0
@@ -1933,8 +1965,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent11 is a MXLEN-bit event register which controls
-            mhpmcounter11.
+        description: The mhpmevent11 is a MXLEN-bit event register which 
+            controls mhpmcounter11.
         address: 0x32b
         priv_mode: M
         reset-val: 0
@@ -1949,8 +1981,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter11 is a 64-bit counter. Returns lower 112 bits
-            in RV112I mode.
+        description: The mhpmcounter11 is a 64-bit counter. Returns lower 112 
+            bits in RV112I mode.
         address: 0xB0B
         priv_mode: M
         reset-val: 0
@@ -1959,7 +1991,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter11h returns the upper half word in RV112I systems.
+        description: The mhpmcounter11h returns the upper half word in RV112I 
+            systems.
         address: 0xB8B
         priv_mode: M
         reset-val: 0
@@ -1974,8 +2007,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent12 is a MXLEN-bit event register which controls
-            mhpmcounter12.
+        description: The mhpmevent12 is a MXLEN-bit event register which 
+            controls mhpmcounter12.
         address: 0x32c
         priv_mode: M
         reset-val: 0
@@ -1990,8 +2023,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter12 is a 64-bit counter. Returns lower 122 bits
-            in RV122I mode.
+        description: The mhpmcounter12 is a 64-bit counter. Returns lower 122 
+            bits in RV122I mode.
         address: 0xB0C
         priv_mode: M
         reset-val: 0
@@ -2000,7 +2033,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter12h returns the upper half word in RV122I systems.
+        description: The mhpmcounter12h returns the upper half word in RV122I 
+            systems.
         address: 0xB8C
         priv_mode: M
         reset-val: 0
@@ -2015,8 +2049,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent13 is a MXLEN-bit event register which controls
-            mhpmcounter13.
+        description: The mhpmevent13 is a MXLEN-bit event register which 
+            controls mhpmcounter13.
         address: 0x32d
         priv_mode: M
         reset-val: 0
@@ -2031,8 +2065,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter13 is a 64-bit counter. Returns lower 132 bits
-            in RV132I mode.
+        description: The mhpmcounter13 is a 64-bit counter. Returns lower 132 
+            bits in RV132I mode.
         address: 0xB0D
         priv_mode: M
         reset-val: 0
@@ -2041,7 +2075,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter13h returns the upper half word in RV132I systems.
+        description: The mhpmcounter13h returns the upper half word in RV132I 
+            systems.
         address: 0xB8D
         priv_mode: M
         reset-val: 0
@@ -2056,8 +2091,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent14 is a MXLEN-bit event register which controls
-            mhpmcounter14.
+        description: The mhpmevent14 is a MXLEN-bit event register which 
+            controls mhpmcounter14.
         address: 0x32e
         priv_mode: M
         reset-val: 0
@@ -2072,8 +2107,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter14 is a 64-bit counter. Returns lower 142 bits
-            in RV142I mode.
+        description: The mhpmcounter14 is a 64-bit counter. Returns lower 142 
+            bits in RV142I mode.
         address: 0xB0E
         priv_mode: M
         reset-val: 0
@@ -2082,7 +2117,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter14h returns the upper half word in RV142I systems.
+        description: The mhpmcounter14h returns the upper half word in RV142I 
+            systems.
         address: 0xB8E
         priv_mode: M
         reset-val: 0
@@ -2097,8 +2133,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent15 is a MXLEN-bit event register which controls
-            mhpmcounter15.
+        description: The mhpmevent15 is a MXLEN-bit event register which 
+            controls mhpmcounter15.
         address: 0x32f
         priv_mode: M
         reset-val: 0
@@ -2113,8 +2149,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter15 is a 64-bit counter. Returns lower 152 bits
-            in RV152I mode.
+        description: The mhpmcounter15 is a 64-bit counter. Returns lower 152 
+            bits in RV152I mode.
         address: 0xB0F
         priv_mode: M
         reset-val: 0
@@ -2123,7 +2159,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter15h returns the upper half word in RV152I systems.
+        description: The mhpmcounter15h returns the upper half word in RV152I 
+            systems.
         address: 0xB8F
         priv_mode: M
         reset-val: 0
@@ -2138,8 +2175,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent16 is a MXLEN-bit event register which controls
-            mhpmcounter16.
+        description: The mhpmevent16 is a MXLEN-bit event register which 
+            controls mhpmcounter16.
         address: 0x330
         priv_mode: M
         reset-val: 0
@@ -2154,8 +2191,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter16 is a 64-bit counter. Returns lower 162 bits
-            in RV162I mode.
+        description: The mhpmcounter16 is a 64-bit counter. Returns lower 162 
+            bits in RV162I mode.
         address: 0xB10
         priv_mode: M
         reset-val: 0
@@ -2164,7 +2201,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter16h returns the upper half word in RV162I systems.
+        description: The mhpmcounter16h returns the upper half word in RV162I 
+            systems.
         address: 0xB90
         priv_mode: M
         reset-val: 0
@@ -2179,8 +2217,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent17 is a MXLEN-bit event register which controls
-            mhpmcounter17.
+        description: The mhpmevent17 is a MXLEN-bit event register which 
+            controls mhpmcounter17.
         address: 0x331
         priv_mode: M
         reset-val: 0
@@ -2195,8 +2233,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter17 is a 64-bit counter. Returns lower 172 bits
-            in RV172I mode.
+        description: The mhpmcounter17 is a 64-bit counter. Returns lower 172 
+            bits in RV172I mode.
         address: 0xB11
         priv_mode: M
         reset-val: 0
@@ -2205,7 +2243,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter17h returns the upper half word in RV172I systems.
+        description: The mhpmcounter17h returns the upper half word in RV172I 
+            systems.
         address: 0xB91
         priv_mode: M
         reset-val: 0
@@ -2220,8 +2259,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent18 is a MXLEN-bit event register which controls
-            mhpmcounter18.
+        description: The mhpmevent18 is a MXLEN-bit event register which 
+            controls mhpmcounter18.
         address: 0x332
         priv_mode: M
         reset-val: 0
@@ -2236,8 +2275,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter18 is a 64-bit counter. Returns lower 182 bits
-            in RV182I mode.
+        description: The mhpmcounter18 is a 64-bit counter. Returns lower 182 
+            bits in RV182I mode.
         address: 0xB12
         priv_mode: M
         reset-val: 0
@@ -2246,7 +2285,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter18h returns the upper half word in RV182I systems.
+        description: The mhpmcounter18h returns the upper half word in RV182I 
+            systems.
         address: 0xB92
         priv_mode: M
         reset-val: 0
@@ -2261,8 +2301,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent19 is a MXLEN-bit event register which controls
-            mhpmcounter19.
+        description: The mhpmevent19 is a MXLEN-bit event register which 
+            controls mhpmcounter19.
         address: 0x333
         priv_mode: M
         reset-val: 0
@@ -2277,8 +2317,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter19 is a 64-bit counter. Returns lower 32 bits
-            in RV32I mode.
+        description: The mhpmcounter19 is a 64-bit counter. Returns lower 32 
+            bits in RV32I mode.
         address: 0xB13
         priv_mode: M
         reset-val: 0
@@ -2287,7 +2327,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter19h returns the upper half word in RV32I systems.
+        description: The mhpmcounter19h returns the upper half word in RV32I 
+            systems.
         address: 0xB93
         priv_mode: M
         reset-val: 0
@@ -2302,8 +2343,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent20 is a MXLEN-bit event register which controls
-            mhpmcounter20.
+        description: The mhpmevent20 is a MXLEN-bit event register which 
+            controls mhpmcounter20.
         address: 0x334
         priv_mode: M
         reset-val: 0
@@ -2318,8 +2359,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter20 is a 64-bit counter. Returns lower 202 bits
-            in RV202I mode.
+        description: The mhpmcounter20 is a 64-bit counter. Returns lower 202 
+            bits in RV202I mode.
         address: 0xB14
         priv_mode: M
         reset-val: 0
@@ -2328,7 +2369,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter20h returns the upper half word in RV202I systems.
+        description: The mhpmcounter20h returns the upper half word in RV202I 
+            systems.
         address: 0xB94
         priv_mode: M
         reset-val: 0
@@ -2343,8 +2385,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent21 is a MXLEN-bit event register which controls
-            mhpmcounter21.
+        description: The mhpmevent21 is a MXLEN-bit event register which 
+            controls mhpmcounter21.
         address: 0x335
         priv_mode: M
         reset-val: 0
@@ -2359,8 +2401,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter21 is a 64-bit counter. Returns lower 212 bits
-            in RV212I mode.
+        description: The mhpmcounter21 is a 64-bit counter. Returns lower 212 
+            bits in RV212I mode.
         address: 0xB15
         priv_mode: M
         reset-val: 0
@@ -2369,7 +2411,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter21h returns the upper half word in RV212I systems.
+        description: The mhpmcounter21h returns the upper half word in RV212I 
+            systems.
         address: 0xB95
         priv_mode: M
         reset-val: 0
@@ -2384,8 +2427,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent22 is a MXLEN-bit event register which controls
-            mhpmcounter22.
+        description: The mhpmevent22 is a MXLEN-bit event register which 
+            controls mhpmcounter22.
         address: 0x336
         priv_mode: M
         reset-val: 0
@@ -2400,8 +2443,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter22 is a 64-bit counter. Returns lower 222 bits
-            in RV222I mode.
+        description: The mhpmcounter22 is a 64-bit counter. Returns lower 222 
+            bits in RV222I mode.
         address: 0xB16
         priv_mode: M
         reset-val: 0
@@ -2410,7 +2453,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter22h returns the upper half word in RV222I systems.
+        description: The mhpmcounter22h returns the upper half word in RV222I 
+            systems.
         address: 0xB96
         priv_mode: M
         reset-val: 0
@@ -2425,8 +2469,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent23 is a MXLEN-bit event register which controls
-            mhpmcounter23.
+        description: The mhpmevent23 is a MXLEN-bit event register which 
+            controls mhpmcounter23.
         address: 0x337
         priv_mode: M
         reset-val: 0
@@ -2441,8 +2485,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter23 is a 64-bit counter. Returns lower 232 bits
-            in RV232I mode.
+        description: The mhpmcounter23 is a 64-bit counter. Returns lower 232 
+            bits in RV232I mode.
         address: 0xB17
         priv_mode: M
         reset-val: 0
@@ -2451,7 +2495,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter23h returns the upper half word in RV232I systems.
+        description: The mhpmcounter23h returns the upper half word in RV232I 
+            systems.
         address: 0xB97
         priv_mode: M
         reset-val: 0
@@ -2466,8 +2511,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent24 is a MXLEN-bit event register which controls
-            mhpmcounter24.
+        description: The mhpmevent24 is a MXLEN-bit event register which 
+            controls mhpmcounter24.
         address: 0x338
         priv_mode: M
         reset-val: 0
@@ -2482,8 +2527,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter24 is a 64-bit counter. Returns lower 242 bits
-            in RV242I mode.
+        description: The mhpmcounter24 is a 64-bit counter. Returns lower 242 
+            bits in RV242I mode.
         address: 0xB18
         priv_mode: M
         reset-val: 0
@@ -2492,7 +2537,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter24h returns the upper half word in RV242I systems.
+        description: The mhpmcounter24h returns the upper half word in RV242I 
+            systems.
         address: 0xB98
         priv_mode: M
         reset-val: 0
@@ -2507,8 +2553,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent25 is a MXLEN-bit event register which controls
-            mhpmcounter25.
+        description: The mhpmevent25 is a MXLEN-bit event register which 
+            controls mhpmcounter25.
         address: 0x339
         priv_mode: M
         reset-val: 0
@@ -2523,8 +2569,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter25 is a 64-bit counter. Returns lower 252 bits
-            in RV252I mode.
+        description: The mhpmcounter25 is a 64-bit counter. Returns lower 252 
+            bits in RV252I mode.
         address: 0xB19
         priv_mode: M
         reset-val: 0
@@ -2533,7 +2579,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter25h returns the upper half word in RV252I systems.
+        description: The mhpmcounter25h returns the upper half word in RV252I 
+            systems.
         address: 0xB99
         priv_mode: M
         reset-val: 0
@@ -2548,8 +2595,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent26 is a MXLEN-bit event register which controls
-            mhpmcounter26.
+        description: The mhpmevent26 is a MXLEN-bit event register which 
+            controls mhpmcounter26.
         address: 0x33a
         priv_mode: M
         reset-val: 0
@@ -2564,8 +2611,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter26 is a 64-bit counter. Returns lower 262 bits
-            in RV262I mode.
+        description: The mhpmcounter26 is a 64-bit counter. Returns lower 262 
+            bits in RV262I mode.
         address: 0xB1A
         priv_mode: M
         reset-val: 0
@@ -2574,7 +2621,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter26h returns the upper half word in RV262I systems.
+        description: The mhpmcounter26h returns the upper half word in RV262I 
+            systems.
         address: 0xB9A
         priv_mode: M
         reset-val: 0
@@ -2589,8 +2637,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent27 is a MXLEN-bit event register which controls
-            mhpmcounter27.
+        description: The mhpmevent27 is a MXLEN-bit event register which 
+            controls mhpmcounter27.
         address: 0x33b
         priv_mode: M
         reset-val: 0
@@ -2605,8 +2653,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter27 is a 64-bit counter. Returns lower 272 bits
-            in RV272I mode.
+        description: The mhpmcounter27 is a 64-bit counter. Returns lower 272 
+            bits in RV272I mode.
         address: 0xB1B
         priv_mode: M
         reset-val: 0
@@ -2615,7 +2663,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter27h returns the upper half word in RV272I systems.
+        description: The mhpmcounter27h returns the upper half word in RV272I 
+            systems.
         address: 0xB9B
         priv_mode: M
         reset-val: 0
@@ -2630,8 +2679,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent28 is a MXLEN-bit event register which controls
-            mhpmcounter28.
+        description: The mhpmevent28 is a MXLEN-bit event register which 
+            controls mhpmcounter28.
         address: 0x33c
         priv_mode: M
         reset-val: 0
@@ -2646,8 +2695,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter28 is a 64-bit counter. Returns lower 282 bits
-            in RV282I mode.
+        description: The mhpmcounter28 is a 64-bit counter. Returns lower 282 
+            bits in RV282I mode.
         address: 0xB1C
         priv_mode: M
         reset-val: 0
@@ -2656,7 +2705,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter28h returns the upper half word in RV282I systems.
+        description: The mhpmcounter28h returns the upper half word in RV282I 
+            systems.
         address: 0xB9C
         priv_mode: M
         reset-val: 0
@@ -2671,8 +2721,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent29 is a MXLEN-bit event register which controls
-            mhpmcounter29.
+        description: The mhpmevent29 is a MXLEN-bit event register which 
+            controls mhpmcounter29.
         address: 0x33d
         priv_mode: M
         reset-val: 0
@@ -2687,8 +2737,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter29 is a 64-bit counter. Returns lower 32 bits
-            in RV32I mode.
+        description: The mhpmcounter29 is a 64-bit counter. Returns lower 32 
+            bits in RV32I mode.
         address: 0xB1D
         priv_mode: M
         reset-val: 0
@@ -2697,7 +2747,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter29h returns the upper half word in RV32I systems.
+        description: The mhpmcounter29h returns the upper half word in RV32I 
+            systems.
         address: 0xB9D
         priv_mode: M
         reset-val: 0
@@ -2712,8 +2763,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent30 is a MXLEN-bit event register which controls
-            mhpmcounter30.
+        description: The mhpmevent30 is a MXLEN-bit event register which 
+            controls mhpmcounter30.
         address: 0x33e
         priv_mode: M
         reset-val: 0
@@ -2728,8 +2779,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter30 is a 64-bit counter. Returns lower 302 bits
-            in RV302I mode.
+        description: The mhpmcounter30 is a 64-bit counter. Returns lower 302 
+            bits in RV302I mode.
         address: 0xB1E
         priv_mode: M
         reset-val: 0
@@ -2738,7 +2789,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter30h returns the upper half word in RV302I systems.
+        description: The mhpmcounter30h returns the upper half word in RV302I 
+            systems.
         address: 0xB9E
         priv_mode: M
         reset-val: 0
@@ -2753,8 +2805,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmevent31 is a MXLEN-bit event register which controls
-            mhpmcounter31.
+        description: The mhpmevent31 is a MXLEN-bit event register which 
+            controls mhpmcounter31.
         address: 0x33f
         priv_mode: M
         reset-val: 0
@@ -2769,8 +2821,8 @@ hart0:
             msb: 63
             lsb: 0
             type: *id001
-        description: The mhpmcounter31 is a 64-bit counter. Returns lower 312 bits
-            in RV312I mode.
+        description: The mhpmcounter31 is a 64-bit counter. Returns lower 312 
+            bits in RV312I mode.
         address: 0xB1F
         priv_mode: M
         reset-val: 0
@@ -2779,7 +2831,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mhpmcounter31h returns the upper half word in RV312I systems.
+        description: The mhpmcounter31h returns the upper half word in RV312I 
+            systems.
         address: 0xB9F
         priv_mode: M
         reset-val: 0
@@ -2805,7 +2858,12 @@ hart0:
         rv32:
             accessible: false
         rv64:
-            accessible: false
+            accessible: true
+            fields: []
+            shadow: fcsr.fflags
+            shadow_type: rw
+            msb: 4
+            lsb: 0
         description: 32-bit register to hold floating point accrued exceptions.
         address: 001
         priv_mode: U
@@ -2814,8 +2872,14 @@ hart0:
         rv32:
             accessible: false
         rv64:
-            accessible: false
-        description: 32-bit register to hold Floating-Point Dynamic Rounding Mode.
+            accessible: true
+            fields: []
+            shadow: fcsr.frm
+            shadow_type: rw
+            msb: 2
+            lsb: 0
+        description: 32-bit register to hold Floating-Point Dynamic Rounding 
+            Mode.
         address: 002
         priv_mode: U
         reset-val: 0
@@ -2823,8 +2887,44 @@ hart0:
         rv32:
             accessible: false
         rv64:
-            accessible: false
-        description: 32-bit register to hold Floating-Point Control and Status Register.
+            accessible: true
+            fields:
+              - fflags
+              - frm
+              -
+                  -
+                      - 8
+                      - 63
+            frm:
+                implemented: true
+                description: Stores Floating-Point Dynamic Rounding Mode.
+                shadow:
+                shadow_type: rw
+                msb: 7
+                lsb: 5
+                type:
+                    warl:
+                        dependency_fields: []
+                        legal:
+                          - frm[2:0] in [0x0:0x7]
+                        wr_illegal:
+                          - Unchanged
+            fflags:
+                implemented: true
+                description: Stores floating point accrued exceptions.
+                shadow:
+                shadow_type: rw
+                msb: 4
+                lsb: 0
+                type:
+                    warl:
+                        dependency_fields: []
+                        legal:
+                          - fflags[4:0] in [0x0:0x1F]
+                        wr_illegal:
+                          - Unchanged
+        description: 32-bit register to hold Floating-Point Control and Status 
+            Register.
         address: 003
         priv_mode: U
         reset-val: 0
@@ -2833,8 +2933,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: Captures the number of cycles executed from an arbitrary point
-            in time.
+        description: Captures the number of cycles executed from an arbitrary 
+            point in time.
         priv_mode: U
         address: 0xC00
         reset-val: 0
@@ -2861,8 +2961,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: Upper 32-bits of the Timer for RDTIME instruction and RTC in
-            the processor; only for rv32.
+        description: Upper 32-bits of the Timer for RDTIME instruction and RTC 
+            in the processor; only for rv32.
         address: 0xC81
         priv_mode: U
         reset-val: 0
@@ -2871,8 +2971,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: Captures the number of instructions executed from an arbitrary
-            point in time.
+        description: Captures the number of instructions executed from an 
+            arbitrary point in time.
         priv_mode: U
         address: 0xC02
         reset-val: 0
@@ -2892,8 +2992,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter3 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter3 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC03
     hpmcounter4:
         rv32:
@@ -2902,8 +3002,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter4 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter4 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC04
     hpmcounter5:
         rv32:
@@ -2912,8 +3012,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter5 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter5 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC05
     hpmcounter6:
         rv32:
@@ -2922,8 +3022,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter6 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter6 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC06
     hpmcounter7:
         rv32:
@@ -2932,8 +3032,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter7 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter7 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC07
     hpmcounter8:
         rv32:
@@ -2942,8 +3042,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter8 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter8 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC08
     hpmcounter9:
         rv32:
@@ -2952,8 +3052,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter9 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter9 is a 64-bit counter. Returns lower 32 bits 
+            in RV32UI mode.
         address: 0xC09
     hpmcounter10:
         rv32:
@@ -2962,8 +3062,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter10 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter10 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC0A
     hpmcounter11:
         rv32:
@@ -2972,8 +3072,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter11 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter11 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC0B
     hpmcounter12:
         rv32:
@@ -2982,8 +3082,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter12 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter12 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC0C
     hpmcounter13:
         rv32:
@@ -2992,8 +3092,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter13 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter13 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC0D
     hpmcounter14:
         rv32:
@@ -3002,8 +3102,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter14 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter14 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC0E
     hpmcounter15:
         rv32:
@@ -3012,8 +3112,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter15 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter15 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC0F
     hpmcounter16:
         rv32:
@@ -3022,8 +3122,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter16 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter16 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC10
     hpmcounter17:
         rv32:
@@ -3032,8 +3132,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter17 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter17 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC11
     hpmcounter18:
         rv32:
@@ -3042,8 +3142,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter18 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter18 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC12
     hpmcounter19:
         rv32:
@@ -3052,8 +3152,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter19 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter19 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC13
     hpmcounter20:
         rv32:
@@ -3062,8 +3162,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter20 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter20 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC14
     hpmcounter21:
         rv32:
@@ -3072,8 +3172,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter21 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter21 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC15
     hpmcounter22:
         rv32:
@@ -3082,8 +3182,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter22 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter22 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC16
     hpmcounter23:
         rv32:
@@ -3092,8 +3192,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter23 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter23 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC17
     hpmcounter24:
         rv32:
@@ -3102,8 +3202,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter24 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter24 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC18
     hpmcounter25:
         rv32:
@@ -3112,8 +3212,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter25 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter25 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC19
     hpmcounter26:
         rv32:
@@ -3122,8 +3222,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter26 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter26 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC1A
     hpmcounter27:
         rv32:
@@ -3132,8 +3232,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter27 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter27 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC1B
     hpmcounter28:
         rv32:
@@ -3142,8 +3242,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter28 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter28 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC1C
     hpmcounter29:
         rv32:
@@ -3152,8 +3252,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter29 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter29 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC1D
     hpmcounter30:
         rv32:
@@ -3162,8 +3262,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter30 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter30 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC1E
     hpmcounter31:
         rv32:
@@ -3172,8 +3272,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter31 is a 64-bit counter. Returns lower 32 bits in
-            RV32UI mode.
+        description: The hpmcounter31 is a 64-bit counter. Returns lower 32 bits
+            in RV32UI mode.
         address: 0xC1F
     hpmcounter3h:
         rv32:
@@ -3182,7 +3282,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter3h returns the upper half word in RV32I systems.
+        description: The hpmcounter3h returns the upper half word in RV32I 
+            systems.
         address: 0xC83
     hpmcounter4h:
         rv32:
@@ -3191,7 +3292,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter4h returns the upper half word in RV32I systems.
+        description: The hpmcounter4h returns the upper half word in RV32I 
+            systems.
         address: 0xC84
     hpmcounter5h:
         rv32:
@@ -3200,7 +3302,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter5h returns the upper half word in RV32I systems.
+        description: The hpmcounter5h returns the upper half word in RV32I 
+            systems.
         address: 0xC85
     hpmcounter6h:
         rv32:
@@ -3209,7 +3312,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter6h returns the upper half word in RV32I systems.
+        description: The hpmcounter6h returns the upper half word in RV32I 
+            systems.
         address: 0xC86
     hpmcounter7h:
         rv32:
@@ -3218,7 +3322,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter7h returns the upper half word in RV32I systems.
+        description: The hpmcounter7h returns the upper half word in RV32I 
+            systems.
         address: 0xC87
     hpmcounter8h:
         rv32:
@@ -3227,7 +3332,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter8h returns the upper half word in RV32I systems.
+        description: The hpmcounter8h returns the upper half word in RV32I 
+            systems.
         address: 0xC88
     hpmcounter9h:
         rv32:
@@ -3236,7 +3342,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter9h returns the upper half word in RV32I systems.
+        description: The hpmcounter9h returns the upper half word in RV32I 
+            systems.
         address: 0xC89
     hpmcounter10h:
         rv32:
@@ -3245,7 +3352,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter10h returns the upper half word in RV32I systems.
+        description: The hpmcounter10h returns the upper half word in RV32I 
+            systems.
         address: 0xC8A
     hpmcounter11h:
         rv32:
@@ -3254,7 +3362,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter11h returns the upper half word in RV32I systems.
+        description: The hpmcounter11h returns the upper half word in RV32I 
+            systems.
         address: 0xC8B
     hpmcounter12h:
         rv32:
@@ -3263,7 +3372,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter12h returns the upper half word in RV32I systems.
+        description: The hpmcounter12h returns the upper half word in RV32I 
+            systems.
         address: 0xC8C
     hpmcounter13h:
         rv32:
@@ -3272,7 +3382,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter13h returns the upper half word in RV32I systems.
+        description: The hpmcounter13h returns the upper half word in RV32I 
+            systems.
         address: 0xC8D
     hpmcounter14h:
         rv32:
@@ -3281,7 +3392,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter14h returns the upper half word in RV32I systems.
+        description: The hpmcounter14h returns the upper half word in RV32I 
+            systems.
         address: 0xC8E
     hpmcounter15h:
         rv32:
@@ -3290,7 +3402,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter15h returns the upper half word in RV32I systems.
+        description: The hpmcounter15h returns the upper half word in RV32I 
+            systems.
         address: 0xC8F
     hpmcounter16h:
         rv32:
@@ -3299,7 +3412,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter16h returns the upper half word in RV32I systems.
+        description: The hpmcounter16h returns the upper half word in RV32I 
+            systems.
         address: 0xC90
     hpmcounter17h:
         rv32:
@@ -3308,7 +3422,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter17h returns the upper half word in RV32I systems.
+        description: The hpmcounter17h returns the upper half word in RV32I 
+            systems.
         address: 0xC91
     hpmcounter18h:
         rv32:
@@ -3317,7 +3432,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter18h returns the upper half word in RV32I systems.
+        description: The hpmcounter18h returns the upper half word in RV32I 
+            systems.
         address: 0xC92
     hpmcounter19h:
         rv32:
@@ -3326,7 +3442,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter19h returns the upper half word in RV32I systems.
+        description: The hpmcounter19h returns the upper half word in RV32I 
+            systems.
         address: 0xC93
     hpmcounter20h:
         rv32:
@@ -3335,7 +3452,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter20h returns the upper half word in RV32I systems.
+        description: The hpmcounter20h returns the upper half word in RV32I 
+            systems.
         address: 0xC94
     hpmcounter21h:
         rv32:
@@ -3344,7 +3462,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter21h returns the upper half word in RV32I systems.
+        description: The hpmcounter21h returns the upper half word in RV32I 
+            systems.
         address: 0xC95
     hpmcounter22h:
         rv32:
@@ -3353,7 +3472,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter22h returns the upper half word in RV32I systems.
+        description: The hpmcounter22h returns the upper half word in RV32I 
+            systems.
         address: 0xC96
     hpmcounter23h:
         rv32:
@@ -3362,7 +3482,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter23h returns the upper half word in RV32I systems.
+        description: The hpmcounter23h returns the upper half word in RV32I 
+            systems.
         address: 0xC97
     hpmcounter24h:
         rv32:
@@ -3371,7 +3492,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter24h returns the upper half word in RV32I systems.
+        description: The hpmcounter24h returns the upper half word in RV32I 
+            systems.
         address: 0xC98
     hpmcounter25h:
         rv32:
@@ -3380,7 +3502,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter25h returns the upper half word in RV32I systems.
+        description: The hpmcounter25h returns the upper half word in RV32I 
+            systems.
         address: 0xC99
     hpmcounter26h:
         rv32:
@@ -3389,7 +3512,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter26h returns the upper half word in RV32I systems.
+        description: The hpmcounter26h returns the upper half word in RV32I 
+            systems.
         address: 0xC9A
     hpmcounter27h:
         rv32:
@@ -3398,7 +3522,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter27h returns the upper half word in RV32I systems.
+        description: The hpmcounter27h returns the upper half word in RV32I 
+            systems.
         address: 0xC9B
     hpmcounter28h:
         rv32:
@@ -3407,7 +3532,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter28h returns the upper half word in RV32I systems.
+        description: The hpmcounter28h returns the upper half word in RV32I 
+            systems.
         address: 0xC9C
     hpmcounter29h:
         rv32:
@@ -3416,7 +3542,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter29h returns the upper half word in RV32I systems.
+        description: The hpmcounter29h returns the upper half word in RV32I 
+            systems.
         address: 0xC9D
     hpmcounter30h:
         rv32:
@@ -3425,7 +3552,8 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter30h returns the upper half word in RV32I systems.
+        description: The hpmcounter30h returns the upper half word in RV32I 
+            systems.
         address: 0xC9E
     hpmcounter31h:
         rv32:
@@ -3434,15 +3562,16 @@ hart0:
             accessible: false
         priv_mode: U
         reset-val: 0
-        description: The hpmcounter31h returns the upper half word in RV32I systems.
+        description: The hpmcounter31h returns the upper half word in RV32I 
+            systems.
         address: 0xC9F
     sstatus:
         rv32:
             accessible: false
         rv64:
             accessible: false
-        description: The sstatus register keeps track of the processor’s current operating
-            state.
+        description: The sstatus register keeps track of the processor’s current
+            operating state.
         address: 0x100
         priv_mode: S
         reset-val: 0
@@ -3451,8 +3580,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The sie register is an SXLEN-bit read/write register containing
-            interrupt enable bits.
+        description: The sie register is an SXLEN-bit read/write register 
+            containing interrupt enable bits.
         address: 0x104
         priv_mode: S
         reset-val: 0
@@ -3461,8 +3590,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The sip register is an SXLEN-bit read/write register containing
-            interrupt pending bits.
+        description: The sip register is an SXLEN-bit read/write register 
+            containing interrupt pending bits.
         address: 0x144
         priv_mode: S
         reset-val: 0
@@ -3471,8 +3600,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The sscratch register is an MXLEN-bit read/write register dedicated
-            for use by machine mode.
+        description: The sscratch register is an MXLEN-bit read/write register 
+            dedicated for use by machine mode.
         address: 0x140
         priv_mode: S
         reset-val: 0
@@ -3481,8 +3610,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The sepc is a warl register that must be able to hold all valid
-            physical and virtual addresses.
+        description: The sepc is a warl register that must be able to hold all 
+            valid physical and virtual addresses.
         address: 0x141
         priv_mode: S
         reset-val: 0
@@ -3491,8 +3620,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The stval is a warl register that holds the address of the instruction
-            which caused the exception.
+        description: The stval is a warl register that holds the address of the 
+            instruction which caused the exception.
         address: 0x143
         priv_mode: S
         reset-val: 0
@@ -3501,7 +3630,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The scause register stores the information regarding the trap.
+        description: The scause register stores the information regarding the 
+            trap.
         address: 0x142
         priv_mode: S
         reset-val: 0
@@ -3510,7 +3640,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: SXLEN-bit read/write register that holds trap vector configuration.
+        description: SXLEN-bit read/write register that holds trap vector 
+            configuration.
         address: 0x105
         priv_mode: S
         reset-val: 0
@@ -3519,8 +3650,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: SXLEN-bit register which controls supervisor-mode address translation
-            and protection
+        description: SXLEN-bit register which controls supervisor-mode address 
+            translation and protection
         address: 0x180
         priv_mode: S
         reset-val: 0
@@ -3529,8 +3660,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The ustatus register keeps track of the processor’s current operating
-            state.
+        description: The ustatus register keeps track of the processor’s current
+            operating state.
         address: 0x000
         priv_mode: U
         reset-val: 0
@@ -3539,8 +3670,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The uie register is an UXLEN-bit read/write register containing
-            interrupt enable bits.
+        description: The uie register is an UXLEN-bit read/write register 
+            containing interrupt enable bits.
         address: 0x004
         priv_mode: U
         reset-val: 0
@@ -3549,8 +3680,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The uip register is an UXLEN-bit read/write register containing
-            interrupt pending bits.
+        description: The uip register is an UXLEN-bit read/write register 
+            containing interrupt pending bits.
         address: 0x044
         priv_mode: U
         reset-val: 0
@@ -3559,8 +3690,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The uscratch register is an UXLEN-bit read/write register dedicated
-            for use by machine mode.
+        description: The uscratch register is an UXLEN-bit read/write register 
+            dedicated for use by machine mode.
         address: 0x040
         priv_mode: U
         reset-val: 0
@@ -3569,8 +3700,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The uepc is a warl register that must be able to hold all valid
-            physical and virtual addresses.
+        description: The uepc is a warl register that must be able to hold all 
+            valid physical and virtual addresses.
         address: 0x041
         priv_mode: U
         reset-val: 0
@@ -3579,8 +3710,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The utval is a warl register that holds the address of the instruction
-            which caused the exception.
+        description: The utval is a warl register that holds the address of the 
+            instruction which caused the exception.
         address: 0x043
         priv_mode: U
         reset-val: 0
@@ -3589,7 +3720,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The ucause register stores the information regarding the trap.
+        description: The ucause register stores the information regarding the 
+            trap.
         address: 0x042
         priv_mode: U
         reset-val: 0
@@ -3598,7 +3730,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: UXLEN-bit read/write register that holds trap vector configuration.
+        description: UXLEN-bit read/write register that holds trap vector 
+            configuration.
         address: 0x005
         priv_mode: U
         reset-val: 0
@@ -3607,9 +3740,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The scounteren is a 32-bit register that controls the availability
-            of the hardware performance-monitoring counters to the next-lowest privileged
-            mode.
+        description: The scounteren is a 32-bit register that controls the 
+            availability of the hardware performance-monitoring counters to the 
+            next-lowest privileged mode.
         address: 0x106
         priv_mode: S
         reset-val: 0
@@ -3618,8 +3751,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hstatus register keeps track of and controls the hart’s current
-            operating state.
+        description: The hstatus register keeps track of and controls the hart’s
+            current operating state.
         address: 1536
         priv_mode: H
         reset-val: 0
@@ -3646,8 +3779,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hip register is an HXLEN-bit read/write register containing
-            information on pending interrupts.
+        description: The hip register is an HXLEN-bit read/write register 
+            containing information on pending interrupts.
         address: 1604
         priv_mode: H
         reset-val: 0
@@ -3656,8 +3789,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hvip register is an HSXLEN-bit read/write register that a
-            hypervisor can write to indicate virtual interrupts intended for VS-mode.
+        description: The hvip register is an HSXLEN-bit read/write register that
+            a hypervisor can write to indicate virtual interrupts intended for 
+            VS-mode.
         address: 1605
         priv_mode: H
         reset-val: 0
@@ -3666,8 +3800,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hgeip register is an HSXLEN-bit read-only register that indicates
-            pending guest external interrupts for this hart.
+        description: The hgeip register is an HSXLEN-bit read-only register that
+            indicates pending guest external interrupts for this hart.
         address: 0xE12
         priv_mode: H
         reset-val: 0
@@ -3676,8 +3810,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hgeie register is an HSXLEN-bit read/write register that
-            contains enable bits for the guest external interrupts at this hart.
+        description: The hgeie register is an HSXLEN-bit read/write register 
+            that contains enable bits for the guest external interrupts at this 
+            hart.
         address: 0x607
         priv_mode: H
         reset-val: 0
@@ -3686,8 +3821,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The htval is a warl register that holds the address of the instruction
-            which caused the exception.
+        description: The htval is a warl register that holds the address of the 
+            instruction which caused the exception.
         address: 0x643
         priv_mode: H
         reset-val: 0
@@ -3696,9 +3831,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The htinst is a warl register that need only be able to hold
-            the values that the implementation may automatically write to it on a
-            trap.
+        description: The htinst is a warl register that need only be able to 
+            hold the values that the implementation may automatically write to 
+            it on a trap.
         address: 0x64A
         priv_mode: H
         reset-val: 0
@@ -3707,8 +3842,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: When a trap is taken into M-mode, mtval2 is written with additional
-            exception-specific information to assist software in handling the trap.
+        description: When a trap is taken into M-mode, mtval2 is written with 
+            additional exception-specific information to assist software in 
+            handling the trap.
         address: 0x34B
         priv_mode: M
         reset-val: 0
@@ -3717,9 +3853,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The mtinst is a warl register that need only be able to hold
-            the values that the implementation may automatically write to it on a
-            trap.
+        description: The mtinst is a warl register that need only be able to 
+            hold the values that the implementation may automatically write to 
+            it on a trap.
         address: 0x34A
         priv_mode: M
         reset-val: 0
@@ -3728,8 +3864,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: HSXLEN-bit register which controls G-stage address translation
-            and protection
+        description: HSXLEN-bit register which controls G-stage address 
+            translation and protection
         address: 0x680
         priv_mode: H
         reset-val: 0
@@ -3738,9 +3874,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The hcounteren is a 32-bit register that controls the availability
-            of the hardware performance-monitoring counters to the next-lowest privileged
-            mode.
+        description: The hcounteren is a 32-bit register that controls the 
+            availability of the hardware performance-monitoring counters to the 
+            next-lowest privileged mode.
         address: 0x606
         priv_mode: H
         reset-val: 0
@@ -3749,9 +3885,9 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The htimedelta CSR is a read/write register that contains the
-            delta between the value of the time CSR and the value returned in VS-mode
-            or VU-mode.
+        description: The htimedelta CSR is a read/write register that contains 
+            the delta between the value of the time CSR and the value returned 
+            in VS-mode or VU-mode.
         priv_mode: H
         address: 0x605
         reset-val: 0
@@ -3769,8 +3905,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vsstatus register keeps track of the processor’s current
-            operating state.
+        description: The vsstatus register keeps track of the processor’s 
+            current operating state.
         address: 0x200
         priv_mode: S
         reset-val: 0
@@ -3779,8 +3915,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vsie register is an VSXLEN-bit read/write register containing
-            interrupt enable bits.
+        description: The vsie register is an VSXLEN-bit read/write register 
+            containing interrupt enable bits.
         address: 0x204
         priv_mode: S
         reset-val: 0
@@ -3789,8 +3925,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vsip register is an VSXLEN-bit read/write register containing
-            interrupt pending bits.
+        description: The vsip register is an VSXLEN-bit read/write register 
+            containing interrupt pending bits.
         address: 0x244
         priv_mode: S
         reset-val: 0
@@ -3799,8 +3935,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vsscratch register is an VSXLEN-bit read/write register dedicated
-            for use by machine mode.
+        description: The vsscratch register is an VSXLEN-bit read/write register
+            dedicated for use by machine mode.
         address: 0x240
         priv_mode: S
         reset-val: 0
@@ -3809,8 +3945,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vsepc is a warl register that must be able to hold all valid
-            physical and virtual addresses.
+        description: The vsepc is a warl register that must be able to hold all 
+            valid physical and virtual addresses.
         address: 0x241
         priv_mode: S
         reset-val: 0
@@ -3819,8 +3955,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vstval is a warl register that holds the address of the instruction
-            which caused the exception.
+        description: The vstval is a warl register that holds the address of the
+            instruction which caused the exception.
         address: 0x243
         priv_mode: S
         reset-val: 0
@@ -3829,7 +3965,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The scause register stores the information regarding the trap.
+        description: The scause register stores the information regarding the 
+            trap.
         address: 0x242
         priv_mode: S
         reset-val: 0
@@ -3838,7 +3975,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: SXLEN-bit read/write register that holds trap vector configuration.
+        description: SXLEN-bit read/write register that holds trap vector 
+            configuration.
         address: 0x205
         priv_mode: S
         reset-val: 0
@@ -3847,8 +3985,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: VSXLEN-bit register which controls supervisor-mode address translation
-            and protection
+        description: VSXLEN-bit register which controls supervisor-mode address 
+            translation and protection
         address: 0x280
         priv_mode: S
         reset-val: 0
@@ -3857,8 +3995,8 @@ hart0:
             accessible: false
         rv64:
             accessible: false
-        description: The vxsat register records the overflow saturation condition
-            of P and V instructions.
+        description: The vxsat register records the overflow saturation 
+            condition of P and V instructions.
         address: 9
         priv_mode: U
         reset-val: 0
