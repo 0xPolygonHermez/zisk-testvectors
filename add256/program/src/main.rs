@@ -471,17 +471,17 @@ fn main() {
     assert_eq!(cout, 0);
 
     for i in 0..(1 << 21) {
-        let a = [42, 1337, 0xDEADBEEF, i];
-        let b = [13, 42, 0x12345678, 2 * i];
-        let mut c = [0, 0, 0, 0];
+        let a: [u64; 4] = [42, 1337, 0xDEADBEEF, i];
+        let b: [u64; 4] = [13, 42, 0x12345678, 2 * i];
+        let mut c: [u64; 4] = [0, 0, 0, 0];
         let mut params = SyscallAdd256Params { a: &a, b: &b, cin: 0, c: &mut c };
         let cout = syscall_add256(&mut params);
-        assert_eq!(params.c[3], 3 * i);
-        assert_eq!(params.c[2], 0xF0E21567);
-        assert_eq!(params.c[1], 0x563);
-        assert_eq!(params.c[0], 0x37);
-        // expected_c[3] = 3 * i;
-        // assert_eq!(params.c, &expected_c);
+        // assert_eq!(params.c[3], 3 * i);
+        // assert_eq!(params.c[2], 0xF0E21567);
+        // assert_eq!(params.c[1], 0x563);
+        // assert_eq!(params.c[0], 0x37);
+        expected_c[3] = 3 * i;
+        assert_eq!(params.c, &expected_c);
         assert_eq!(cout, 0);
     }
 }

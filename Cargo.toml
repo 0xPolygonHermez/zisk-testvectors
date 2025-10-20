@@ -27,7 +27,7 @@ opt-level = 3
 [workspace.dependencies]
 rand = "0.8"
 byteorder = "1.5.0"
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feature/add256" }
 # Local development
 # ziskos = { path = "../zisk/ziskos/entrypoint" }
 
