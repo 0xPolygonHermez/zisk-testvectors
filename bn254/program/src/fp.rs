@@ -1,4 +1,4 @@
-use ziskos::bn254::fp::{add_fp_bn254, inv_fp_bn254, mul_fp_bn254, neg_fp_bn254, square_fp_bn254};
+use ziskos::{add_fp_bn254, inv_fp_bn254, mul_fp_bn254, neg_fp_bn254, square_fp_bn254};
 
 pub fn fp_tests() {
     // Addition

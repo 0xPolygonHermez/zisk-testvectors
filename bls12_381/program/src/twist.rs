@@ -1,4 +1,4 @@
-use ziskos::bls12_381::twist::{
+use ziskos::{
     add_twist_bls12_381, dbl_twist_bls12_381, is_on_curve_twist_bls12_381,
     is_on_subgroup_twist_bls12_381, neg_twist_bls12_381, scalar_mul_by_abs_x_twist_bls12_381,
 };

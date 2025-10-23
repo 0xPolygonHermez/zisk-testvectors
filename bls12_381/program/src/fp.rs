@@ -1,4 +1,4 @@
-use ziskos::bls12_381::fp::{
+use ziskos::{
     add_fp_bls12_381, inv_fp_bls12_381, mul_fp_bls12_381, neg_fp_bls12_381, square_fp_bls12_381,
 };
 

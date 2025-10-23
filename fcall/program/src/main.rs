@@ -3,7 +3,7 @@
 ziskos::entrypoint!(main);
 
 use ziskos::{
-    fcall2_secp256k1_fn_inv, fcall2_secp256k1_fp_inv, fcall2_secp256k1_fp_sqrt,
+    fcall2_secp256k1_fn_inv, fcall2_secp256k1_fp_inv,
     fcall_secp256k1_fn_inv, fcall_secp256k1_fp_inv, fcall_secp256k1_fp_sqrt, ziskos_fcall_get,
 };
 
@@ -40,26 +40,15 @@ fn main() {
         [0xfffffffefffffc2e, 0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff];
 
     let result = fcall_secp256k1_fp_sqrt(&value, 1);
-    assert_eq!(result, Some(expected_result_1));
-
-    fcall2_secp256k1_fp_sqrt(&value, 0);
-    assert_eq!(ziskos_fcall_get(), 1);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, expected_result_0);
+    assert_eq!(result[0], 1);
+    assert_eq!(result[1..5], expected_result_1);
 
     let result = fcall_secp256k1_fp_sqrt(&no_root, 0);
-    assert_eq!(result, None);
-
-    fcall2_secp256k1_fp_sqrt(&no_root, 1);
-    assert_eq!(ziskos_fcall_get(), 0);
+    assert_eq!(result[0], 0);
 
     let result = fcall_secp256k1_fp_sqrt(&value, 0);
-    assert_eq!(result, Some(expected_result_0));
-
-    fcall2_secp256k1_fp_sqrt(&value, 1);
-    assert_eq!(ziskos_fcall_get(), 1);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, expected_result_1);
+    assert_eq!(result[0], 1);
+    assert_eq!(result[1..5], expected_result_0);
 
     let value: [u64; 4] =
         [0xfffffffefffffc2c, 0xffffffffffffffff, 0xffffffffffffffff, 0xffffffffffffffff];
@@ -70,20 +59,12 @@ fn main() {
         [0x7d8d27ae1cd5f852, 0xc61f6d15da14ecd4, 0x233770c2a797962c, 0x0a2d2ba93507f1df];
 
     let result = fcall_secp256k1_fp_sqrt(&value, 1);
-    assert_eq!(result, Some(expected_result_1));
-
-    fcall2_secp256k1_fp_sqrt(&value, 0);
-    assert_eq!(ziskos_fcall_get(), 1);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, expected_result_0);
+    assert_eq!(result[0], 1);
+    assert_eq!(result[1..5], expected_result_1);
 
     let result = fcall_secp256k1_fp_sqrt(&value, 0);
-    assert_eq!(result, Some(expected_result_0));
-
-    fcall2_secp256k1_fp_sqrt(&value, 1);
-    assert_eq!(ziskos_fcall_get(), 1);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, expected_result_1);
+    assert_eq!(result[0], 1);
+    assert_eq!(result[1..5], expected_result_0);
 
     // secp256k1_fp_inv
 

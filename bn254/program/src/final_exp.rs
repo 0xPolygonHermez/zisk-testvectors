@@ -1,4 +1,4 @@
-use ziskos::bn254::final_exp::final_exp_bn254;
+use ziskos::final_exp_bn254;
 
 pub fn final_exp_tests() {
     let a = [

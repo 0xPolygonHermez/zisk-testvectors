@@ -1,4 +1,4 @@
-use ziskos::bn254::fp2::{
+use ziskos::{
     add_fp2_bn254, conjugate_fp2_bn254, dbl_fp2_bn254, inv_fp2_bn254, mul_fp2_bn254, neg_fp2_bn254,
     scalar_mul_fp2_bn254, square_fp2_bn254, sub_fp2_bn254,
 };

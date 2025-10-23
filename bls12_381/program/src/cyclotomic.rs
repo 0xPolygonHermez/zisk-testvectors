@@ -1,4 +1,4 @@
-use ziskos::bls12_381::cyclotomic::{
+use ziskos::{
     compress_cyclo_bls12_381, decompress_cyclo_bls12_381, exp_by_x_cyclo_bls12_381,
     exp_by_xdiv3_cyclo_bls12_381, exp_by_xone_cyclo_bls12_381, square_cyclo_bls12_381,
 };

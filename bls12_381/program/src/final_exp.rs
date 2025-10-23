@@ -1,4 +1,4 @@
-use ziskos::bls12_381::final_exp::final_exp_bls12_381;
+use ziskos::final_exp_bls12_381;
 
 pub fn final_exp_tests() {
     // 0^{(p¹²-1)/r} = 0
