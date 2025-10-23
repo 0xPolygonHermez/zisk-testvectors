@@ -1,4 +1,6 @@
-use ziskos::{exp_fp12_bls12_381, pairing_bls12_381, scalar_mul_bls12_381, scalar_mul_twist_bls12_381};
+use ziskos::{
+    exp_fp12_bls12_381, pairing_bls12_381, scalar_mul_bls12_381, scalar_mul_twist_bls12_381,
+};
 
 use crate::constants::{G1, G2, P};
 

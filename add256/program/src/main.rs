@@ -4,6 +4,18 @@ ziskos::entrypoint!(main);
 
 use ziskos::add256::{syscall_add256, SyscallAdd256Params};
 
+const P: [u64; 4] =
+    [0xFFFFFFFEFFFFFC2F, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF];
+
+const P_COMP: u64 = 0x1000003D1;
+
+const P_MINUS_ONE: [u64; 4] = [P[0] - 1, P[1], P[2], P[3]];
+
+const P_PLUS_ONE: [u64; 4] = [P[0] + 1, P[1], P[2], P[3]];
+
+const MASK_256: [u64; 4] =
+    [0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF];
+
 fn main() {
     let mut a: [u64; 4] = [0, 0, 0, 0];
     let mut b: [u64; 4] = [0, 0, 0, 0];
@@ -484,4 +496,150 @@ fn main() {
         assert_eq!(params.c, &expected_c);
         assert_eq!(cout, 0);
     }
+
+    test_secp256k1_fp();
+}
+
+fn test_secp256k1_fp() {
+    assert_eq!(secp256k1_fp_reduce(&[0, 0, 0, 0]), [0, 0, 0, 0]);
+
+    assert_eq!(secp256k1_fp_reduce(&P_MINUS_ONE), P_MINUS_ONE);
+
+    assert_eq!(secp256k1_fp_reduce(&P), [0, 0, 0, 0]);
+
+    assert_eq!(secp256k1_fp_reduce(&P_PLUS_ONE), [1, 0, 0, 0]);
+
+    assert_eq!(secp256k1_fp_reduce(&MASK_256), [4294968272, 0, 0, 0]);
+
+    // Test case: P - 1 + P - 1 = 2P - 2 = P - 2 (mod P)
+    let p_minus_1 = [P[0] - 1, P[1], P[2], P[3]];
+    let result = secp256k1_fp_add(&p_minus_1, &p_minus_1);
+    let expected = [P[0] - 2, P[1], P[2], P[3]];
+    assert_eq!(result, expected);
+
+    // Test case: P - 1 + 1 = 0 (mod P)
+    let result = secp256k1_fp_add(&p_minus_1, &[1, 0, 0, 0]);
+    assert_eq!(result, [0, 0, 0, 0]);
+
+    // Test case: P - 1 + 2 = 1 (mod P)
+    let result = secp256k1_fp_add(&p_minus_1, &[2, 0, 0, 0]);
+    assert_eq!(result, [1, 0, 0, 0]);
+
+    // Test case: Large values that cause overflow
+    let large1 = [0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0, 0];
+    let large2 = [0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0, 0];
+    let result = secp256k1_fp_add(&large1, &large2);
+    assert_eq!(result, [0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF, 1, 0]);
+
+    // Test case: Adding P to any value should give the same value
+    let test_val = [0x123456789ABCDEF0, 0xFEDCBA9876543210, 0x1111222233334444, 0x4444555566667777];
+    let result = secp256k1_fp_add(&test_val, &P);
+    assert_eq!(result, test_val);
+
+    // Test case: Edge case near modulus
+    let near_p = [P[0] - 100, P[1], P[2], P[3]];
+    let small_val = [200, 0, 0, 0];
+    let result = secp256k1_fp_add(&near_p, &small_val);
+    let expected = [100, 0, 0, 0]; // (P - 100 + 200) mod P = 100 mod P = 100
+    assert_eq!(result, expected);
+
+    // Test case: Maximum possible values
+    let max_val = [0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF];
+    let result = secp256k1_fp_add(&max_val, &[1, 0, 0, 0]);
+    let expected = [P_COMP, 0, 0, 0];
+    assert_eq!(result, expected);
+
+    // Test case: Multiple P_COMP additions
+    let test_val = [P_COMP - 1, 0, 0, 0];
+    let result = secp256k1_fp_add(&max_val, &test_val);
+    let expected = [0x2000007a0, 0, 0, 0];
+    assert_eq!(result, expected);
+
+    // Test case: Verify P_COMP correctness
+    // P_COMP should equal 2^256 - P
+    let mut params =
+        SyscallAdd256Params { a: &P, b: &[P_COMP, 0, 0, 0], cin: 0, c: &mut [0, 0, 0, 0] };
+    let cout = syscall_add256(&mut params);
+    assert_eq!(*params.c, [0, 0, 0, 0]);
+    assert_eq!(cout, 1); // Should overflow to exactly 2^256
+
+    // Test case: Associativity check
+    let a = [0x123456789ABCDEF0, 0, 0, 0];
+    let b = [0xFEDCBA9876543210, 0, 0, 0];
+    let c = [0x1111222233334444, 0, 0, 0];
+
+    let ab_c = secp256k1_fp_add(&secp256k1_fp_add(&a, &b), &c);
+    let a_bc = secp256k1_fp_add(&a, &secp256k1_fp_add(&b, &c));
+    assert_eq!(ab_c, a_bc);
+
+    // Test case: Commutativity check
+    let x = [0xDEADBEEFCAFEBABE, 0x123456789ABCDEF0, 0, 0];
+    let y = [0xFACEB00CC0DED00D, 0xFEDCBA9876543210, 0, 0];
+
+    let xy = secp256k1_fp_add(&x, &y);
+    let yx = secp256k1_fp_add(&y, &x);
+    assert_eq!(xy, yx);
+
+    // Test case: Identity element
+    let test_val = [0xABCDEF0123456789, 0x9876543210FEDCBA, 0x1234567890ABCDEF, 0xFEDCBA0987654321];
+    let result = secp256k1_fp_add(&test_val, &[0, 0, 0, 0]);
+    assert_eq!(result, test_val);
+}
+
+pub fn secp256k1_fp_add_with_pcomp(x: &[u64; 4]) -> [u64; 4] {
+    let mut params =
+        SyscallAdd256Params { a: x, b: &[P_COMP, 0, 0, 0], cin: 0, c: &mut [0, 0, 0, 0] };
+    syscall_add256(&mut params);
+    *params.c
+}
+
+pub fn secp256k1_fp_reduce(x: &[u64; 4]) -> [u64; 4] {
+    if lt(x, &P) {
+        return *x;
+    }
+
+    // Since p <= x < 2·p (because 2·p > 2^256), computing x (mod p) = x - p = x + (2^256 - p) (mod 2^256)
+    secp256k1_fp_add_with_pcomp(x)
+}
+
+pub fn secp256k1_fp_add(x: &[u64; 4], y: &[u64; 4]) -> [u64; 4] {
+    // x + y
+    let mut params = SyscallAdd256Params { a: x, b: y, cin: 0, c: &mut [0, 0, 0, 0] };
+    let cout = syscall_add256(&mut params);
+    let mut s = *params.c;
+
+    // Let s = (x + y) mod 2^256
+    // There are 4 possible cases:
+    // 1. If s < p and cout == 0, then result = s
+    // 2. If s >= p and cout == 0, then result = s (mod p)
+    // 3. If s < p and cout == 1, then result = s
+    // 4. If s >= p and cout == 1, this is not possible
+    if cout == 0 {
+        if !lt(&s, &P) {
+            s = secp256k1_fp_add_with_pcomp(&s);
+        }
+        return s;
+    }
+
+    // Here we have x + y = s + 2^256, with s < p
+    // Since 2^256 = p_comp (mod p), we only need to compute (s + p_comp) mod p
+    // Moreover, since s < p, we have s + p_comp <= p - 1 + p_comp = 2^256 - 1
+    params.a = &s;
+    params.b = &[P_COMP, 0, 0, 0];
+    syscall_add256(&mut params);
+    *params.c
+}
+
+fn lt(x: &[u64], y: &[u64]) -> bool {
+    let len = x.len();
+    assert_eq!(len, y.len(), "x and y must have the same length");
+
+    for i in (0..len).rev() {
+        if x[i] < y[i] {
+            return true;
+        } else if x[i] > y[i] {
+            return false;
+        }
+    }
+    false
 }
