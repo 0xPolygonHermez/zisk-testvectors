@@ -4,7 +4,11 @@ version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-rand = { workspace = true }
-byteorder = { workspace = true }
-tiny-keccak = { workspace = true }
 ziskos = { workspace = true }
+rand = { workspace = true }
+byteorder = "1.5.0"
+tiny-keccak = { git = "https://github.com/0xPolygonHermez/zisk-patch-tiny-keccak.git", branch = "zisk", features = [ "keccak" ] }
+# tiny-keccak = { version = "2.0.2", features = ["keccak"] }
+
+[lints]
+workspace = true
