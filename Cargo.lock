@@ -1279,6 +1279,67 @@ dependencies = [
 ]
 
 [[package]]
+name = "precomp-arith-eq-384"
+version = "0.13.0"
+dependencies = [
+ "ark-bls12-381",
+ "ark-bn254",
+ "ark-ff",
+ "ark-secp256k1",
+ "ark-std",
+ "fields",
+ "k256",
+ "lazy_static",
+ "lib-c",
+ "mem-common",
+ "nom",
+ "num-bigint",
+ "num-traits",
+ "path-clean",
+ "pil-std-lib",
+ "precomp-arith-eq",
+ "precompiles-common",
+ "precompiles-helpers",
+ "proofman",
+ "proofman-common",
+ "proofman-macros",
+ "proofman-util",
+ "rayon",
+ "regex",
+ "rustfmt-wrapper",
+ "serde",
+ "serde_json",
+ "tracing",
+ "typenum",
+ "witness",
+ "zisk-common",
+ "zisk-core",
+ "zisk-pil",
+]
+
+[[package]]
+name = "precomp-big-int"
+version = "0.13.0"
+dependencies = [
+ "fields",
+ "generic-array",
+ "lib-c",
+ "mem-common",
+ "pil-std-lib",
+ "precompiles-common",
+ "proofman",
+ "proofman-common",
+ "proofman-macros",
+ "proofman-util",
+ "rayon",
+ "sm-mem",
+ "tracing",
+ "zisk-common",
+ "zisk-core",
+ "zisk-pil",
+]
+
+[[package]]
 name = "precompiles-common"
 version = "0.13.0"
 dependencies = [
@@ -1339,6 +1400,8 @@ dependencies = [
  "env",
  "path-clean",
  "precomp-arith-eq",
+ "precomp-arith-eq-384",
+ "precomp-big-int",
 ]
 
 [[package]]

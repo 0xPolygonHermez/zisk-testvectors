@@ -6,13 +6,12 @@ use precomp_arith_eq::test_data::{
 };
 use std::path::Path;
 
-use super::{ProgramBuilder, ProgramConfig, MINIMAL_TESTS};
+use super::ProgramBuilder;
 
-pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
-    let config = ProgramConfig::new("ArithEq").with_minimal(minimal);
-    let mut builder = ProgramBuilder::new(config);
+pub fn generate_arith_eq_tests(output_path: &Path, limit: Option<usize>) -> (String, String) {
+    let mut builder = ProgramBuilder::new("ArithEq");
 
-    let max_tests = if minimal { MINIMAL_TESTS } else { usize::MAX };
+    let limit = limit.unwrap_or(usize::MAX);
 
     // ========== Arith256 Test Group ==========
     builder.add_test_group("Arith256 Tests");
@@ -27,7 +26,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     let mut index = 0;
     while let Some((a, b, c, dh, dl)) = get_arith256_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -60,7 +59,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((a, b, c, module, d)) = get_arith256_mod_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -89,7 +88,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((p1, p2, p3)) = get_secp256k1_add_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -121,7 +120,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((p1, p3)) = get_secp256k1_dbl_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -151,7 +150,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((p1, p2, p3)) = get_bn254_curve_add_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -183,7 +182,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((p1, p3)) = get_bn254_curve_dbl_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -215,7 +214,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((f1, f2, f3)) = get_bn254_complex_add_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -250,7 +249,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((f1, f2, f3)) = get_bn254_complex_sub_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -285,7 +284,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
 
     index = 0;
     while let Some((f1, f2, f3)) = get_bn254_complex_mul_test_data(index) {
-        if index >= max_tests {
+        if index >= limit {
             break;
         }
 
@@ -312,6 +311,10 @@ pub fn generate_arith_eq_tests(output_path: &Path, minimal: bool) {
         index += 1;
     }
 
-    let output_file = output_path.join("main.rs");
-    builder.generate_to_file(output_file.to_str().unwrap());
+    // Write to file
+    let file_name = "arith_eq_tests";
+    let fn_name = "test_arith_eq";
+    let output_file = output_path.join(format!("{}.rs", file_name));
+    builder.generate_to_file(output_file.to_str().unwrap(), fn_name);
+    (file_name.to_string(), fn_name.to_string())
 }

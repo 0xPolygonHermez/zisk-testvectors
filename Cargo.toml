@@ -9,6 +9,3 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-# precomp-arith-eq = { git = "https://github.com/0xPolygonHermez/zisk.git" }
-# Local development
-precomp-arith-eq = { path = "../zisk/precompiles/arith_eq" }
