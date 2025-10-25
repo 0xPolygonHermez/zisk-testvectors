@@ -2,7 +2,7 @@
 #![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
-use ziskos::add256::{syscall_add256, SyscallAdd256Params};
+use ziskos::syscalls::{syscall_add256, SyscallAdd256Params};
 
 const P: [u64; 4] =
     [0xFFFFFFFEFFFFFC2F, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF];

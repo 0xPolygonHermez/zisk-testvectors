@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::zisklib::{
     add_twist_bn254, dbl_twist_bn254, is_on_curve_twist_bn254, is_on_subgroup_twist_bn254,
     neg_twist_bn254, scalar_mul_by_x_twist_bn254, utf_endomorphism_twist_bn254,
 };

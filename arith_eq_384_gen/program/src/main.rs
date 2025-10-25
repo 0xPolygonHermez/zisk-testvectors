@@ -2,10 +2,7 @@
 #![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
-use ziskos::{
-    arith384_mod::*, bls12_381_complex_add::*, bls12_381_complex_mul::*, bls12_381_complex_sub::*,
-    bls12_381_curve_add::*, bls12_381_curve_dbl::*, complex::*, point::*,
-};
+use ziskos::syscalls::*;
 
 fn main() {
     let mut a: [u64; 6] = [0, 0, 0, 0, 0, 0];

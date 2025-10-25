@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::zisklib::{
     conjugate_fp12_bn254, exp_fp12_bn254, frobenius1_fp12_bn254, frobenius2_fp12_bn254,
     frobenius3_fp12_bn254, inv_fp12_bn254, mul_fp12_bn254, square_fp12_bn254,
 };

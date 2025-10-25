@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::zisklib::{
     add_fp6_bls12_381, dbl_fp6_bls12_381, inv_fp6_bls12_381, mul_fp6_bls12_381, neg_fp6_bls12_381,
     sub_fp6_bls12_381,
 };

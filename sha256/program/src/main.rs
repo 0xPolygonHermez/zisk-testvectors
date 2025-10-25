@@ -3,7 +3,7 @@ ziskos::entrypoint!(main);
 
 use ziskos::{
     read_input,
-    sha256f::{syscall_sha256_f, SyscallSha256Params},
+    syscalls::{syscall_sha256_f, SyscallSha256Params},
 };
 
 use generic_array::{typenum::U64, GenericArray};

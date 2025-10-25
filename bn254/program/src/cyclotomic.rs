@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::zisklib::{
     compress_cyclo_bn254, decompress_cyclo_bn254, exp_by_x_cyclo_bn254, square_cyclo_bn254,
 };
 

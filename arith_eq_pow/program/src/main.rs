@@ -2,7 +2,7 @@
 #![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
-use ziskos::exp_power_of_two_self;
+use ziskos::zisklib::exp_power_of_two_self;
 
 fn main() {
     let module: [u64; 4] =

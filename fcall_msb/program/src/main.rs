@@ -2,7 +2,7 @@
 
 ziskos::entrypoint!(main);
 
-use ziskos::fcall_msb_pos_256;
+use ziskos::zisklib::fcall_msb_pos_256;
 
 fn main() {
     /* SAGE:

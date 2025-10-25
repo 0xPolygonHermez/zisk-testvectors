@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::zisklib::{
     add_fp2_bls12_381, conjugate_fp2_bls12_381, dbl_fp2_bls12_381, inv_fp2_bls12_381,
     mul_fp2_bls12_381, neg_fp2_bls12_381, scalar_mul_fp2_bls12_381, square_fp2_bls12_381,
     sub_fp2_bls12_381,

@@ -1,4 +1,4 @@
-use ziskos::{
+use ziskos::zisklib::{
     conjugate_fp12_bls12_381, exp_fp12_bls12_381, frobenius1_fp12_bls12_381,
     frobenius2_fp12_bls12_381, inv_fp12_bls12_381, mul_fp12_bls12_381, sparse_mul_fp12_bls12_381,
     square_fp12_bls12_381,

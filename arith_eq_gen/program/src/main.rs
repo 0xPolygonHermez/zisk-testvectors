@@ -2,11 +2,7 @@
 #![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
-use ziskos::{
-    arith256::*, arith256_mod::*, bn254_complex_add::*, bn254_complex_mul::*, bn254_complex_sub::*,
-    bn254_curve_add::*, bn254_curve_dbl::*, complex::*, point::*, secp256k1_add::*,
-    secp256k1_dbl::*,
-};
+use ziskos::syscalls::*;
 
 fn main() {
     let mut a: [u64; 4] = [0, 0, 0, 0];

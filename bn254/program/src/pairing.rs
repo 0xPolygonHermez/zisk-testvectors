@@ -1,4 +1,4 @@
-use ziskos::{exp_fp12_bn254, pairing_bn254};
+use ziskos::zisklib::{exp_fp12_bn254, pairing_bn254};
 
 use crate::constants::P;
 

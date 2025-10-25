@@ -3,8 +3,11 @@
 ziskos::entrypoint!(main);
 
 use ziskos::{
-    fcall2_secp256k1_fn_inv, fcall2_secp256k1_fp_inv, fcall_secp256k1_fn_inv,
-    fcall_secp256k1_fp_inv, fcall_secp256k1_fp_sqrt, ziskos_fcall_get,
+    zisklib::{
+        fcall2_secp256k1_fn_inv, fcall2_secp256k1_fp_inv, fcall_secp256k1_fn_inv,
+        fcall_secp256k1_fp_inv, fcall_secp256k1_fp_sqrt,
+    },
+    ziskos_fcall_get,
 };
 
 fn main() {
