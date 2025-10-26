@@ -4,13 +4,6 @@ use std::arch::asm;
 use std::num::Wrapping;
 
 pub fn diagnostic_riscv_ima() {
-    // {
-    //     let a: u32 = 10;
-    //     let b: u32 = 3;
-    //     let c: u32 = a / b;
-    //     assert_eq!(c, 3);
-    // }
-
     // minu belongs to Zbb extension, not IMA
 
     // {
@@ -31,50 +24,7 @@ pub fn diagnostic_riscv_ima() {
     //     assert_eq!(c, 0xFFFF_FFFF_FFFF_FFFE);
     // }
 
-    // bltu (RISCV) -> ltu (ZisK)
-    {
-        let a: u64 = 0xFFFF_FFFF_FFFF_FFFF;
-        let b: u64 = 0xFFFF_FFFF_FFFF_FFFE;
-        let c: u64;
-
-        // Use RISCV inline assembly to ensure ZisK instruction is called
-        unsafe {
-            std::arch::asm!(
-                "mv {result}, {input1}",          // Initialize result with a
-                "bltu {input2}, {input1}, 2f",     // If b < a, skip next instruction
-                "mv {result}, {input2}",          // Otherwise, set result to b (minimum)
-                "2:",                             // Label for branch target
-                result = out(reg) c,
-                input1 = in(reg) a,
-                input2 = in(reg) b,
-            );
-        }
-
-        assert_eq!(c, 0xFFFF_FFFF_FFFF_FFFF); // Check we branched correctly
-    }
-    println!("diagnostic_riscv_ima() success");
-
-    // blt (RISCV) -> lt (ZisK)
-    {
-        let a: i64 = 0xFF_FFFF_FFFF_FFFF;
-        let b: i64 = 0xFF_FFFF_FFFF_FFFE;
-        let c: i64;
-
-        // Use RISCV inline assembly to ensure ZisK instruction is called
-        unsafe {
-            std::arch::asm!(
-                "mv {result}, {input1}",          // Initialize result with a
-                "blt {input2}, {input1}, 2f",     // If b < a, skip next instruction
-                "mv {result}, {input2}",          // Otherwise, set result to b (minimum)
-                "2:",                             // Label for branch target
-                result = out(reg) c,
-                input1 = in(reg) a,
-                input2 = in(reg) b,
-            );
-        }
-
-        assert_eq!(c, 0xFF_FFFF_FFFF_FFFF); // Check we branched correctly
-    }
+    diagnostic_riscv_ima_branch();
 
     or(0xFFFF_FFFF_FFFF_FFF1, 0xFFFF_FFFF_FFFF_FFFE, 0xFFFF_FFFF_FFFF_FFFF);
     xor(0xFFFF_0000_FFFF_0000, 0xFFFF_FFFF_0000_0000, 0x0000_FFFF_FFFF_0000);
@@ -94,8 +44,6 @@ pub fn diagnostic_riscv_ima() {
     muluh(0xFFFF_FFFF_0000_0000, 0x1_0000_0000, 0xFFFF_FFFF);
     mulsuh(0xFFFF_FFFF_FFFF_FFFFu64 as i64, 0x1, 0xFFFF_FFFF_FFFF_FFFFu64 as i64);
     mul_w(0xFFFF, 0x100, 0xFF_FF00);
-
-    //signextend_b(-1, -1);
 
     sll_w(0x1_0000, 2, 0x4_0000);
     srl_w(0x4000_0000, 2, 0x1000_0000);
@@ -134,8 +82,7 @@ pub fn diagnostic_riscv_ima() {
     signextend_w(-1, -1);
 
     // TODO: not mapped from RISCV to ZisK
-    // leu, le, ltu_w, lt_w, eq_w, leu_w, le_w
-    // mulu
+    // leu, le, ltu_w, lt_w, eq_w, leu_w, le_w, mulu
 
     // TODO: they require Zbb extension
     // minu, min, maxu, max,
@@ -948,4 +895,55 @@ fn signextend_w(input_a: i32, expected_c: i64) {
         );
     }
     assert_eq!(c, expected_c);
+}
+
+/**********/
+/* branch */
+/**********/
+
+fn diagnostic_riscv_ima_branch() {
+    // bltu (RISCV) -> ltu (ZisK)
+    {
+        let a: u64 = 0xFFFF_FFFF_FFFF_FFFF;
+        let b: u64 = 0xFFFF_FFFF_FFFF_FFFE;
+        let c: u64;
+
+        // Use RISCV inline assembly to ensure ZisK instruction is called
+        unsafe {
+            std::arch::asm!(
+                "mv {result}, {input1}",          // Initialize result with a
+                "bltu {input2}, {input1}, 2f",     // If b < a, skip next instruction
+                "mv {result}, {input2}",          // Otherwise, set result to b (minimum)
+                "2:",                             // Label for branch target
+                result = out(reg) c,
+                input1 = in(reg) a,
+                input2 = in(reg) b,
+            );
+        }
+
+        assert_eq!(c, 0xFFFF_FFFF_FFFF_FFFF); // Check we branched correctly
+    }
+    println!("diagnostic_riscv_ima() success");
+
+    // blt (RISCV) -> lt (ZisK)
+    {
+        let a: i64 = 0xFF_FFFF_FFFF_FFFF;
+        let b: i64 = 0xFF_FFFF_FFFF_FFFE;
+        let c: i64;
+
+        // Use RISCV inline assembly to ensure ZisK instruction is called
+        unsafe {
+            std::arch::asm!(
+                "mv {result}, {input1}",          // Initialize result with a
+                "blt {input2}, {input1}, 2f",     // If b < a, skip next instruction
+                "mv {result}, {input2}",          // Otherwise, set result to b (minimum)
+                "2:",                             // Label for branch target
+                result = out(reg) c,
+                input1 = in(reg) a,
+                input2 = in(reg) b,
+            );
+        }
+
+        assert_eq!(c, 0xFF_FFFF_FFFF_FFFF); // Check we branched correctly
+    }
 }
