@@ -26,18 +26,32 @@ pub fn diagnostic_riscv_ima() {
 
     diagnostic_riscv_ima_branch();
 
+    or(0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF);
     or(0xFFFF_FFFF_FFFF_FFF1, 0xFFFF_FFFF_FFFF_FFFE, 0xFFFF_FFFF_FFFF_FFFF);
+    or(0xFFFF_0000_FFFF_0000, 0xFFFF_0000_0000_0000, 0xFFFF_0000_FFFF_0000);
+    or(0x0000_0000_0000_0000, 0xFFFF_0000_0000_0000, 0xFFFF_0000_0000_0000);
+    or(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000);
+
+    xor(0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF, 0x0000_0000_0000_0000);
     xor(0xFFFF_0000_FFFF_0000, 0xFFFF_FFFF_0000_0000, 0x0000_FFFF_FFFF_0000);
+    xor(0x0000_0000_0000_0000, 0xFFFF_FFFF_0000_0000, 0xFFFF_FFFF_0000_0000);
+    xor(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000);
+
+    and(0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF);
     and(0xFFFF_0000_FFFF_0000, 0xFFFF_FFFF_0000_0000, 0xFFFF_0000_0000_0000);
+    and(0x0000_0000_0000_0000, 0xFFFF_FFFF_0000_0000, 0x0000_0000_0000_0000);
+    and(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000);
 
     div(0xFFFF_FFFF_FFFF, 0x1_0000_0000, 0xFFFF);
     divu(0xFFFF_FFFF_FFFF_FFFF, 0x1_0000_0000, 0xFFFF_FFFF);
     div_w(0xFF_FFFF, 0x1_0000, 0xFF);
     divu_w(0xFF_FFFF, 0x1_0000, 0xFF);
+
     rem(0xFFFF_0000_FFFF, 0x1_0000_0000, 0xFFFF);
     remu(0xFFFF_0000_FFFF, 0x1_0000_0000, 0xFFFF);
     rem_w(0xFF_00FF, 0x1_0000, 0xFF);
     remu_w(0xFF_00FF, 0x1_0000, 0xFF);
+
     mul(0xFFFF_FFFF, 0x1_0000, 0xFFFF_FFFF_0000);
     mulh(0xFFFF_FFFF, 0x1_0000, 0x0);
     mulh(0xFFFF_FFFF_0000, 0x1_0000_0000, 0xFFFF);
@@ -71,15 +85,43 @@ pub fn diagnostic_riscv_ima() {
     amoor_w(0x0000_0001, 0x0000_0002, 0x0000_0003);
     amoxor_w(0x1000_0001, 0x1000_0002, 0x0000_0003);
 
-    amoadd_d(0x0000_0001, 0x0000_0002, 0x0000_0003);
-    amoadd_w(0x0000_0001, 0x0000_0002, 0x0000_0003);
+    amoadd_d(0, 0, 0);
+    amoadd_d(0, 1, 1);
+    amoadd_d(1, 2, 3);
+    amoadd_d(2, 2, 4);
+    amoadd_d(0xFFFF_FFFF_FFFF_0000, 0xFFFF, 0xFFFF_FFFF_FFFF_FFFF);
 
-    amoswap_d(0x0000_0001, 0x0000_0002, 0x0000_0001);
-    amoswap_w(0x0000_0001, 0x0000_0002, 0x0000_0001);
+    amoadd_w(0, 0, 0);
+    amoadd_w(0, 1, 1);
+    amoadd_w(1, 2, 3);
+    amoadd_w(2, 2, 4);
+    amoadd_w(0xFFFF_0000, 0xFFFF, 0xFFFF_FFFF);
 
+    amoswap_d(1, 2, 1);
+    amoswap_d(0, 0xFFFF_FFFF_FFFF_FFFF, 0);
+    amoswap_d(0xFFFF_FFFF_FFFF_FFFF, 0, 0xFFFF_FFFF_FFFF_FFFF);
+
+    amoswap_w(1, 2, 1);
+    amoswap_w(0, 0xFFFF_FFFF, 0);
+    amoswap_w(0xFFFF_FFFF, 0, 0xFFFF_FFFF);
+
+    signextend_b(127, 127);
+    signextend_b(1, 1);
+    signextend_b(0, 0);
     signextend_b(-1, -1);
+    signextend_b(-128, -128);
+
+    signextend_h(32767, 32767);
+    signextend_h(1, 1);
+    signextend_h(0, 0);
     signextend_h(-1, -1);
+    signextend_h(-32768, -32768);
+
+    signextend_w(2147483647, 2147483647);
+    signextend_w(1, 1);
+    signextend_w(0, 0);
     signextend_w(-1, -1);
+    signextend_w(-2147483648, -2147483648);
 
     // TODO: not mapped from RISCV to ZisK
     // leu, le, ltu_w, lt_w, eq_w, leu_w, le_w, mulu
