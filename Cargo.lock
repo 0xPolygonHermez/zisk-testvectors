@@ -1383,7 +1383,6 @@ dependencies = [
  "clap",
  "env",
  "hex",
- "path-clean",
  "precomp-arith-eq",
  "precomp-arith-eq-384",
  "serde",

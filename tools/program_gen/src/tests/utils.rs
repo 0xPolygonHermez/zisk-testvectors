@@ -102,15 +102,12 @@ where
     let hex_str = s.trim_start_matches("0x");
 
     // Pad with a leading zero if odd length
-    let padded_hex = if hex_str.len() % 2 == 1 {
-        format!("0{}", hex_str)
-    } else {
-        hex_str.to_string()
-    };
+    let padded_hex =
+        if hex_str.len() % 2 == 1 { format!("0{}", hex_str) } else { hex_str.to_string() };
 
     // Parse the hex string to bytes
-    let bytes =
-        hex::decode(padded_hex).map_err(|e| D::Error::custom(format!("Invalid hex string: {}", e)))?;
+    let bytes = hex::decode(padded_hex)
+        .map_err(|e| D::Error::custom(format!("Invalid hex string: {}", e)))?;
 
     // Calculate required byte size (N * 8 bytes per u64)
     let required_bytes = N * 8;
@@ -147,13 +144,10 @@ where
 
     // Remove "0x" prefix if present
     let hex_str = s.trim_start_matches("0x");
-    
+
     // Pad with a leading zero if odd length
-    let padded_hex = if hex_str.len() % 2 == 1 {
-        format!("0{}", hex_str)
-    } else {
-        hex_str.to_string()
-    };
+    let padded_hex =
+        if hex_str.len() % 2 == 1 { format!("0{}", hex_str) } else { hex_str.to_string() };
 
     u64::from_str_radix(&padded_hex, 16)
         .map_err(|e| D::Error::custom(format!("Invalid u64 hex: {}", e)))

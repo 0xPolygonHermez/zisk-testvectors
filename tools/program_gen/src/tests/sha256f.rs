@@ -13,6 +13,8 @@ pub fn generate_sha256f_tests(output_path: &Path, limit: Option<usize>) -> (Stri
     if !test_data.sha256f.is_empty() {
         builder.add_test_group("Sha256f Tests");
         builder.add_header_to_current_group(&[
+            "let mut state: [u64; 4] = [0, 0, 0, 0];",
+            "let input: [u64; 8] = [0, 0, 0, 0, 0, 0, 0, 0];",
             "let mut params = SyscallSha256Params { state: &mut state, input: &input };",
         ]);
 
