@@ -24,9 +24,9 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/ziskos" }
 # Local development
-ziskos = { path = "../../zisk/ziskos/entrypoint" }
+# ziskos = { path = "../../zisk/ziskos/entrypoint" }
 rand = "0.8"
 
 [workspace.lints.rust]

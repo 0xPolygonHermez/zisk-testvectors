@@ -64,10 +64,10 @@ pub fn generate_cargo_toml(output_path: &Path) {
     writeln!(writer).unwrap();
 
     writeln!(writer, "[dependencies]").unwrap();
-    writeln!(writer, "# ziskos = {{ git = \"https://github.com/0xPolygonHermez/zisk.git\" }}")
+    writeln!(writer, "ziskos = {{ git = \"https://github.com/0xPolygonHermez/zisk.git\", branch = \"fix/ziskos\" }}")
         .unwrap();
     writeln!(writer, "# Local development").unwrap();
-    writeln!(writer, "ziskos = {{ path = \"../../zisk/ziskos/entrypoint\" }}").unwrap();
+    writeln!(writer, "# ziskos = {{ path = \"../../zisk/ziskos/entrypoint\" }}").unwrap();
     writeln!(writer).unwrap();
 
     writer.flush().expect("Failed to flush Cargo.toml");

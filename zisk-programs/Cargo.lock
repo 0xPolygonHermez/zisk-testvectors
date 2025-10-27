@@ -160,6 +160,7 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 [[package]]
 name = "lib-c"
 version = "0.13.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=fix%2Fziskos#eca131040e41957aea987098b6da4a5110426f29"
 
 [[package]]
 name = "libc"
@@ -355,6 +356,7 @@ dependencies = [
 [[package]]
 name = "ziskos"
 version = "0.13.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=fix%2Fziskos#eca131040e41957aea987098b6da4a5110426f29"
 dependencies = [
  "cfg-if",
  "getrandom",
