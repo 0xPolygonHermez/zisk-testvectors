@@ -1,7 +1,0 @@
-// BN254 base field size
-pub const P: [u64; 4] =
-    [0x3C208C16D87CFD47, 0x97816A916871CA8D, 0xB85045B68181585D, 0x30644E72E131A029];
-
-// BN254 scalar field size
-pub const R: [u64; 4] =
-    [0x43e1f593f0000001, 0x2833e84879b97091, 0xb85045b68181585d, 0x30644e72e131a029];
