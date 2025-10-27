@@ -10,12 +10,16 @@ members = [
     "arith_eq_pow/program",
     "bls12_381/program",
     "bn254/program",
+    "diagnostic/program",
     "fcall/program",
     "fcall_msb/program",
     "keccak/program",
     "sha256/program",
 ]
 resolver = "2"
+
+[profile.dev]
+debug = 0  # No debug info to prevent linker overflow
 
 [profile.release]
 opt-level = 3

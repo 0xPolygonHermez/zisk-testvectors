@@ -2,22 +2,23 @@
 #![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
+mod arith_eq_384_tests;
+mod arith_eq_tests;
+mod bigint_tests;
 mod fcall;
+mod keccakf_tests;
 mod riscv_fd;
 mod riscv_ima;
-
-use fcall::diagnostic_fcall;
-use riscv_fd::diagnostic_riscv_fd;
-use riscv_ima::diagnostic_riscv_ima;
-
-// use ziskos::{
-//     fcall2_secp256k1_fn_inv, fcall2_secp256k1_fp_inv, fcall2_secp256k1_fp_sqrt,
-//     fcall_secp256k1_fn_inv, fcall_secp256k1_fp_inv, fcall_secp256k1_fp_sqrt, ziskos_fcall_get,
-// };
+mod sha256f_tests;
 
 fn main() {
-    diagnostic_riscv_ima();
-    diagnostic_riscv_fd();
-    diagnostic_fcall();
+    riscv_ima::diagnostic_riscv_ima();
+    riscv_fd::diagnostic_riscv_fd();
+    fcall::diagnostic_fcall();
+    arith_eq_tests::test_arith_eq();
+    arith_eq_384_tests::test_arith_eq_384();
+    bigint_tests::test_bigint();
+    keccakf_tests::test_keccakf();
+    sha256f_tests::test_sha256f();
     println!("Success");
 }
