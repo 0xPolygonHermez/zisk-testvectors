@@ -1,0 +1,33 @@
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+members = [
+    "add256/program",
+    "arith_eq_384_gen/program",
+    "arith_eq_gen/program",
+    "arith_eq_pow/program",
+    "bls12_381/program",
+    "bn254/program",
+    "fcall/program",
+    "fcall_msb/program",
+    "keccak/program",
+    "sha256/program",
+]
+resolver = "2"
+
+[profile.release]
+opt-level = 3
+
+[profile.bench]
+opt-level = 3
+
+[workspace.dependencies]
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/ziskos" }
+# Local development
+# ziskos = { path = "../../zisk/ziskos/entrypoint" }
+rand = "0.8"
+
+[workspace.lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
