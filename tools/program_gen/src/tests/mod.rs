@@ -1,16 +1,18 @@
 mod arith_eq;
-// mod bigint;
+mod bigint;
+mod utils;
 // mod keccakf;
 // mod sha256f;
 mod arith_eq_384;
 mod builder;
 
 pub use arith_eq::generate_arith_eq_tests;
-// pub use bigint::generate_bigint_tests;
+pub use bigint::generate_bigint_tests;
 // pub use keccakf::generate_keccakf_tests;
 // pub use sha256f::generate_sha256f_tests;
 pub use arith_eq_384::generate_arith_eq_384_tests;
 pub use builder::ProgramBuilder;
+pub use utils::load_bigint_test_data;
 
 use std::fs::File;
 use std::io::{BufWriter, Write};
@@ -45,5 +47,28 @@ pub fn generate_main_file(output_path: &Path, modules: &[(String, String)]) {
     writeln!(writer, "}}").unwrap();
 
     writer.flush().expect("Failed to flush main.rs");
-    println!("Generated main file: {:?}", main_file);
+}
+
+pub fn generate_cargo_toml(output_path: &Path) {
+    let cargo_file = output_path.join("Cargo.toml");
+    let file = File::create(&cargo_file).expect("Failed to create Cargo.toml");
+    let mut writer = BufWriter::new(file);
+
+    writeln!(writer, "[package]").unwrap();
+    writeln!(writer, "name = \"zisk\"").unwrap();
+    writeln!(writer, "version = \"0.1.0\"").unwrap();
+    writeln!(writer, "edition = \"2021\"").unwrap();
+    writeln!(writer).unwrap();
+
+    writeln!(writer, "[workspace]").unwrap();
+    writeln!(writer).unwrap();
+
+    writeln!(writer, "[dependencies]").unwrap();
+    writeln!(writer, "# ziskos = {{ git = \"https://github.com/0xPolygonHermez/zisk.git\" }}")
+        .unwrap();
+    writeln!(writer, "# Local development").unwrap();
+    writeln!(writer, "ziskos = {{ path = \"../../zisk/ziskos/entrypoint\" }}").unwrap();
+    writeln!(writer).unwrap();
+
+    writer.flush().expect("Failed to flush Cargo.toml");
 }

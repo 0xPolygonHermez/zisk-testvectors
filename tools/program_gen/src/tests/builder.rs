@@ -56,7 +56,6 @@ impl ProgramBuilder {
         self.write_file_footer(&mut writer);
 
         writer.flush().expect("Failed to flush test file");
-        println!("Generated test file: {}", file_path);
     }
 
     fn write_file_header(&self, writer: &mut BufWriter<File>, fn_name: &str) {

@@ -1,11 +1,16 @@
 use clap::Parser;
 use path_clean::PathClean;
-use std::fs;
-use std::path::Path;
+use std::{
+    fs::{self},
+    path::Path,
+};
 
 mod tests;
 
-use tests::{generate_arith_eq_384_tests, generate_arith_eq_tests, generate_main_file};
+use tests::{
+    generate_arith_eq_384_tests, generate_arith_eq_tests, generate_bigint_tests,
+    generate_cargo_toml, generate_main_file,
+};
 
 const MINIMAL_TESTS: usize = 5;
 
@@ -32,26 +37,34 @@ fn main() {
         None // No limit
     };
 
-    let current_file_path = Path::new(file!());
+    let current_file_path = Path::new(env!("CARGO_MANIFEST_DIR"));
     let current_dir = current_file_path
-        .parent() // → tools/program_gen/src
-        .and_then(|p| p.parent()) // → tools/program_gen
-        .and_then(|p| p.parent()) // → tools
+        .parent() // → tools/
         .and_then(|p| p.parent()) // → zisk-testvectors
         .unwrap();
 
-    let target_output_path = current_dir.join("zisk-programs/precompiles/program/src").clean();
-    fs::create_dir_all(&target_output_path).expect("Failed to create test directory");
+    // Create build/src directory
+    let build_dir = current_dir.join("build");
+    let src_dir = build_dir.join("src").clean();
+    fs::create_dir_all(&src_dir).expect("Failed to create build/src directory");
 
     // Generate each test module and collect their info
     let mut modules = Vec::new();
 
-    let (fn_name, file_name) = generate_arith_eq_tests(&target_output_path, max_tests);
+    let (fn_name, file_name) = generate_arith_eq_tests(&src_dir, max_tests);
     modules.push((fn_name, file_name));
 
-    let (fn_name, file_name) = generate_arith_eq_384_tests(&target_output_path, max_tests);
+    let (fn_name, file_name) = generate_arith_eq_384_tests(&src_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_bigint_tests(&src_dir, max_tests);
     modules.push((fn_name, file_name));
 
     // Generate main.rs to call all test modules
-    generate_main_file(&target_output_path, &modules);
+    generate_main_file(&src_dir, &modules);
+
+    // Generate Cargo.toml
+    generate_cargo_toml(&build_dir);
+
+    println!("\nTest program generated successfully at: {}\n", build_dir.display());
 }
