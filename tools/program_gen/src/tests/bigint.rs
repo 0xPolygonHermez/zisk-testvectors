@@ -25,7 +25,7 @@ pub fn generate_bigint_tests(output_path: &Path, limit: Option<usize>) -> (Strin
             }
 
             builder.add_test_to_current_group(
-                "arith256",
+                "add256",
                 &[
                     &format!("params.a = &{:?};", test.a),
                     &format!("params.b = &{:?};", test.b),

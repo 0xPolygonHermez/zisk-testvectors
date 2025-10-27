@@ -9,7 +9,7 @@ mod tests;
 
 use tests::{
     generate_arith_eq_384_tests, generate_arith_eq_tests, generate_bigint_tests,
-    generate_cargo_toml, generate_main_file,
+    generate_cargo_toml, generate_main_file, generate_keccakf_tests, generate_sha256f_tests,
 };
 
 const MINIMAL_TESTS: usize = 5;
@@ -58,6 +58,12 @@ fn main() {
     modules.push((fn_name, file_name));
 
     let (fn_name, file_name) = generate_bigint_tests(&src_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_keccakf_tests(&src_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_sha256f_tests(&src_dir, max_tests);
     modules.push((fn_name, file_name));
 
     // Generate main.rs to call all test modules

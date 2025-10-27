@@ -1,18 +1,18 @@
 mod arith_eq;
 mod bigint;
 mod utils;
-// mod keccakf;
-// mod sha256f;
+mod keccakf;
+mod sha256f;
 mod arith_eq_384;
 mod builder;
 
 pub use arith_eq::generate_arith_eq_tests;
 pub use bigint::generate_bigint_tests;
-// pub use keccakf::generate_keccakf_tests;
-// pub use sha256f::generate_sha256f_tests;
+pub use keccakf::generate_keccakf_tests;
+pub use sha256f::generate_sha256f_tests;
 pub use arith_eq_384::generate_arith_eq_384_tests;
 pub use builder::ProgramBuilder;
-pub use utils::load_bigint_test_data;
+pub use utils::{load_bigint_test_data, load_keccakf_test_data, load_sha256f_test_data};
 
 use std::fs::File;
 use std::io::{BufWriter, Write};
