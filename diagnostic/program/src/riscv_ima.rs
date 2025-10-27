@@ -64,8 +64,17 @@ pub fn diagnostic_riscv_ima() {
     srl_w(0x8000_0000, 0, 0xFFFF_FFFF_8000_0000);
     sra_w(0x8000_0000, 0, 0xFFFF_FFFF_8000_0000);
 
+    add_w(0, 0, 0);
+    add_w(1, 2, 3);
+    add_w(2, 2, 4);
     add_w(0xFFFF, 0x1, 0x1_0000);
+    add_w(0xFFFF_FFFF, 0x1, 0);
+
+    sub_w(0, 0, 0);
+    sub_w(3, 2, 1);
+    sub_w(0x1_0000, 1, 0xFFFF);
     sub_w(0x1_0000, 0x1, 0xFFFF);
+    sub_w(0, 0x1, 0xFFFF_FFFF_FFFF_FFFF);
 
     amomax_d(0x0000_0001, 0x0000_0002, 0x0000_0002);
     amomin_d(0x0000_0001, 0x0000_0002, 0x0000_0001);
@@ -81,9 +90,21 @@ pub fn diagnostic_riscv_ima() {
     amoor_d(0x0000_0001, 0x0000_0002, 0x0000_0003);
     amoxor_d(0x1000_0001, 0x1000_0002, 0x0000_0003);
 
+    amoand_w(0x0000_0000, 0x0000_0000, 0x0000_0000);
     amoand_w(0x0000_0001, 0x0000_0002, 0x0000_0000);
+    amoand_w(0x0000_FFFF, 0x0000_FF00, 0x0000_FF00);
+    amoand_w(0xFF00_FF00, 0x0000_FFFF, 0x0000_FF00);
+    amoand_w(0xFFFF_FFFF, 0xFFFF_FFFF, 0xFFFF_FFFF);
+
+    amoor_w(0x0000_0000, 0x0000_0000, 0x0000_0000);
     amoor_w(0x0000_0001, 0x0000_0002, 0x0000_0003);
+    amoor_w(0x0000_FF00, 0x00FF_0000, 0x00FF_FF00);
+    amoor_w(0xFFFF_FFFF, 0xFFFF_FFFF, 0xFFFF_FFFF);
+
+    amoxor_w(0x0000_0000, 0x0000_0000, 0x0000_0000);
     amoxor_w(0x1000_0001, 0x1000_0002, 0x0000_0003);
+    amoxor_w(0xFFFF_0000, 0xFF00_FF00, 0x00FF_FF00);
+    amoxor_w(0xFFFF_FFFF, 0xFFFF_FFFF, 0x0000_0000);
 
     amoadd_d(0, 0, 0);
     amoadd_d(0, 1, 1);
