@@ -7,12 +7,14 @@ mod arith_eq_tests;
 mod bigint_tests;
 mod fcall;
 mod keccakf_tests;
+mod riscv_c;
 mod riscv_fd;
 mod riscv_ima;
 mod sha256f_tests;
 
 fn main() {
     riscv_ima::diagnostic_riscv_ima();
+    riscv_c::diagnostic_riscv_c();
     riscv_fd::diagnostic_riscv_fd();
     fcall::diagnostic_fcall();
     arith_eq_tests::test_arith_eq();

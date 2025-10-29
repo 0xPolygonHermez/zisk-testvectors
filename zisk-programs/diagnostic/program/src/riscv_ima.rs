@@ -150,7 +150,30 @@ pub fn diagnostic_riscv_ima() {
     // TODO: they require Zbb extension
     // minu, min, maxu, max,
 
-    // arith384_mod, bls12_381_curve_add, bls12_381_curve_dbl, bls12_381_complex_add, bls12_381_complex_sub, bls12_381_complex_mul, add256, keccak, arith256, arith256_mod, secp256k1_add, secp256k1_dbl, sha256, bn254_curve_add, bn254_curve_dbl, bn254_complex_add, bn254_complex_sub, bn254_complex_mul, halt, ]
+    riscv_xori();
+    riscv_ori();
+    riscv_fence();
+    riscv_fence_i();
+    riscv_ebreak();
+    riscv_lr_d();
+    riscv_lr_w();
+    riscv_sc_d();
+    riscv_sc_w();
+    riscv_sll(1, 2, 4);
+    riscv_srl(4, 2, 1);
+    riscv_sra(4, 2, 1);
+    riscv_slli();
+    riscv_slliw();
+    riscv_sraiw();
+    riscv_srliw();
+    riscv_slti();
+    riscv_slt(2, 3, 1);
+    riscv_csrrw();
+    riscv_csrrwi();
+    riscv_csrrs();
+    riscv_csrrsi();
+    riscv_csrrc();
+    riscv_csrrci();
 
     println!("diagnostic_riscv_ima() success");
 }
@@ -176,7 +199,7 @@ fn or(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // xor (RISCV) -> xor (ZisK)
@@ -196,7 +219,7 @@ fn xor(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // and (RISCV) -> and (ZisK)
@@ -216,7 +239,7 @@ fn and(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 /*******/
@@ -240,7 +263,7 @@ fn div(input_a: i64, input_b: i64, expected_c: i64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // divu (RISCV) -> divu (ZisK)
@@ -260,7 +283,7 @@ fn divu(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // divw (RISCV) -> div_w (ZisK)
@@ -280,7 +303,7 @@ fn div_w(input_a: i32, input_b: i32, expected_c: i32) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // divuw (RISCV) -> divu_w (ZisK)
@@ -300,7 +323,7 @@ fn divu_w(input_a: u32, input_b: u32, expected_c: u32) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 /*******/
@@ -324,7 +347,7 @@ fn rem(input_a: i64, input_b: i64, expected_c: i64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // remu (RISCV) -> remu (ZisK)
@@ -344,7 +367,7 @@ fn remu(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // remw (RISCV) -> rem_w (ZisK)
@@ -364,7 +387,7 @@ fn rem_w(input_a: i32, input_b: i32, expected_c: i32) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // remu_w (RISCV) -> remu_w (ZisK)
@@ -384,7 +407,7 @@ fn remu_w(input_a: u32, input_b: u32, expected_c: u32) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 /*******/
@@ -408,7 +431,7 @@ fn mul(input_a: i64, input_b: i64, expected_c: i64) {
         );
     }*/
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // mulh (RISCV) -> mulh (ZisK)
@@ -427,7 +450,7 @@ fn mulh(input_a: i64, input_b: i64, expected_c: i64) {
         );
     }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // mulhu (RISCV) -> muluh (ZisK)
@@ -446,7 +469,7 @@ fn muluh(input_a: u64, input_b: u64, expected_c: u64) {
         );
     }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // mulhsu (RISCV) -> mulsuh (ZisK)
@@ -466,7 +489,7 @@ fn mulsuh(input_a: i64, input_b: u64, expected_c: i64) {
         );
     }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // mulw (RISCV) -> mul_w (ZisK)
@@ -486,7 +509,7 @@ fn mul_w(input_a: i32, input_b: i32, expected_c: i32) {
         );
     }*/
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // fn signextend_b(input_a: i8, expected: i64) {
@@ -527,7 +550,7 @@ fn sll_w(input_a: u64, input_b: u64, expected_c: u64) {
     // }
     println!("sll_w: {} << {} = {}", a, b, c);
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // srlw (RISCV) -> srl_w (ZisK)
@@ -547,7 +570,7 @@ fn srl_w(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 // sraw (RISCV) -> sra_w (ZisK)
@@ -567,7 +590,7 @@ fn sra_w(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 /*************/
@@ -591,7 +614,7 @@ fn sub_w(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 // addw (RISCV) -> add_w (ZisK)
 fn add_w(input_a: u64, input_b: u64, expected_c: u64) {
@@ -610,7 +633,7 @@ fn add_w(input_a: u64, input_b: u64, expected_c: u64) {
     //     );
     // }
 
-    assert_eq!(c, expected_c); // Check we branched correctly
+    assert_eq!(c, expected_c); // Check result
 }
 
 /*******************/
@@ -984,7 +1007,7 @@ fn diagnostic_riscv_ima_branch() {
             );
         }
 
-        assert_eq!(c, 0xFFFF_FFFF_FFFF_FFFF); // Check we branched correctly
+        assert_eq!(c, 0xFFFF_FFFF_FFFF_FFFF); // Check result
     }
     println!("diagnostic_riscv_ima() success");
 
@@ -1007,6 +1030,433 @@ fn diagnostic_riscv_ima_branch() {
             );
         }
 
-        assert_eq!(c, 0xFF_FFFF_FFFF_FFFF); // Check we branched correctly
+        assert_eq!(c, 0xFF_FFFF_FFFF_FFFF); // Check result
+    }
+}
+
+/**********/
+/* RISC-V */
+/**********/
+
+fn riscv_xori() {
+    let a: u64 = 0xFFFF_FFFF_0000_0000;
+    const B: u64 = 0xFFu64; // immediate
+    let expected_c: u64 = 0xFFFF_FFFF_0000_00FF;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "xori {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B, // immediate
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_ori() {
+    let a: u64 = 0xFFFF_FFFF_0000_0000;
+    const B: u64 = 0xFFu64; // immediate
+    let expected_c: u64 = 0xFFFF_FFFF_0000_00FF;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "ori {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B, // immediate
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_fence() {
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!("fence",);
+    }
+}
+
+fn riscv_fence_i() {
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!("fence.i",);
+    }
+}
+
+fn riscv_ebreak() {
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!("ebreak",);
+    }
+}
+
+fn riscv_lr_d() {
+    let a: u64 = 0xFFFF_FFFF_0000_0000;
+    let expected_c: u64 = a;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "lr.d {result}, 0({ptr})",
+            result = out(reg) c,
+            ptr = in(reg) &a,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_lr_w() {
+    let a: u32 = 0xFFFF_FFFF;
+    let expected_c: u32 = a;
+    let c: u32;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "lr.w {result}, 0({ptr})",
+            result = out(reg) c,
+            ptr = in(reg) &a,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_sc_d() {
+    let a: u64 = 0xFFFF_FFFF_0000_0000;
+    let b: u64;
+    let expected_c: u64 = a;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "lr.d {result}, 0({ptr})",
+            "sc.d {result2}, {result}, 0({ptr})",
+            result = out(reg) c,
+            result2 = out(reg) b,
+            ptr = in(reg) &a,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+    assert_eq!(b, 0); // Check result
+}
+
+fn riscv_sc_w() {
+    let a: u32 = 0xFFFF_FFFF;
+    let b: u32;
+    let expected_c: u32 = a;
+    let c: u32;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "lr.w {result}, 0({ptr})",
+            "sc.w {result2}, {result}, 0({ptr})",
+            result = out(reg) c,
+            result2 = out(reg) b,
+            ptr = in(reg) &a,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+    assert_eq!(b, 0); // Check result
+}
+
+fn riscv_sll(input_a: u64, input_b: u64, expected_c: u64) {
+    let a: u64 = input_a;
+    let b: u64 = input_b;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "sll {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_srl(input_a: u64, input_b: u64, expected_c: u64) {
+    let a: u64 = input_a;
+    let b: u64 = input_b;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "srl {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_sra(input_a: u64, input_b: u64, expected_c: u64) {
+    let a: u64 = input_a;
+    let b: u64 = input_b;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "sra {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_slli() {
+    let a: u64 = 1;
+    const B: u64 = 3;
+    let expected_c: u64 = 8;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "slli {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_slliw() {
+    let a: u32 = 1;
+    const B: u32 = 3;
+    let expected_c: u32 = 8;
+    let c: u32;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "slliw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_sraiw() {
+    let a: u32 = 8;
+    const B: u32 = 3;
+    let expected_c: u32 = 1;
+    let c: u32;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "sraiw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_srliw() {
+    let a: u32 = 8;
+    const B: u32 = 3;
+    let expected_c: u32 = 1;
+    let c: u32;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "srliw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_slti() {
+    let a: u32 = 2;
+    const B: u32 = 3;
+    let expected_c: u32 = 1;
+    let c: u32;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "slti {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = const B,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_slt(input_a: u64, input_b: u64, expected_c: u64) {
+    let a: u64 = input_a;
+    let b: u64 = input_b;
+    let c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "slt {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+
+    assert_eq!(c, expected_c); // Check result
+}
+
+fn riscv_csrrw() {
+    // csrrw rd, csr, rs1 - Read old, write new
+    // csrrw rd, csr, x0 - Read only (write zero)
+    // csrrw x0, csr, rs1 - Write only (discard old value)
+
+    {
+        let a: u64 = 3;
+        let c: u64;
+
+        // Use RISCV inline assembly to ensure RISC-V instruction is called
+        unsafe {
+            std::arch::asm!(
+                "csrrw {result}, 3, {input1}",
+                result = out(reg) c,
+                input1 = in(reg) a,
+            );
+        }
+
+        assert_eq!(c, 0); // Check result
+    }
+    {
+        let a: u64 = 0;
+        let c: u64;
+
+        // Use RISCV inline assembly to ensure RISC-V instruction is called
+        unsafe {
+            std::arch::asm!(
+                "csrrw {result}, 3, {input1}",
+                result = out(reg) c,
+                input1 = in(reg) a,
+            );
+        }
+
+        assert_eq!(c, 3); // Check result
+    }
+}
+
+fn riscv_csrrwi() {
+    {
+        // Use RISCV inline assembly to ensure RISC-V instruction is called
+        unsafe {
+            std::arch::asm!("csrrwi x0, 3, 0",);
+        }
+    }
+}
+
+fn riscv_csrrs() {
+    {
+        let a: u64 = 3;
+        let c: u64;
+
+        // Use RISCV inline assembly to ensure RISC-V instruction is called
+        unsafe {
+            std::arch::asm!(
+                "csrrs {result}, 3, {input1}",
+                result = out(reg) c,
+                input1 = in(reg) a,
+            );
+        }
+
+        assert_eq!(c, 0); // Check result
+    }
+    {
+        let a: u64 = 0;
+        let c: u64;
+
+        // Use RISCV inline assembly to ensure RISC-V instruction is called
+        unsafe {
+            std::arch::asm!(
+                "csrrs {result}, 3, {input1}",
+                result = out(reg) c,
+                input1 = in(reg) a,
+            );
+        }
+
+        assert_eq!(c, 3); // Check result
+    }
+}
+
+fn riscv_csrrsi() {
+    {
+        let _c: u64;
+
+        // Use RISCV inline assembly to ensure RISC-V instruction is called
+        unsafe {
+            std::arch::asm!(
+                "csrrsi {result}, 3, 0",
+                result = out(reg) _c,
+            );
+        }
+    }
+}
+
+fn riscv_csrrc() {
+    // csrrc rd, csr, rs1 - Read old value, clear bits set in rs1
+    // csrrc rd, csr, x0 - Read only (clear no bits)
+    // csrrc x0, csr, rs1 - Clear bits only (discard old value)
+
+    let _c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "csrrc {result}, 3, x0",
+            result = out(reg) _c,
+        );
+    }
+}
+
+fn riscv_csrrci() {
+    let _c: u64;
+
+    // Use RISCV inline assembly to ensure RISC-V instruction is called
+    unsafe {
+        std::arch::asm!(
+            "csrrci {result}, 3, 0",
+            result = out(reg) _c,
+        );
     }
 }
