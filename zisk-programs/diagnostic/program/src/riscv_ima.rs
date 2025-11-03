@@ -178,6 +178,60 @@ pub fn diagnostic_riscv_ima() {
     println!("diagnostic_riscv_ima() success");
 }
 
+#[allow(dead_code)]
+pub fn diagnostic_riscv_ima_combinations() {
+    let values: [u8; 7] = [0, 1, 0x7F, 0x80, 0x81, 0xFE, 0xFF];
+    for a_byte_0 in values {
+        for a_byte_3 in values {
+            for a_byte_4 in values {
+                for a_byte_7 in values {
+                    let a: u64 = (a_byte_0 as u64) << 0
+                        | (a_byte_3 as u64) << 24
+                        | (a_byte_4 as u64) << 32
+                        | (a_byte_7 as u64) << 56;
+                    for b_byte_0 in values {
+                        for b_byte_3 in values {
+                            for b_byte_4 in values {
+                                for b_byte_7 in values {
+                                    let b: u64 = (b_byte_0 as u64) << 0
+                                        | (b_byte_3 as u64) << 24
+                                        | (b_byte_4 as u64) << 32
+                                        | (b_byte_7 as u64) << 56;
+                                    and_no_check(a, b);
+                                    // or_no_check(a, b);
+                                    // xor_no_check(a, b);
+                                    // add_no_check(a, b);
+                                    // add_w_no_check(a, b);
+                                    // sub_no_check(a, b);
+                                    // sub_w_no_check(a, b);
+                                    // sll_no_check(a, b);
+                                    // sll_w_no_check(a, b);
+                                    // sra_no_check(a, b);
+                                    // sra_w_no_check(a, b);
+                                    // srl_no_check(a, b);
+                                    // srl_w_no_check(a, b);
+
+                                    // eq_no_check(a, b);
+                                    // ltu_no_check(a, b);
+                                    // lt_no_check(a, b);
+
+                                    // minu_no_check(a, b);
+                                    // min_no_check(a, b);
+                                    // minu_w_no_check(a as u32, b as u32);
+                                    // min_w_no_check(a as u32, b as u32);
+                                    // maxu_no_check(a, b);
+                                    // max_no_check(a, b);
+                                    // maxu_w_no_check(a as u32, b as u32);
+                                    // max_w_no_check(a as u32, b as u32);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 /******************/
 /* or / xor / and */
 /******************/
@@ -202,6 +256,19 @@ fn or(input_a: u64, input_b: u64, expected_c: u64) {
     assert_eq!(c, expected_c); // Check result
 }
 
+#[allow(dead_code)]
+fn or_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "or {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
 // xor (RISCV) -> xor (ZisK)
 fn xor(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
@@ -222,6 +289,19 @@ fn xor(input_a: u64, input_b: u64, expected_c: u64) {
     assert_eq!(c, expected_c); // Check result
 }
 
+#[allow(dead_code)]
+fn xor_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "xor {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
 // and (RISCV) -> and (ZisK)
 fn and(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
@@ -240,6 +320,19 @@ fn and(input_a: u64, input_b: u64, expected_c: u64) {
     // }
 
     assert_eq!(c, expected_c); // Check result
+}
+
+#[allow(dead_code)]
+fn and_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "and {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 }
 
 /*******/
@@ -553,6 +646,19 @@ fn sll_w(input_a: u64, input_b: u64, expected_c: u64) {
     assert_eq!(c, expected_c); // Check result
 }
 
+#[allow(dead_code)]
+fn sll_w_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "sllw {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
 // srlw (RISCV) -> srl_w (ZisK)
 fn srl_w(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
@@ -571,6 +677,19 @@ fn srl_w(input_a: u64, input_b: u64, expected_c: u64) {
     // }
 
     assert_eq!(c, expected_c); // Check result
+}
+
+#[allow(dead_code)]
+fn srl_w_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "srlw {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 }
 
 // sraw (RISCV) -> sra_w (ZisK)
@@ -593,9 +712,58 @@ fn sra_w(input_a: u64, input_b: u64, expected_c: u64) {
     assert_eq!(c, expected_c); // Check result
 }
 
+#[allow(dead_code)]
+fn sra_w_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "sraw {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
 /*************/
 /* add / sub */
 /*************/
+
+#[allow(dead_code)]
+fn add_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "add {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
+#[allow(dead_code)]
+fn add_w_no_check(a: u64, b: u64) {
+    let _c = (Wrapping(a as i32) + Wrapping(b as i32)).0 as u64;
+}
+
+#[allow(dead_code)]
+fn sub_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "sub {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
+#[allow(dead_code)]
+fn sub_w_no_check(a: u64, b: u64) {
+    let _c = (Wrapping(a as i32) - Wrapping(b as i32)).0 as u64;
+}
 
 // subw (RISCV) -> sub_w (ZisK)
 fn sub_w(input_a: u64, input_b: u64, expected_c: u64) {
@@ -1191,6 +1359,19 @@ fn riscv_sll(input_a: u64, input_b: u64, expected_c: u64) {
     assert_eq!(c, expected_c); // Check result
 }
 
+#[allow(dead_code)]
+fn sll_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "sll {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
 fn riscv_srl(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
@@ -1209,6 +1390,19 @@ fn riscv_srl(input_a: u64, input_b: u64, expected_c: u64) {
     assert_eq!(c, expected_c); // Check result
 }
 
+#[allow(dead_code)]
+fn srl_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "srl {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
+}
+
 fn riscv_sra(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
@@ -1225,6 +1419,19 @@ fn riscv_sra(input_a: u64, input_b: u64, expected_c: u64) {
     }
 
     assert_eq!(c, expected_c); // Check result
+}
+
+#[allow(dead_code)]
+fn sra_no_check(a: u64, b: u64) {
+    let _c: u64;
+    unsafe {
+        std::arch::asm!(
+            "sra {result}, {input1}, {input2}",
+            result = out(reg) _c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 }
 
 fn riscv_slli() {

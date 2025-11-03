@@ -13,6 +13,7 @@ mod riscv_ima;
 mod sha256f_tests;
 
 fn main() {
+    //riscv_ima::diagnostic_riscv_ima_combinations();
     riscv_ima::diagnostic_riscv_ima();
     riscv_c::diagnostic_riscv_c();
     riscv_fd::diagnostic_riscv_fd();
