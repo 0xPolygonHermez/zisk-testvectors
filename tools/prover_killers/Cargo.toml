@@ -1,0 +1,16 @@
+[package]
+name = "prover_killers"
+version = { workspace = true }
+edition = { workspace = true }
+
+[[bin]]
+name = "prover_killers"
+path = "src/main.rs"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+clap = { workspace = true }
+hex = { workspace = true }
+num-bigint = { workspace = true }
+num-traits = { workspace = true }
