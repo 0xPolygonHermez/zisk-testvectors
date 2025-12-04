@@ -1,23 +1,23 @@
-use ziskos::zisklib::{square, U256};
+use ziskos::zisklib::{square_long, U256};
 
 use super::constants::*;
 
 pub fn square_tests() {
     // [5]
     let a = [U256::from_u64(5)];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 1);
     assert_eq!(res, [U256::from_u64(25)]);
 
     // [MAX]
     let a = [U256::MAX];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 2);
     assert_eq!(res, [U256::ONE, U256_MAX_MINUS_ONE]);
 
     // [MAX, MAX]
     let a = [U256::MAX, U256::MAX];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 4);
     assert_eq!(res, [U256::ONE, U256::ZERO, U256_MAX_MINUS_ONE, U256::MAX]);
 
@@ -30,7 +30,7 @@ pub fn square_tests() {
         U256::from_u64(2),
         U256::from_u64(4),
     ];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 11);
     assert_eq!(
         res,
@@ -65,7 +65,7 @@ pub fn square_tests() {
         ]),
         U256::from_u64(2),
     ];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 5);
     assert_eq!(
         res,
@@ -114,7 +114,7 @@ pub fn square_tests() {
         ]),
         U256::from_u64(3),
     ];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 5);
     assert_eq!(
         res,
@@ -162,7 +162,7 @@ pub fn square_tests() {
             13669016069429398136,
         ]),
     ];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 4);
     assert_eq!(
         res,
@@ -197,7 +197,7 @@ pub fn square_tests() {
     // [MAX, (MAX+1)/2+1, MAX-1]
     // this covers the case where the addition 2·a_i·a_j + out[i + j] produces a third chunk carry
     let a = [U256::MAX, U256_MAX_HALF_PLUS_ONE, U256_MAX_MINUS_ONE];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 6);
     assert_eq!(
         res,
@@ -230,7 +230,7 @@ pub fn square_tests() {
     // this covers the case where out[i + j] has a non-zero second chunk (i.e., when j == len -1)
     // and it produces carry when added to the second chunk of 2·a_i·a_j
     let a = [U256_MAX_HALF_PLUS_ONE, U256_MAX_HALF_PLUS_ONE, U256_MAX_MINUS_ONE];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 6);
     assert_eq!(
         res,
@@ -263,7 +263,7 @@ pub fn square_tests() {
     // this covers the case where carry has a non-zero second chunk
     // and it produces carry when added to the second chunk of 2·a_i·a_j + out[i + j]
     let a = [U256_MAX_HALF_PLUS_ONE, U256::MAX, U256_MAX_MINUS_ONE];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 6);
     assert_eq!(
         res,
@@ -391,7 +391,7 @@ pub fn square_tests() {
             15795479471708216334,
         ]),
     ];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 32);
     assert_eq!(
         res,
@@ -601,7 +601,7 @@ pub fn square_tests() {
         ]),
         U256::from_u64s(&[4790811567723628071, 2833133123455345538, 518, 0]),
     ];
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 6);
     assert_eq!(
         res,
@@ -643,7 +643,7 @@ pub fn square_tests() {
     // [0]*9 || [MAX]
     let mut a = vec![U256::ZERO; 9];
     a.push(U256::MAX);
-    let res = square(&a);
+    let res = square_long(&a);
     assert_eq!(res.len(), 20);
     let mut res_expected = vec![U256::ZERO; 20];
     res_expected[18] = U256::ONE;

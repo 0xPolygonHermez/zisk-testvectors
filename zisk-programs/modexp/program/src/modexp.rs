@@ -1,6 +1,8 @@
 use ziskos::zisklib::{modexp, U256};
 
 pub fn modexp_tests() {
+    println!("Starting Modexp tests...");
+
     // Early returns
     // ============================
     // M == 1 should return 0
@@ -47,6 +49,7 @@ pub fn modexp_tests() {
     assert_eq!(res.len(), 1);
     assert_eq!(res, [U256::ONE]);
     // ============================
+    println!("  - Early returns tests passed.");
 
     // 256-bits exponent
     // ============================
@@ -203,6 +206,38 @@ pub fn modexp_tests() {
         ]
     );
 
+    // 
+    let base = [
+        U256::from_u64s(&[
+            0x7aa27b83e565bec0,
+            0xe483a9ec581780eb,
+            0x12d1,
+            0x0,
+        ]),
+    ];
+    let exp = [0x43e1f593efffffff, 0x2833e84879b97091, 0xb85045b68181585d, 0x30644e72e131a029];
+    let modulus = [
+        U256::from_u64s(&[
+            0x43e1f593f0000001,
+            0x2833e84879b97091,
+            0xb85045b68181585d,
+            0x30644e72e131a029,
+        ]),
+    ];
+    let res = modexp(&base, &exp, &modulus);
+    assert_eq!(res.len(), 1);
+    assert_eq!(
+        res,
+        [
+            U256::from_u64s(&[
+                7624567303516453975,
+                7358464923315255633,
+                17438404034899072343,
+                1240638032234031244,
+            ]),
+        ]
+    );
+
     // worst case
     let base = [U256::from_u64(3)];
     let exp =
@@ -217,6 +252,7 @@ pub fn modexp_tests() {
     assert_eq!(res.len(), 1);
     assert_eq!(res, [U256::ONE]);
     // ============================
+    println!("  - 256-bits exponent tests passed.");
 
     // 512-bits exponent
     // ============================
@@ -272,16 +308,19 @@ pub fn modexp_tests() {
         ]
     );
     // ============================
+    println!("  - 512-bits exponent tests passed.");
 
     // 768-bits exponent
     // ============================
     // TODO
     // ============================
+    println!("  - 768-bits exponent tests passed.");
 
     // 1024-bits exponent
     // ============================
     // TODO
     // ============================
+    println!("  - 1024-bits exponent tests passed.");
 
     // 4096-bits exponent
     // ============================
@@ -994,6 +1033,7 @@ pub fn modexp_tests() {
         ]
     );
     // ============================
+    println!("  - 4096-bits exponent tests passed.");
 
     // 8192-bits exponent
     // ============================
@@ -2064,6 +2104,7 @@ pub fn modexp_tests() {
         ]
     );
     // ============================
+    println!("  - 8192-bits exponent tests passed.");
 
     // Singleton tests to ensure the maximum input length we can achieve in each of base, exponent
     // and modulus without crashing
