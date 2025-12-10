@@ -4,8 +4,16 @@ edition = "2021"
 
 [workspace]
 members = [
-    "tools/program_gen"
+    "tools/program_gen",
+    "tools/prover_killers"
 ]
 resolver = "2"
 
 [workspace.dependencies]
+clap = "4.5.50"
+env = "1.0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+hex = "0.4"
+num-bigint = "0.4"
+num-traits = "0.2"
