@@ -51,3 +51,17 @@ pub const G2: [u64; 24] = [
     0x32AC_D2B0_2BC2_8B99,
     0x0606_C4A0_2EA7_34CC,
 ];
+
+/// Identity element in G1
+pub const IDENTITY_G1: [u64; 12] = {
+    let mut tmp = [0u64; 12];
+    tmp[6] = 1;
+    tmp
+};
+
+/// Identity element in G2
+pub const IDENTITY_G2: [u64; 24] = {
+    let mut tmp = [0u64; 24];
+    tmp[12] = 1;
+    tmp
+};
