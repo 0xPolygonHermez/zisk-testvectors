@@ -3,9 +3,11 @@ use ziskos::zisklib::{
     neg_twist_bn254, scalar_mul_by_x_twist_bn254, utf_endomorphism_twist_bn254,
 };
 
+use crate::constants::IDENTITY_G2;
+
 pub fn twist_tests() {
     // Is on curve
-    let p = [0; 16];
+    let p = IDENTITY_G2;
     let res = is_on_curve_twist_bn254(&p);
     assert_eq!(res, false);
 
@@ -132,7 +134,7 @@ pub fn twist_tests() {
         0x06B2DE200F6BD225,
     ];
     let res = add_twist_bn254(&p1, &p2);
-    let res_exp = [0; 16];
+    let res_exp = IDENTITY_G2;
     assert_eq!(res, res_exp);
 
     // (different)

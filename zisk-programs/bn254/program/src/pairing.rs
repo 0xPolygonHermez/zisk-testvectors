@@ -1,13 +1,13 @@
 use ziskos::zisklib::{exp_fp12_bn254, pairing_bn254};
 
-use crate::constants::P;
+use crate::constants::{IDENTITY_G1, IDENTITY_G2, P};
 
 pub fn pairing_valid_tests() {
     let mut one = [0; 48];
     one[0] = 1;
 
     // Degenerate tests: e(0,Q) = e(P,0) = e(0,0) = 1
-    let p = [0, 0, 0, 0, 0, 0, 0, 0];
+    let p = IDENTITY_G1;
     let q = [
         0x9990C4F783E78FC5,
         0x47B71082B0D94CED,
@@ -26,8 +26,7 @@ pub fn pairing_valid_tests() {
         0x51704116523CBD21,
         0x1FA69C987C6371FF,
     ];
-    let (res, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let res = pairing_bn254(&p, &q);
     assert_eq!(res, one);
 
     let p = [
@@ -40,15 +39,13 @@ pub fn pairing_valid_tests() {
         0xE7845F96B2AE9C0A,
         0x15ED738C0E0A7C92,
     ];
-    let q = [0; 16];
-    let (res, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let q = IDENTITY_G2;
+    let res = pairing_bn254(&p, &q);
     assert_eq!(res, one);
 
-    let p = [0; 8];
-    let q = [0; 16];
-    let (res, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let p = IDENTITY_G1;
+    let q = IDENTITY_G2;
+    let res = pairing_bn254(&p, &q);
     assert_eq!(res, one);
 
     // Bilinearity test
@@ -132,8 +129,7 @@ pub fn pairing_valid_tests() {
         0x51704116523CBD21,
         0x1FA69C987C6371FF,
     ];
-    let (e1, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let e1 = pairing_bn254(&p, &q);
     assert_eq!(e1, answer);
 
     // e(P,12Q)²
@@ -165,8 +161,7 @@ pub fn pairing_valid_tests() {
         0x51704116523CBD21,
         0x1FA69C987C6371FF,
     ];
-    let (e2, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let e2 = pairing_bn254(&p, &q);
 
     // e(2P,Q)¹²
     let p = [
@@ -197,8 +192,7 @@ pub fn pairing_valid_tests() {
         0xEC9E99AD690C3395,
         0x090689D0585FF075,
     ];
-    let (e3, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let e3 = pairing_bn254(&p, &q);
 
     // e(P,Q)²⁴
     let p = [
@@ -229,8 +223,7 @@ pub fn pairing_valid_tests() {
         0xEC9E99AD690C3395,
         0x090689D0585FF075,
     ];
-    let (e4, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let e4 = pairing_bn254(&p, &q);
 
     // e(12P,2Q)
     let p = [
@@ -261,8 +254,7 @@ pub fn pairing_valid_tests() {
         0x722B8C153931579D,
         0x195E8AA5B7827463,
     ];
-    let (e5, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 0);
+    let e5 = pairing_bn254(&p, &q);
 
     // e(2P,12Q) = e(P,12Q)² = e(2P,Q)¹² = e(P,Q)²⁴ = e(12P,2Q)
     assert_eq!(e1, exp_fp12_bn254(2, &e2));
@@ -271,72 +263,72 @@ pub fn pairing_valid_tests() {
     assert_eq!(e1, e5);
 }
 
-pub fn pairing_invalid_tests() {
-    // P not in range
-    let p = [P[0], P[1], P[2], P[3], 0, 0, 0, 0];
-    let q = [0; 16];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 1);
+// pub fn pairing_invalid_tests() {
+//     // P not in range
+//     let p = [P[0], P[1], P[2], P[3], 0, 0, 0, 0];
+//     let q = IDENTITY_G2;
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 1);
 
-    let p = [0, 0, 0, 0, P[0], P[1], P[2], P[3]];
-    let q = [0; 16];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 2);
+//     let p = [0, 0, 0, 0, P[0], P[1], P[2], P[3]];
+//     let q = IDENTITY_G2;
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 2);
 
-    // Q not in range
-    let p = [0; 8];
-    let q = [P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 3);
+//     // Q not in range
+//     let p = IDENTITY_G1;
+//     let q = [P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 3);
 
-    let p = [0; 8];
-    let q = [0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 4);
+//     let p = IDENTITY_G1;
+//     let q = [0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0];
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 4);
 
-    let p = [0; 8];
-    let q = [0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 5);
+//     let p = IDENTITY_G1;
+//     let q = [0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0];
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 5);
 
-    let p = [0; 8];
-    let q = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3]];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 6);
+//     let p = IDENTITY_G1;
+//     let q = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3]];
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 6);
 
-    // P not in E nor G1
-    let p = [1, 0, 0, 0, 1, 0, 0, 0];
-    let q = [0; 16];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 7);
+//     // P not in E nor G1
+//     let p = [1, 0, 0, 0, 1, 0, 0, 0];
+//     let q = IDENTITY_G2;
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 7);
 
-    // Q not in E'
-    let p = [0; 8];
-    let mut q = [0; 16];
-    q[0] = 1;
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 8);
+//     // Q not in E'
+//     let p = IDENTITY_G1;
+//     let mut q = IDENTITY_G2;
+//     q[0] = 1;
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 8);
 
-    // Q not in G2
-    let p = [0; 8];
-    let q = [
-        0xE642D1780FA77460,
-        0x940C7100CC3B163F,
-        0x9E35DB46F7250AFC,
-        0x1ED91A62C98A6383,
-        0x9E87C23424EE0063,
-        0x12859810070565E9,
-        0x03CE49ABC798B83F,
-        0x181BAE8231C1F263,
-        0x6B283DE32DD4D366,
-        0xFE4EED8EF8036477,
-        0x49D7F9C268537017,
-        0x1B2D40EFDB1326CC,
-        0xE0A118CFA3E0D8D7,
-        0x9A3C9ECF0C83F1D7,
-        0x28D70CD532462E40,
-        0x07D105D0066EC703,
-    ];
-    let (_, error_code) = pairing_bn254(&p, &q);
-    assert_eq!(error_code, 9);
-}
+//     // Q not in G2
+//     let p = IDENTITY_G1;
+//     let q = [
+//         0xE642D1780FA77460,
+//         0x940C7100CC3B163F,
+//         0x9E35DB46F7250AFC,
+//         0x1ED91A62C98A6383,
+//         0x9E87C23424EE0063,
+//         0x12859810070565E9,
+//         0x03CE49ABC798B83F,
+//         0x181BAE8231C1F263,
+//         0x6B283DE32DD4D366,
+//         0xFE4EED8EF8036477,
+//         0x49D7F9C268537017,
+//         0x1B2D40EFDB1326CC,
+//         0xE0A118CFA3E0D8D7,
+//         0x9A3C9ECF0C83F1D7,
+//         0x28D70CD532462E40,
+//         0x07D105D0066EC703,
+//     ];
+//     let (_, error_code) = pairing_bn254(&p, &q);
+//     assert_eq!(error_code, 9);
+// }

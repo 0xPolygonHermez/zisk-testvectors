@@ -3,11 +3,11 @@ use ziskos::zisklib::{
     is_on_subgroup_twist_bls12_381, neg_twist_bls12_381, scalar_mul_by_abs_x_twist_bls12_381,
 };
 
-use crate::constants::G2;
+use crate::constants::{G2, IDENTITY_G2};
 
 pub fn twist_tests() {
     // Is on curve
-    let p = [0; 24];
+    let p = IDENTITY_G2;
     let res = is_on_curve_twist_bls12_381(&p);
     assert_eq!(res, false);
 
@@ -107,7 +107,7 @@ pub fn twist_tests() {
         0x13FA4D4A0AD8B1CE,
     ];
     let res = add_twist_bls12_381(&p1, &p2);
-    let res_exp = [0; 24];
+    let res_exp = IDENTITY_G2;
     assert_eq!(res, res_exp);
 
     // (different)
