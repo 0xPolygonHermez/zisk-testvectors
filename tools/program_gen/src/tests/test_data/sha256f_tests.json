@@ -2,9 +2,9 @@
   "test_type": "Sha256f",
   "sha256f": [
     {
-      "state_in": "0x1f83d9ab5be0cd19510e527f9b05688c3c6ef372a54ff53a6a09e667bb67ae85",
-      "input": "0x8000000000000000",
-      "state_out": "0xa495991b7852b85527ae41e4649b934c9afbf4c8996fb924e3b0c44298fc1c14"
+      "state_in": "0x5be0cd191f83d9ab9b05688c510e527fa54ff53a3c6ef372bb67ae856a09e667",
+      "input": "0x0000000000000080",
+      "state_out": "0x7852b855a495991b649b934c27ae41e4996fb9249afbf4c898fc1c14e3b0c442"
     }
   ]
 }
