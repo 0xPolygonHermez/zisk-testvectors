@@ -10,36 +10,41 @@ pub fn array_arith_tests() {
     // inA = inB and len(inA) = len(inB) = 1
     let a = [U256::MAX];
     let b = U256::MAX;
-    let res = add_short(&a, &b);
-    assert_eq!(res.len(), 2);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = add_short(&a, &b, &mut res);
+    assert_eq!(len_res, 2);
     assert_eq!(res, [U256_MAX_MINUS_ONE, U256::ONE]);
 
     // inA < inB and len(inA) = len(inB) = 1
     let a = [U256_MAX_MINUS_ONE];
     let b = U256::MAX;
-    let res = add_short(&a, &b);
-    assert_eq!(res.len(), 2);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = add_short(&a, &b, &mut res);
+    assert_eq!(len_res, 2);
     assert_eq!(res, [U256_MAX_MINUS_TWO, U256::ONE]);
 
     // [1, 0, 1] + [MAX]
     let a = [U256::ONE, U256::ZERO, U256::ONE];
     let b = U256::MAX;
-    let res = add_short(&a, &b);
-    assert_eq!(res.len(), 3);
+    let mut res = vec![U256::ZERO; 3];
+    let len_res = add_short(&a, &b, &mut res);
+    assert_eq!(len_res, 3);
     assert_eq!(res, [U256::ZERO, U256::ONE, U256::ONE]);
 
     // [MAX, MAX, MAX] + [MAX]
     let a = [U256::MAX, U256::MAX, U256::MAX];
     let b = U256::MAX;
-    let res = add_short(&a, &b);
-    assert_eq!(res.len(), 4);
+    let mut res = vec![U256::ZERO; 4];
+    let len_res = add_short(&a, &b, &mut res);
+    assert_eq!(len_res, 4);
     assert_eq!(res, [U256_MAX_MINUS_ONE, U256::ZERO, U256::ZERO, U256::ONE]);
 
     // [MAX, MAX, MAX, MAX, MAX] + [1]
     let a = [U256::MAX, U256::MAX, U256::MAX, U256::MAX, U256::MAX];
     let b = U256::ONE;
-    let res = add_short(&a, &b);
-    assert_eq!(res.len(), 6);
+    let mut res = vec![U256::ZERO; 6];
+    let len_res = add_short(&a, &b, &mut res);
+    assert_eq!(len_res, 6);
     assert_eq!(res, [U256::ZERO, U256::ZERO, U256::ZERO, U256::ZERO, U256::ZERO, U256::ONE]);
 
     // random
@@ -63,7 +68,8 @@ pub fn array_arith_tests() {
         5122917048051454884,
         5590305811533986117,
     ]);
-    let res = add_short(&a, &b);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = add_short(&a, &b, &mut res);
     let expected = [
         U256::from_u64s(&[
             3577019244705361401,
@@ -78,7 +84,7 @@ pub fn array_arith_tests() {
             3839014248966290641,
         ]),
     ];
-    assert_eq!(res.len(), 2);
+    assert_eq!(len_res, 2);
     assert_eq!(res, expected);
     // ============================
 
@@ -87,37 +93,42 @@ pub fn array_arith_tests() {
     // inA = inB and len(inA) = len(inB) = 1
     let a = [U256::MAX];
     let b = [U256::MAX];
-    let res = add_agtb(&a, &b);
-    assert_eq!(res.len(), 2);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = add_agtb(&a, &b, &mut res);
+    assert_eq!(len_res, 2);
     assert_eq!(res, [U256_MAX_MINUS_ONE, U256::ONE]);
 
     // inA < inB and len(inA) = len(inB) = 1
     let a = [U256_MAX_MINUS_ONE];
     let b = [U256::MAX];
-    let res = add_agtb(&a, &b);
-    assert_eq!(res.len(), 2);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = add_agtb(&a, &b, &mut res);
+    assert_eq!(len_res, 2);
     assert_eq!(res, [U256_MAX_MINUS_TWO, U256::ONE]);
 
     // [MAX, MAX, MAX] + [MAX, MAX]
     let a = [U256::MAX, U256::MAX, U256::MAX];
     let b = [U256::MAX, U256::MAX];
-    let res = add_agtb(&a, &b);
-    assert_eq!(res.len(), 4);
+    let mut res = vec![U256::ZERO; 4];
+    let len_res = add_agtb(&a, &b, &mut res);
+    assert_eq!(len_res, 4);
     assert_eq!(res, [U256_MAX_MINUS_ONE, U256::MAX, U256::ZERO, U256::ONE]);
 
     // [MAX, MAX, MAX, MAX] + [0, 1]
     let a = [U256::MAX, U256::MAX, U256::MAX, U256::MAX];
     let b = [U256::ZERO, U256::ONE];
-    let res = add_agtb(&a, &b);
-    assert_eq!(res.len(), 5);
+    let mut res = vec![U256::ZERO; 5];
+    let len_res = add_agtb(&a, &b, &mut res);
+    assert_eq!(len_res, 5);
     assert_eq!(res, [U256::MAX, U256::ZERO, U256::ZERO, U256::ZERO, U256::ONE]);
 
     // [MAX, MAX, MAX-1, MAX-1] + [1]
     let a = [U256::MAX, U256::MAX, U256_MAX_MINUS_ONE, U256_MAX_MINUS_ONE];
     let b = [U256::ONE];
-    let res = add_agtb(&a, &b);
-    assert_eq!(res.len(), 4);
-    assert_eq!(res, [U256::ZERO, U256::ZERO, U256::MAX, U256_MAX_MINUS_ONE]);
+    let mut res = vec![U256::ZERO; 5];
+    let len_res = add_agtb(&a, &b, &mut res);
+    assert_eq!(len_res, 4);
+    assert_eq!(&res[..len_res], [U256::ZERO, U256::ZERO, U256::MAX, U256_MAX_MINUS_ONE]);
     // ============================
 
     // Mul short
@@ -125,38 +136,43 @@ pub fn array_arith_tests() {
     // [1] * 0
     let a = [U256::ONE];
     let b = U256::ZERO;
-    let res = mul_short(&a, &b);
-    assert_eq!(res.len(), 1);
-    assert_eq!(res, [U256::ZERO]);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = mul_short(&a, &b, &mut res);
+    assert_eq!(len_res, 1);
+    assert_eq!(&res[..len_res], [U256::ZERO]);
 
     // [MAX] * MAX
     let a = [U256::MAX];
     let b = U256::MAX;
-    let res = mul_short(&a, &b);
-    assert_eq!(res.len(), 2);
-    assert_eq!(res, [U256::ONE, U256_MAX_MINUS_ONE]);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = mul_short(&a, &b, &mut res);
+    assert_eq!(len_res, 2);
+    assert_eq!(&res[..len_res], [U256::ONE, U256_MAX_MINUS_ONE]);
 
     // [MAX-1] * MAX
     let a = [U256_MAX_MINUS_ONE];
     let b = U256::MAX;
-    let res = mul_short(&a, &b);
-    assert_eq!(res.len(), 2);
-    assert_eq!(res, [U256::TWO, U256_MAX_MINUS_TWO]);
+    let mut res = vec![U256::ZERO; 2];
+    let len_res = mul_short(&a, &b, &mut res);
+    assert_eq!(len_res, 2);
+    assert_eq!(&res[..len_res], [U256::TWO, U256_MAX_MINUS_TWO]);
 
     // [MAX, MAX, MAX] * MAX
     let a = [U256::MAX, U256::MAX, U256::MAX];
     let b = U256::MAX;
-    let res = mul_short(&a, &b);
-    assert_eq!(res.len(), 4);
-    assert_eq!(res, [U256::ONE, U256::MAX, U256::MAX, U256_MAX_MINUS_ONE]);
+    let mut res = vec![U256::ZERO; 4];
+    let len_res = mul_short(&a, &b, &mut res);
+    assert_eq!(len_res, 4);
+    assert_eq!(&res[..len_res], [U256::ONE, U256::MAX, U256::MAX, U256_MAX_MINUS_ONE]);
 
     // [MAX, 100, MAX, 6] * 400
     let a = [U256::MAX, U256::from_u64(100), U256::MAX, U256::from_u64(6)];
     let b = U256::from_u64(400);
-    let res = mul_short(&a, &b);
-    assert_eq!(res.len(), 4);
+    let mut res = vec![U256::ZERO; 4];
+    let len_res = mul_short(&a, &b, &mut res);
+    assert_eq!(len_res, 4);
     assert_eq!(
-        res,
+        &res[..len_res],
         [
             U256::from_u64s(&[
                 18446744073709551216,
@@ -181,24 +197,27 @@ pub fn array_arith_tests() {
     // len(inA) = len(inB) and inA = inB
     let a = [U256::from_u64(5), U256::from_u64(6)];
     let b = [U256::from_u64(5), U256::from_u64(6)];
-    let res = mul_long(&a, &b);
-    assert_eq!(res.len(), 3);
-    assert_eq!(res, [U256::from_u64(25), U256::from_u64(60), U256::from_u64(36)]);
+    let mut res = vec![U256::ZERO; 4];
+    let len_res = mul_long(&a, &b, &mut res);
+    assert_eq!(len_res, 3);
+    assert_eq!(&res[..len_res], [U256::from_u64(25), U256::from_u64(60), U256::from_u64(36)]);
 
     // len(inA) = len(inB) and inA < inB
     let a = [U256::from_u64(5), U256::from_u64(5)];
     let b = [U256::from_u64(5), U256::from_u64(6)];
-    let res = mul_long(&a, &b);
-    assert_eq!(res.len(), 3);
-    assert_eq!(res, [U256::from_u64(25), U256::from_u64(55), U256::from_u64(30)]);
+    let mut res = vec![U256::ZERO; 4];
+    let len_res = mul_long(&a, &b, &mut res);
+    assert_eq!(len_res, 3);
+    assert_eq!(&res[..len_res], [U256::from_u64(25), U256::from_u64(55), U256::from_u64(30)]);
 
     // len(inA) = len(inB) and inA > inB
     let a = [U256::from_u64(5), U256::from_u64(6), U256::from_u64(7)];
     let b = [U256::from_u64(2), U256::from_u64(3), U256::from_u64(4)];
-    let res = mul_long(&a, &b);
-    assert_eq!(res.len(), 5);
+    let mut res = vec![U256::ZERO; 6];
+    let len_res = mul_long(&a, &b, &mut res);
+    assert_eq!(len_res, 5);
     assert_eq!(
-        res,
+        &res[..len_res],
         [
             U256::from_u64(10),
             U256::from_u64(27),
@@ -211,19 +230,21 @@ pub fn array_arith_tests() {
     // len(inA) < len(inB)
     let a = [U256::from_u64(5), U256::from_u64(6)];
     let b = [U256::from_u64(11), U256::from_u64(21), U256::from_u64(16)];
-    let res = mul_long(&a, &b);
-    assert_eq!(res.len(), 4);
+    let mut res = vec![U256::ZERO; 5];
+    let len_res = mul_long(&a, &b, &mut res);
+    assert_eq!(len_res, 4);
     assert_eq!(
-        res,
+        &res[..len_res],
         [U256::from_u64(55), U256::from_u64(171), U256::from_u64(206), U256::from_u64(96)]
     );
 
     // [MAX, MAX, MAX] * [MAX, MAX]
     let a = [U256::MAX, U256::MAX, U256::MAX];
     let b = [U256::MAX, U256::MAX];
-    let res = mul_long(&a, &b);
-    assert_eq!(res.len(), 5);
-    assert_eq!(res, [U256::ONE, U256::ZERO, U256::MAX, U256_MAX_MINUS_ONE, U256::MAX]);
+    let mut res = vec![U256::ZERO; 5];
+    let len_res = mul_long(&a, &b, &mut res);
+    assert_eq!(len_res, 5);
+    assert_eq!(&res[..len_res], [U256::ONE, U256::ZERO, U256::MAX, U256_MAX_MINUS_ONE, U256::MAX]);
     // ============================
 
     // Div short
