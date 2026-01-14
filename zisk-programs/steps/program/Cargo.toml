@@ -1,0 +1,10 @@
+[package]
+name = "steps"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+ziskos = { workspace = true }
+
+[lints]
+workspace = true

@@ -15,6 +15,7 @@ members = [
     "fcall_msb/program",
     "keccak/program",
     "sha256/program",
+    "steps/program",
     "modexp/program",
     "prover_killers/program",
     "secp256k1/program",
@@ -43,10 +44,10 @@ substrate-bn = { version = "0.6.0" }
 
 [patch.crates-io]
 blst = { git = "https://github.com/0xPolygonHermez/zisk-patch-blst.git", branch = "zisk-patch/v0.3.15" }
-# substrate-bn = { git = "https://github.com/0xPolygonHermez/zisk-patch-bn.git", tag = "patch-0.6.0-zisk-0.15.0" }
+substrate-bn = { git = "https://github.com/0xPolygonHermez/zisk-patch-bn.git", tag = "patch-0.6.0-zisk-0.15.0" }
 # Local development
 # blst = { path = "../../patches/zisk-patch-blst/bindings/rust" }
-substrate-bn = { path = "../../patches/zisk-patch-bn" }
+# substrate-bn = { path = "../../patches/zisk-patch-bn" }
 
 [workspace.lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
