@@ -2,8 +2,8 @@
 
 use ziskos::{
     zisklib::{
-        fcall2_secp256k1_fn_inv, fcall2_secp256k1_fp_inv, fcall_secp256k1_fn_inv,
-        fcall_secp256k1_fp_inv, fcall_secp256k1_fp_sqrt,
+        fcall_secp256k1_fn_inv, fcall_secp256k1_fn_inv_in_place, fcall_secp256k1_fp_inv,
+        fcall_secp256k1_fp_inv_in_place, fcall_secp256k1_fp_sqrt,
     },
     ziskos_fcall_get,
 };
@@ -77,14 +77,14 @@ pub fn diagnostic_fcall() {
     let result = fcall_secp256k1_fp_inv(&value);
     assert_eq!(result, inv_value);
 
-    fcall2_secp256k1_fp_inv(&value);
+    fcall_secp256k1_fp_inv_in_place(&value);
     let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
     assert_eq!(result, inv_value);
 
     let result = fcall_secp256k1_fp_inv(&inv_value);
     assert_eq!(result, value);
 
-    fcall2_secp256k1_fp_inv(&inv_value);
+    fcall_secp256k1_fp_inv_in_place(&inv_value);
     let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
     assert_eq!(result, value);
 
@@ -98,7 +98,7 @@ pub fn diagnostic_fcall() {
     // let result = fcall_secp256k1_fp_inv(&zero);
     // assert_eq!(result, zero);
 
-    // fcall2_secp256k1_fp_inv(&zero);
+    // fcall_secp256k1_fp_inv_in_place(&zero);
     // let result = [ziskos_fcall_get(),ziskos_fcall_get(),ziskos_fcall_get(),ziskos_fcall_get()];
     // assert_eq!(result, zero);
 
@@ -110,14 +110,14 @@ pub fn diagnostic_fcall() {
     let result = fcall_secp256k1_fn_inv(&value);
     assert_eq!(result, inv_value);
 
-    fcall2_secp256k1_fn_inv(&value);
+    fcall_secp256k1_fn_inv_in_place(&value);
     let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
     assert_eq!(result, inv_value);
 
     let result = fcall_secp256k1_fn_inv(&inv_value);
     assert_eq!(result, value);
 
-    fcall2_secp256k1_fn_inv(&inv_value);
+    fcall_secp256k1_fn_inv_in_place(&inv_value);
     let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
     assert_eq!(result, value);
 

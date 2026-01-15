@@ -16,7 +16,8 @@ members = [
     "keccak/program",
     "sha256/program",
     "modexp/program",
-    "prover_killers/program"
+    "prover_killers/program",
+    "secp256k1/program",
 ]
 resolver = "2"
 
