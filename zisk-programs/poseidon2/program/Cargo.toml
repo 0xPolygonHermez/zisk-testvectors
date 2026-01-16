@@ -1,0 +1,16 @@
+[package]
+name = "poseidon2"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+ziskos = { workspace = true }
+rand = { workspace = true }
+byteorder = "1.5.0"
+bytemuck = "1.24.0"
+
+[build-dependencies]
+bytemuck = "1.24.0"
+
+[lints]
+workspace = true
