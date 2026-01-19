@@ -1,0 +1,13 @@
+[package]
+name = "blst-lib"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+ziskos = { workspace = true }
+blst = { workspace = true }
+
+[lints]
+workspace = true
+
+
