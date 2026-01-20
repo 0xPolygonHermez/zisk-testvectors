@@ -1,7 +1,7 @@
 #![no_main]
-#![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
+#[cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 use ziskos::{
     zisklib::{
         fcall_secp256k1_fn_inv, fcall_secp256k1_fn_inv_in_place, fcall_secp256k1_fp_inv,
@@ -10,6 +10,10 @@ use ziskos::{
     ziskos_fcall_get,
 };
 
+#[cfg(not(all(target_os = "zkvm", target_vendor = "zisk")))]
+fn main() {}
+
+#[cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 fn main() {
     /* SAGE:
        p = 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f

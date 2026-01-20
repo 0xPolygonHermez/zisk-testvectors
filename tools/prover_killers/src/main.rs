@@ -282,7 +282,6 @@ fn generate_rust_code(
     // File header
     code.push_str("// Auto-generated Prover Killer test cases\n\n");
     code.push_str("#![no_main]\n");
-    code.push_str("#![cfg(all(target_os = \"zkvm\", target_vendor = \"zisk\"))]\n");
     code.push_str("ziskos::entrypoint!(main);\n\n");
     code.push_str("use ziskos::array_lib::{modexp, U256};\n\n"); // Add all the necessary imports
     code.push_str("fn main() {\n");

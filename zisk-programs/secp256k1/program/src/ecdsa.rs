@@ -1,7 +1,5 @@
 use ziskos::zisklib::secp256k1_ecdsa_verify;
 
-use crate::constants::{G, G_NEG, G_X, G_Y, IDENTITY, IDENTITY_X, IDENTITY_Y};
-
 pub fn ecdsa_tests() {
     // Verify (valids)
     let pk = [

@@ -1,8 +1,10 @@
 /// Secp256k1 base field size
+#[allow(dead_code)]
 pub const P: [u64; 4] =
     [0xFFFFFFFEFFFFFC2F, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF];
 
 /// Secp256k1 scalar field size
+#[allow(dead_code)]
 pub const N: [u64; 4] =
     [0xBFD25E8CD0364141, 0xBAAEDCE6AF48A03B, 0xFFFFFFFFFFFFFFFE, 0xFFFFFFFFFFFFFFFF];
 

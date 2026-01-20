@@ -1,7 +1,6 @@
 // Auto-generated Prover Killer test cases
 
 #![no_main]
-#![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
 use ziskos::zisklib::{modexp, U256};

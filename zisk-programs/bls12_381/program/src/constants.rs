@@ -1,4 +1,5 @@
 /// Base field size
+#[allow(dead_code)]
 pub const P: [u64; 6] = [
     0xB9FEFFFFFFFFAAAB,
     0x1EABFFFEB153FFFF,

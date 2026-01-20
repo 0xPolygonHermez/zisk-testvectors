@@ -1,5 +1,5 @@
 #![no_main]
-#![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
+#![cfg_attr(not(all(target_os = "zkvm", target_vendor = "zisk")), allow(unused))]
 ziskos::entrypoint!(main);
 
 mod arith_eq_384_tests;
@@ -12,6 +12,10 @@ mod riscv_fd;
 mod riscv_ima;
 mod sha256f_tests;
 
+#[cfg(not(all(target_os = "zkvm", target_vendor = "zisk")))]
+fn main() {}
+
+#[cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 fn main() {
     //riscv_ima::diagnostic_riscv_ima_combinations();
     riscv_ima::diagnostic_riscv_ima();

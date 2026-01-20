@@ -1,6 +1,6 @@
 use ziskos::zisklib::{exp_fp12_bn254, pairing_bn254};
 
-use crate::constants::{IDENTITY_G1, IDENTITY_G2, P};
+use crate::constants::{IDENTITY_G1, IDENTITY_G2};
 
 pub fn pairing_valid_tests() {
     let mut one = [0; 48];

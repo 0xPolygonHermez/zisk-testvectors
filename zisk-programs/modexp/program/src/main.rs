@@ -1,5 +1,4 @@
 #![no_main]
-#![cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
 ziskos::entrypoint!(main);
 
 mod constants;

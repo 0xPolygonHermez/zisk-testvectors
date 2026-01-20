@@ -2,7 +2,7 @@ use ziskos::zisklib::{
     exp_fp12_bls12_381, pairing_bls12_381, scalar_mul_bls12_381, scalar_mul_twist_bls12_381,
 };
 
-use crate::constants::{G1, G2, IDENTITY_G1, IDENTITY_G2, P};
+use crate::constants::{G1, G2, IDENTITY_G1, IDENTITY_G2};
 
 pub fn pairing_valid_tests() {
     let mut one = [0; 72];

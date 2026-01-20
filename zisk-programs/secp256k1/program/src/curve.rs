@@ -3,7 +3,7 @@ use ziskos::zisklib::{
     secp256k1_scalar_mul, secp256k1_to_affine, secp256k1_triple_scalar_mul_with_g,
 };
 
-use crate::constants::{G, G_NEG, G_X, G_Y, IDENTITY, IDENTITY_X, IDENTITY_Y};
+use crate::constants::{G, G_NEG, G_X, G_Y, IDENTITY};
 
 pub fn curve_tests() {
     // Decompress

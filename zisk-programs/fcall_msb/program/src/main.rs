@@ -1,5 +1,4 @@
 #![no_main]
-
 ziskos::entrypoint!(main);
 
 use ziskos::zisklib::fcall_msb_pos_256;
