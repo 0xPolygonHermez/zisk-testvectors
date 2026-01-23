@@ -1,0 +1,20 @@
+[package]
+name = "revm"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+hex = "0.4"
+num-bigint = "0.4"
+ziskos = { workspace = true }
+
+revm = { version = "31.0.2", default-features = false }
+alloy-consensus = { version = "1.0.37", default-features = false, features = ["crypto-backend"] }
+alloy-primitives = { version = "1.5.0", default-features = false, features = ["native-keccak"] }
+
+crypto = { git = "https://github.com/0xPolygonHermez/zisk-eth-client.git", branch = "feat/new-patch-style" }
+# Local development
+# crypto = { path = "../../crates/crypto" }
+
+[lints]
+workspace = true

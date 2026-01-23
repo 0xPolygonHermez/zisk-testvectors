@@ -18,8 +18,9 @@ members = [
     "modexp/program",
     "prover_killers/program",
     "secp256k1/program",
-    "blst/program",
-    "substrate_bn/program",
+    "revm/program",
+    # "blst/program",
+    # "substrate_bn/program",
 ]
 resolver = "2"
 
@@ -38,15 +39,15 @@ opt-level = 3
 ziskos = { path = "../../zisk/ziskos/entrypoint" }
 rand = "0.8"
 
-blst = { version = "0.3.15", features = ["portable"] }
-substrate-bn = { version = "0.6.0" }
+# blst = { version = "0.3.15", features = ["portable"] }
+# substrate-bn = { version = "0.6.0" }
 
-[patch.crates-io]
-blst = { git = "https://github.com/0xPolygonHermez/zisk-patch-blst.git", branch = "zisk-patch/v0.3.15" }
-# substrate-bn = { git = "https://github.com/0xPolygonHermez/zisk-patch-bn.git", tag = "patch-0.6.0-zisk-0.15.0" }
-# Local development
-# blst = { path = "../../patches/zisk-patch-blst/bindings/rust" }
-substrate-bn = { path = "../../patches/zisk-patch-bn" }
+# [patch.crates-io]
+# blst = { git = "https://github.com/0xPolygonHermez/zisk-patch-blst.git", branch = "zisk-patch/v0.3.15" }
+# # substrate-bn = { git = "https://github.com/0xPolygonHermez/zisk-patch-bn.git", tag = "patch-0.6.0-zisk-0.15.0" }
+# # Local development
+# # blst = { path = "../../patches/zisk-patch-blst/bindings/rust" }
+# substrate-bn = { path = "../../patches/zisk-patch-bn" }
 
 [workspace.lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
