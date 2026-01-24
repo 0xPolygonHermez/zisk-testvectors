@@ -230,7 +230,7 @@ fn g1_add_tests(crypto: &CustomEvmCrypto) {
     );
     assert_eq!(result, expected, "Test 10d: P + P (doubling) failed");
 
-    println!("All Bn254 G1 Add tests passed!");
+    println!("All BN254 G1 Add tests passed!");
 }
 
 fn g1_mul_tests(crypto: &CustomEvmCrypto) {
@@ -410,7 +410,7 @@ fn g1_mul_tests(crypto: &CustomEvmCrypto) {
     );
     assert_eq!(result, expected, "Test 7: worst case scalar multiplication failed");
 
-    println!("All Bn254 G1 Mul tests passed!");
+    println!("All BN254 G1 Mul tests passed!");
 }
 
 fn pairing_check_tests(crypto: &CustomEvmCrypto) {
@@ -769,5 +769,5 @@ fn pairing_check_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.bn254_pairing_check(pairs).expect("Test 5 should succeed");
     assert!(result, "Test 5: 4 pairs pairing should be true");
 
-    println!("All Bn254 Pairing Check tests passed!");
+    println!("All BN254 Pairing Check tests passed!");
 }

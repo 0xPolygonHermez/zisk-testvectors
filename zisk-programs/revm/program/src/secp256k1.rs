@@ -50,7 +50,7 @@ pub fn secp256k1_tests(crypto: &CustomEvmCrypto) {
 // ============================================================
 fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     /////////
-    /// Valid tests
+    // Valid tests
     //////////
     let hash = hex_to_32("d9eba16ed0ecae432b71fe008c98cc872bb4cc214d3220a36f365326cf807d68");
     let r = hex_to_32("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798"); // ECGX
@@ -381,7 +381,7 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     assert_eq!(result.unwrap(), expected, "Test #26 failed");
 
     ////////
-    /// Invalid tests
+    // Invalid tests
     ////////
     // #27 v < 27 - should fail
     let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
@@ -515,7 +515,7 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     assert!(result.is_err(), "Test #39 should fail (s > N)");
 
     /////////
-    /// Additional edge case tests
+    // Additional edge case tests
     /////////
     // #40 ECGX
     let hash = hex_to_32("3cc4cb050478c49877188e4fbd022f35ccb41cee02d9d4417194cbf7ebc1eebe");
@@ -593,6 +593,8 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     let sig = build_sig_65(r, s, v);
     let result = crypto.recover_signer_unchecked(&sig, &hash);
     assert_eq!(result.unwrap(), expected, "Masked ECGX 248-bit test failed");
+
+    println!("All EcRecover TX tests passed!");
 }
 
 // ============================================================
@@ -711,5 +713,5 @@ fn ecrecover_precompile_tests(crypto: &impl Crypto) {
     let result = crypto.secp256k1_ecrecover(&sig, recid, &hash);
     assert!(result.is_err(), "Precompile s>=N should fail");
 
-    println!("All secp256k1 tests passed!");
+    println!("All EcRecover Precompile tests passed!");
 }
