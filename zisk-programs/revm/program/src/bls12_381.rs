@@ -10,9 +10,8 @@ pub fn bls12_381_tests(crypto: &CustomEvmCrypto) {
     g2_mul_tests(crypto); // Use MSM
     g2_msm_tests(crypto);
     pairing_check_tests(crypto);
-    // TODO!
-    // fp_to_g1_tests(crypto);
-    // fp2_to_g2_tests(crypto);
+    fp_to_g1_tests(crypto);
+    fp2_to_g2_tests(crypto);
 }
 
 fn hex_to_bytes<const N: usize>(hex: &str) -> [u8; N] {
@@ -2656,4 +2655,84 @@ fn pairing_check_tests(crypto: &CustomEvmCrypto) {
     }
 
     println!("All BLS12-381 Pairing tests passed!");
+}
+
+fn fp_to_g1_tests(crypto: &CustomEvmCrypto) {
+    let yaml_content = include_str!("bls-tests/map_fp_to_G1/map_fp_to_G1_bls.yaml");
+    let tests = parse_success_yaml(yaml_content);
+
+    for test in &tests {
+        if test.input.len() != 64 {
+            println!("Skipping {} - invalid input length {}", test.name, test.input.len());
+            continue;
+        }
+        let mut fe = [0u8; 48];
+        fe.copy_from_slice(&test.input[16..64]); // take last 48 bytes
+        let result = crypto.bls12_381_fp_to_g1(&fe);
+        assert!(result.is_ok(), "FP to G1 {} should succeed", test.name);
+        let result_padded = pad_g1_result(&result.unwrap());
+        assert_eq!(
+            result_padded.as_slice(),
+            test.expected.as_slice(),
+            "FP to G1 {} mismatch",
+            test.name
+        );
+    }
+
+    // let fail_yaml = include_str!("bls-tests/fail_map_fp_to_G1/fail-map_fp_to_G1_bls.yaml");
+    // let fail_tests = parse_fail_yaml(fail_yaml);
+
+    // for test in &fail_tests {
+    //     if test.input.len() != 64 {
+    //         continue;
+    //     }
+    //     let mut fe = [0u8; 48];
+    //     fe.copy_from_slice(&test.input[16..64]);
+    //     let result = crypto.bls12_381_fp_to_g1(&fe);
+    //     assert!(result.is_err(), "FP to G1 {} should fail: {}", test.name, test.expected_error);
+    // }
+
+    println!("All BLS12-381 FP to G1 tests passed!");
+}
+
+fn fp2_to_g2_tests(crypto: &CustomEvmCrypto) {
+    let yaml_content = include_str!("bls-tests/map_fp2_to_G2/map_fp2_to_G2_bls.yaml");
+    let tests = parse_success_yaml(yaml_content);
+
+    for test in &tests {
+        if test.input.len() != 128 {
+            println!("Skipping {} - invalid input length {}", test.name, test.input.len());
+            continue;
+        }
+        let mut fe0 = [0u8; 48];
+        let mut fe1 = [0u8; 48];
+        fe0.copy_from_slice(&test.input[16..64]); // first FP element
+        fe1.copy_from_slice(&test.input[80..128]); // second FP element
+        let result = crypto.bls12_381_fp2_to_g2((fe0, fe1));
+        assert!(result.is_ok(), "FP2 to G2 {} should succeed", test.name);
+        let result_padded = pad_g2_result(&result.unwrap());
+        assert_eq!(
+            result_padded.as_slice(),
+            test.expected.as_slice(),
+            "FP2 to G2 {} mismatch",
+            test.name
+        );
+    }
+
+    // let fail_yaml = include_str!("bls-tests/fail_map_fp2_to_G2/fail-map_fp2_to_G2_bls.yaml");
+    // let fail_tests = parse_fail_yaml(fail_yaml);
+
+    // for test in &fail_tests {
+    //     if test.input.len() != 128 {
+    //         continue;
+    //     }
+    //     let mut fe0 = [0u8; 48];
+    //     let mut fe1 = [0u8; 48];
+    //     fe0.copy_from_slice(&test.input[16..64]);
+    //     fe1.copy_from_slice(&test.input[80..128]);
+    //     let result = crypto.bls12_381_fp2_to_g2(&fe0, &fe1);
+    //     assert!(result.is_err(), "FP2 to G2 {} should fail: {}", test.name, test.expected_error);
+    // }
+
+    println!("All BLS12-381 FP2 to G2 tests passed!");
 }
