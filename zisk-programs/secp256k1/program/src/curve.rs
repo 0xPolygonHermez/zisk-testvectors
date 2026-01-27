@@ -1,6 +1,6 @@
 use ziskos::zisklib::{
     secp256k1_decompress, secp256k1_double_scalar_mul_with_g, secp256k1_is_on_curve,
-    secp256k1_scalar_mul, secp256k1_to_affine, secp256k1_triple_scalar_mul_with_g,
+    secp256k1_scalar_mul, secp256k1_triple_scalar_mul_with_g,
 };
 
 use crate::constants::{G, G_NEG, G_X, G_Y, IDENTITY};
@@ -13,25 +13,6 @@ pub fn curve_tests() {
         Err(_) => panic!("Decompress failed"),
     };
     let res_exp = (G_X, G_Y);
-    assert_eq!(res, res_exp);
-
-    // To Affine
-    let p = [
-        0x29868c37ceb8e39c,
-        0x177be3b49c3f6fa4,
-        0x2a3774442bf633f,
-        0x47b19a76c8c2990f,
-        0x7b92ff367ac68a1f,
-        0xb18003a9900fdeb3,
-        0xe06693957bcbe9d2,
-        0x9e350a911345b6b0,
-        0x3,
-        0x0,
-        0x0,
-        0x0,
-    ];
-    let res = secp256k1_to_affine(&p);
-    let res_exp = G;
     assert_eq!(res, res_exp);
 
     // Is on curve
