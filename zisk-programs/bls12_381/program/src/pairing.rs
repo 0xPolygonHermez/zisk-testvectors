@@ -26,10 +26,10 @@ pub fn pairing_valid_tests() {
 
     // Bilinearity test
     // 2P, 12P, 2Q, 12Q
-    let p_two = scalar_mul_bls12_381(&G1, &[2, 0, 0, 0, 0, 0]);
-    let p_twelve = scalar_mul_bls12_381(&G1, &[12, 0, 0, 0, 0, 0]);
-    let q_two = scalar_mul_twist_bls12_381(&G2, &[2, 0, 0, 0, 0, 0]);
-    let q_twelve = scalar_mul_twist_bls12_381(&G2, &[12, 0, 0, 0, 0, 0]);
+    let p_two = scalar_mul_bls12_381(&G1, &[2, 0, 0, 0]);
+    let p_twelve = scalar_mul_bls12_381(&G1, &[12, 0, 0, 0]);
+    let q_two = scalar_mul_twist_bls12_381(&G2, &[2, 0, 0, 0]);
+    let q_twelve = scalar_mul_twist_bls12_381(&G2, &[12, 0, 0, 0]);
 
     // e(2P,12Q)
     let p = p_two;
