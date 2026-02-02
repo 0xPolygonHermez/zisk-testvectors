@@ -2,25 +2,24 @@
 version = "0.1.0"
 edition = "2021"
 
-# TODO: Uncomment before merge
 [workspace]
 members = [
-    # "add256/program",
-    # "arith_eq_384_gen/program",
+    "add256/program",
+    "arith_eq_384_gen/program",
     "arith_eq_gen/program",
-    # "arith_eq_pow/program",
-    # "bls12_381/program",
-    # "bn254/program",
+    "arith_eq_pow/program",
+    "bls12_381/program",
+    "bn254/program",
     # "diagnostic/program",
-    # "fcall/program",
-    # "fcall_msb/program",
-    # "keccak/program",
-    # "sha256/program",
-    # "modexp/program",
-    # "prover_killers/program",
-    # "secp256k1/program",
+    "fcall/program",
+    "fcall_msb/program",
+    "keccak/program",
+    "sha256/program",
+    "modexp/program",
+    "prover_killers/program",
+    "secp256k1/program",
     "secp256r1/program",
-    # "revm/program",
+    "revm/program",
     # "blst/program",
     # "substrate_bn/program",
 ]

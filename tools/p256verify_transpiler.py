@@ -13,16 +13,24 @@ Input format (assembly):
     B => A
     0-10 :ASSERT ; error code (ignored)
 
-Output format (Rust):
+Output formats:
+1. Chunk format (for ziskos direct usage):
     let z = [0x..., 0x..., 0x..., 0x...];
     let r = [0x..., 0x..., 0x..., 0x...];
     let s = [0x..., 0x..., 0x..., 0x...];
     let pk = [0x..., 0x..., 0x..., 0x..., 0x..., 0x..., 0x..., 0x...];
-    assert!(secp256r1_ecdsa_verify(&pk, &z, &r, &s));  // or assert!(!...)
+    assert!(secp256r1_ecdsa_verify(&pk, &z, &r, &s));
+
+2. Byte format (for Crypto trait - revm precompile):
+    let msg = hex_to_32("...");
+    let sig = build_sig("...", "...");
+    let pk = build_pk("...", "...");
+    assert!(crypto.secp256r1_verify_signature(&msg, &sig, &pk));
 """
 
 import re
 import sys
+import argparse
 
 def hex_to_u64_chunks(hex_str: str) -> list[str]:
     """
@@ -37,22 +45,28 @@ def hex_to_u64_chunks(hex_str: str) -> list[str]:
     if hex_str.startswith('0x') or hex_str.startswith('0X'):
         hex_str = hex_str[2:]
     
-    # Pad to multiple of 16 characters (64 bits)
-    while len(hex_str) < 64:
-        hex_str = '0' + hex_str
+    # Pad to 64 characters (32 bytes = 256 bits)
+    hex_str = hex_str.zfill(64)
     
     # Split into 16-character chunks from right to left (little-endian)
     chunks = []
-    for i in range(0, len(hex_str), 16):
-        chunk = hex_str[len(hex_str) - 16 - i:len(hex_str) - i] if len(hex_str) - 16 - i >= 0 else hex_str[:len(hex_str) - i]
-        if chunk:
-            chunks.append(f"0x{chunk}")
+    for i in range(4):
+        start = 64 - (i + 1) * 16
+        end = 64 - i * 16
+        chunk = hex_str[start:end]
+        chunks.append(f"0x{chunk}")
     
-    # Ensure we have exactly 4 chunks for 256-bit values
-    while len(chunks) < 4:
-        chunks.append("0x0000000000000000")
-    
-    return chunks[:4]  # Return only first 4 chunks for 256-bit
+    return chunks
+
+
+def normalize_hex(hex_str: str) -> str:
+    """Normalize hex string to 64 characters without 0x prefix."""
+    hex_str = hex_str.strip()
+    if hex_str.endswith('n'):
+        hex_str = hex_str[:-1]
+    if hex_str.startswith('0x') or hex_str.startswith('0X'):
+        hex_str = hex_str[2:]
+    return hex_str.zfill(64)
 
 
 def parse_test_block(lines: list[str], start_idx: int) -> tuple[dict, int]:
@@ -92,7 +106,7 @@ def parse_test_block(lines: list[str], start_idx: int) -> tuple[dict, int]:
             continue
             
         # Match: 0xhex_value => A ; comment
-        match = re.match(r'(0x[0-9a-fA-F]+n?|%[A-Z_]+)\s*=>\s*([A-E])', line)
+        match = re.match(r'(0x[0-9a-fA-F]+n?|%[A-Z_0-9]+)\s*=>\s*([A-E])', line)
         if match:
             value = match.group(1)
             register = match.group(2)
@@ -147,8 +161,8 @@ def parse_test_block(lines: list[str], start_idx: int) -> tuple[dict, int]:
     return test, i
 
 
-def generate_rust_test(test: dict, test_num: int) -> str:
-    """Generate Rust code for a single test."""
+def generate_rust_test_chunks(test: dict, test_num: int) -> str:
+    """Generate Rust code for a single test in chunk format (for ziskos)."""
     if not all([test['hash'], test['r'], test['s'], test['x'], test['y'], test['expected'] is not None]):
         return f"    // Test {test_num}: incomplete data\n"
     
@@ -177,25 +191,116 @@ def generate_rust_test(test: dict, test_num: int) -> str:
     return result
 
 
+def generate_rust_test_bytes(test: dict, test_num: int) -> str:
+    """Generate Rust code for a single test in byte format (for Crypto trait)."""
+    if not all([test['hash'], test['r'], test['s'], test['x'], test['y'], test['expected'] is not None]):
+        return f"    // Test {test_num}: incomplete data\n"
+    
+    msg_hex = normalize_hex(test['hash'])
+    r_hex = normalize_hex(test['r'])
+    s_hex = normalize_hex(test['s'])
+    x_hex = normalize_hex(test['x'])
+    y_hex = normalize_hex(test['y'])
+    
+    comment = f"    // {test['comment']}\n" if test['comment'] else ""
+    
+    result = comment
+    result += f"    let msg = hex_to_32(\"{msg_hex}\");\n"
+    result += f"    let sig = build_sig(\"{r_hex}\", \"{s_hex}\");\n"
+    result += f"    let pk = build_pk(\"{x_hex}\", \"{y_hex}\");\n"
+    
+    if test['expected']:
+        result += f"    assert!(crypto.secp256r1_verify_signature(&msg, &sig, &pk), \"Test {test_num} failed\");\n"
+    else:
+        result += f"    assert!(!crypto.secp256r1_verify_signature(&msg, &sig, &pk), \"Test {test_num} should fail\");\n"
+    
+    return result
+
+
+def generate_header_chunks():
+    """Generate header for chunk format output."""
+    return """use ziskos::zisklib::secp256r1_ecdsa_verify;
+
+use crate::constants::{G_X, G_Y};
+
+// Tests from https://github.com/ethereum/go-ethereum/blob/master/core/vm/testdata/precompiles/p256Verify.json
+pub fn ecdsa_tests() {
+"""
+
+
+def generate_header_bytes():
+    """Generate header for byte format output."""
+    return """use revm::precompile::Crypto;
+
+/// Convert hex string (without 0x prefix) to 32-byte array
+fn hex_to_32(hex: &str) -> [u8; 32] {
+    let bytes = hex::decode(hex).expect("valid hex");
+    let mut arr = [0u8; 32];
+    arr.copy_from_slice(&bytes);
+    arr
+}
+
+/// Build signature from r and s hex strings (32 bytes each, big-endian)
+fn build_sig(r: &str, s: &str) -> [u8; 64] {
+    let mut sig = [0u8; 64];
+    let r_bytes = hex::decode(r).expect("valid hex");
+    let s_bytes = hex::decode(s).expect("valid hex");
+    sig[..32].copy_from_slice(&r_bytes);
+    sig[32..].copy_from_slice(&s_bytes);
+    sig
+}
+
+/// Build public key from x and y hex strings (32 bytes each, big-endian)
+fn build_pk(x: &str, y: &str) -> [u8; 64] {
+    let mut pk = [0u8; 64];
+    let x_bytes = hex::decode(x).expect("valid hex");
+    let y_bytes = hex::decode(y).expect("valid hex");
+    pk[..32].copy_from_slice(&x_bytes);
+    pk[32..].copy_from_slice(&y_bytes);
+    pk
+}
+
+pub fn secp256r1_tests(crypto: &impl Crypto) {
+"""
+
+
+def generate_footer():
+    """Generate footer for output."""
+    return "}\n"
+
+
 def main():
-    # Read from stdin or file
-    if len(sys.argv) > 1:
-        with open(sys.argv[1], 'r') as f:
+    parser = argparse.ArgumentParser(
+        description='Convert secp256r1 ECDSA test vectors from assembly to Rust format'
+    )
+    parser.add_argument('input_file', nargs='?', help='Input assembly file')
+    parser.add_argument(
+        '-f', '--format',
+        choices=['chunks', 'bytes', 'both'],
+        default='chunks',
+        help='Output format: chunks (ziskos), bytes (Crypto trait), or both'
+    )
+    parser.add_argument(
+        '-o', '--output',
+        help='Output file (default: stdout)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Read input
+    if args.input_file:
+        with open(args.input_file, 'r') as f:
             content = f.read()
     else:
-        print("Usage: python asm_to_rust.py <input_file>")
-        print("Or paste assembly code and press Ctrl+D when done:")
+        print("Usage: python p256verify_transpiler.py <input_file> [-f chunks|bytes|both]", file=sys.stderr)
+        print("Or paste assembly code and press Ctrl+D when done:", file=sys.stderr)
         content = sys.stdin.read()
     
     lines = content.split('\n')
     
-    # Generate header
-    print("use ziskos::zisklib::secp256r1_ecdsa_verify;")
-    print()
-    print("pub fn ecdsa_tests() {")
-    
+    # Parse all tests
+    tests = []
     i = 0
-    test_num = 1
     while i < len(lines):
         line = lines[i].strip()
         
@@ -204,12 +309,39 @@ def main():
            ('=>' in line and ('=> A' in line or '=> B' in line)):
             test, i = parse_test_block(lines, i)
             if test['expected'] is not None:
-                print(generate_rust_test(test, test_num))
-                test_num += 1
+                tests.append(test)
         else:
             i += 1
     
-    print("}")
+    # Generate output
+    output_lines = []
+    
+    if args.format in ['chunks', 'both']:
+        output_lines.append(generate_header_chunks())
+        for idx, test in enumerate(tests, 1):
+            output_lines.append(generate_rust_test_chunks(test, idx))
+        output_lines.append(generate_footer())
+    
+    if args.format == 'both':
+        output_lines.append("\n// " + "=" * 70 + "\n")
+        output_lines.append("// Byte format (for Crypto trait / revm precompile)\n")
+        output_lines.append("// " + "=" * 70 + "\n\n")
+    
+    if args.format in ['bytes', 'both']:
+        output_lines.append(generate_header_bytes())
+        for idx, test in enumerate(tests, 1):
+            output_lines.append(generate_rust_test_bytes(test, idx))
+        output_lines.append(generate_footer())
+    
+    output = ''.join(output_lines)
+    
+    # Write output
+    if args.output:
+        with open(args.output, 'w') as f:
+            f.write(output)
+        print(f"Output written to {args.output}", file=sys.stderr)
+    else:
+        print(output)
 
 
 if __name__ == "__main__":

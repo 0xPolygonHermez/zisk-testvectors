@@ -146,6 +146,7 @@ fn modexp_512bit_tests(crypto: &CustomEvmCrypto) {
     let modulus = hex_to_vec("07");
     let result = crypto.modexp(&base, &exp, &modulus).unwrap();
     // The result depends on actual computation, let's use a simpler test
+    assert_eq!(result, hex_to_vec("01"), "2^(2^256 + 3) mod 7 should be 1");
 
     // 3^65537 mod (2^512 - 1) - RSA-like exponent
     let base = hex_to_vec("03");

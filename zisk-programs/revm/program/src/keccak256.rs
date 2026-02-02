@@ -1,6 +1,3 @@
-use crypto::CustomEvmCrypto;
-use revm::precompile::Crypto;
-
 unsafe extern "C" {
     // This gets linked to the ziskos keccak256 implementation
     fn native_keccak256(bytes: *const u8, len: usize, output: *mut u8);
@@ -20,7 +17,7 @@ fn hex_to_hash(hex: &str) -> [u8; 32] {
     arr
 }
 
-pub fn keccak256_tests(_crypto: &CustomEvmCrypto) {
+pub fn keccak256_tests() {
     keccak256_empty_tests();
     keccak256_basic_tests();
     keccak256_length_tests();

@@ -601,7 +601,7 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
 // ecrecover_precompiled tests (using secp256k1_ecrecover)
 // These allow high S values (s < N)
 // ============================================================
-fn ecrecover_precompile_tests(crypto: &impl Crypto) {
+fn ecrecover_precompile_tests(crypto: &CustomEvmCrypto) {
     // #34 s == field/2 + 1. Valid for precompile
     let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
     let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
