@@ -1,6 +1,7 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
+mod constants;
 mod ecdsa;
 
 use ecdsa::ecdsa_tests;
