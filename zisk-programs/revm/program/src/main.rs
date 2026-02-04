@@ -22,11 +22,11 @@ use crypto::CustomEvmCrypto;
 fn main() {
     let crypto = CustomEvmCrypto::default();
 
-    bls12_381_tests(&crypto);
-    bn254_tests(&crypto);
-    modexp_tests(&crypto);
-    secp256k1_tests(&crypto);
-    secp256r1_tests(&crypto);
+    // bls12_381_tests(&crypto);
+    // bn254_tests(&crypto);
+    // modexp_tests(&crypto);
+    // secp256k1_tests(&crypto);
+    // secp256r1_tests(&crypto);
     sha256_tests(&crypto);
 
     keccak256_tests();

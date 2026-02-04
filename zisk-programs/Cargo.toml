@@ -20,8 +20,6 @@ members = [
     "secp256k1/program",
     "secp256r1/program",
     "revm/program",
-    # "blst/program",
-    # "substrate_bn/program",
 ]
 resolver = "2"
 
