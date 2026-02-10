@@ -18,13 +18,12 @@ fn hex_to_hash(hex: &str) -> [u8; 32] {
 }
 
 pub fn keccak256_tests() {
-    keccak256_empty_tests();
     keccak256_basic_tests();
     keccak256_length_tests();
     println!("All Keccak256 tests passed!");
 }
 
-fn keccak256_empty_tests() {
+fn keccak256_basic_tests() {
     // Empty input - this is a critical edge case
     // keccak256("") = 0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470
     let result = keccak256(b"");
@@ -33,9 +32,7 @@ fn keccak256_empty_tests() {
         hex_to_hash("c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"),
         "keccak256 of empty string"
     );
-}
 
-fn keccak256_basic_tests() {
     // Single character
     // keccak256("a") = 0x3ac225168df54212a25c1c01fd35bebfea408fdac2e31ddd6f80a4bbf9a5f1cb
     let result = keccak256(b"a");
