@@ -1,10 +1,7 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use ziskos::{
-    read_input,
-    syscalls::{syscall_sha256_f, SyscallSha256Params},
-};
+use ziskos::syscalls::{syscall_sha256_f, SyscallSha256Params};
 
 #[allow(deprecated)]
 use generic_array::{typenum::U64, GenericArray};
@@ -15,7 +12,7 @@ const ACTIVATE_CONSISTENCY_TEST: bool = false;
 
 fn main() {
     // Get the input from ziskos
-    let input: Vec<u8> = read_input();
+    let input: Vec<u8> = ziskos::io::read();
 
     let mut rng = rand::thread_rng();
 

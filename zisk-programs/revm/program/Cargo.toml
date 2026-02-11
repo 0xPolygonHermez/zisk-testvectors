@@ -8,7 +8,7 @@ hex = "0.4"
 num-bigint = "0.4"
 ziskos = { workspace = true }
 
-revm = { version = "33.1.0", default-features = false }
+revm = { version = "34.0.0", default-features = false }
 
 alloy-primitives = { version = "1.5.4", default-features = false, features = ["native-keccak"] }
 

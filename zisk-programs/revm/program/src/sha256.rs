@@ -202,16 +202,12 @@ fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {
     let aligned_buffer: [u8; 64] = [
         0x00, // padding byte at offset 0
         0x61, 0x62, 0x63, // "abc"
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     ];
-    
+
     let unaligned_slice = &aligned_buffer[1..4];
     let result = crypto.sha256(unaligned_slice);
     assert_eq!(
@@ -219,7 +215,7 @@ fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {
         hex_to_hash("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"),
         "sha256('abc') from unaligned offset 1"
     );
-    
+
     // 2] Use a Vec with explicit unaligned access via raw pointer
     let mut buffer = vec![0u8; 128];
     buffer[1] = b'h';
@@ -227,7 +223,7 @@ fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {
     buffer[3] = b'l';
     buffer[4] = b'l';
     buffer[5] = b'o';
-    
+
     let unaligned_hello = &buffer[1..6];
     let result = crypto.sha256(unaligned_hello);
     assert_eq!(
@@ -235,7 +231,7 @@ fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {
         hex_to_hash("2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"),
         "sha256('hello') from unaligned offset"
     );
-    
+
     // 3] Test various alignment offsets
     for offset in [1usize, 2, 3, 5, 7] {
         let mut buf = vec![0u8; 64 + offset];
@@ -243,7 +239,7 @@ fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {
         buf[offset] = b'a';
         buf[offset + 1] = b'b';
         buf[offset + 2] = b'c';
-        
+
         let slice = &buf[offset..offset + 3];
         let result = crypto.sha256(slice);
         assert_eq!(
@@ -252,13 +248,13 @@ fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {
             "sha256('abc') from offset {offset}"
         );
     }
-    
+
     // 4] Larger unaligned data
     let mut large_buf = vec![0u8; 256];
     for i in 0..64 {
         large_buf[3 + i] = i as u8;
     }
-    
+
     // Hash 64 bytes from unaligned offset 3
     let unaligned_64 = &large_buf[3..67];
     let result = crypto.sha256(unaligned_64);

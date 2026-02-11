@@ -1,15 +1,13 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use byteorder::ByteOrder;
 use rand::Rng;
 use std::convert::TryInto;
 use tiny_keccak::{keccakf, Hasher, Keccak};
-use ziskos::{read_input, set_output};
 
 fn main() {
     // Get the input from ziskos
-    let input: Vec<u8> = read_input();
+    let input: Vec<u8> = ziskos::io::read();
 
     let full_keccak = input[8] == 1;
     if full_keccak {
@@ -20,16 +18,13 @@ fn main() {
             u64::from_le_bytes(input[..8].try_into().expect("Input should be at least 8 bytes"));
         println!("Number to hash:  0x{:X}", input_number);
 
-        let mut output = full_keccak_hash(&keccak_input);
+        let output = full_keccak_hash(&keccak_input);
 
         let output_number: String = output.iter().map(|byte| format!("{:02x}", byte)).collect();
         println!("Output: 0x{}", output_number);
 
         // Write the output using ziskos
-        for i in 0..8 {
-            let val = byteorder::BigEndian::read_u32(&mut output[i * 4..i * 4 + 4]);
-            set_output(i, val);
-        }
+        ziskos::io::commit(&output);
     } else {
         let mut rng = rand::thread_rng();
 

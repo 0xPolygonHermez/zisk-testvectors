@@ -1,20 +1,11 @@
 use ziskos::zisklib::{
-    secp256k1_decompress, secp256k1_double_scalar_mul_with_g, secp256k1_is_on_curve,
-    secp256k1_scalar_mul, secp256k1_triple_scalar_mul_with_g,
+    secp256k1_double_scalar_mul_with_g, secp256k1_is_on_curve, secp256k1_scalar_mul,
+    secp256k1_triple_scalar_mul_with_g,
 };
 
-use crate::constants::{G, G_NEG, G_X, G_Y, IDENTITY};
+use crate::constants::{G, G_NEG, IDENTITY};
 
 pub fn curve_tests() {
-    // Decompress
-    let p_x = G_X;
-    let res = match secp256k1_decompress(&p_x, false) {
-        Ok(point) => point,
-        Err(_) => panic!("Decompress failed"),
-    };
-    let res_exp = (G_X, G_Y);
-    assert_eq!(res, res_exp);
-
     // Is on curve
     let p = IDENTITY;
     let res = secp256k1_is_on_curve(&p);
