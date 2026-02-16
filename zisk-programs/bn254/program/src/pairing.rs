@@ -1,8 +1,317 @@
-use ziskos::zisklib::{exp_fp12_bn254, pairing_bn254};
+use ziskos::zisklib::{
+    bn254_pairing_check_c, exp_fp12_bn254, neg_bn254, pairing_bn254, pairing_check_bn254,
+};
 
-use crate::constants::{IDENTITY_G1, IDENTITY_G2};
+use crate::constants::{IDENTITY_G1, IDENTITY_G2, P};
 
-pub fn pairing_valid_tests() {
+pub fn pairing_check_tests() {
+    // Test 1: Empty pairing (should return true)
+    let result = pairing_check_bn254(&[], &[]).expect("Empty pairing should succeed");
+    assert!(result, "Empty pairing should return true");
+
+    // Test 2: Identity points (e(0,Q) = 1, should return true after filtering)
+    let p = IDENTITY_G1;
+    let q = [
+        0x9990C4F783E78FC5,
+        0x47B71082B0D94CED,
+        0xDFF850E44C211262,
+        0x099ECE5FA385A639,
+        0x9FA008B0854738C5,
+        0xADA5D1130460685D,
+        0x9546DBB3D53487DF,
+        0x0486687755AD3E80,
+        0x311BB2C2C86690CF,
+        0xCC56CB84BC137759,
+        0x86897C3C692D952C,
+        0x00B6884E5D02665B,
+        0x2702AB556C5EFF3E,
+        0x059E40D295EB0F4E,
+        0x51704116523CBD21,
+        0x1FA69C987C6371FF,
+    ];
+    let result = pairing_check_bn254(&[p], &[q]).expect("Identity G1 should succeed");
+    assert!(result, "e(0,Q) = 1");
+
+    // Test 3: e(P,0) = 1
+    let p = [
+        0xD3C208C16D87CFD3,
+        0xD97816A916871CA8,
+        0x9B85045B68181585,
+        0x030644E72E131A02,
+        0xFF3EBF7A5A18A2C4,
+        0x68A6A449E3538FC7,
+        0xE7845F96B2AE9C0A,
+        0x15ED738C0E0A7C92,
+    ];
+    let q = IDENTITY_G2;
+    let result = pairing_check_bn254(&[p], &[q]).expect("Identity G2 should succeed");
+    assert!(result, "e(P,0) = 1");
+
+    // e(0,0) = 1
+    let p = IDENTITY_G1;
+    let q = IDENTITY_G2;
+    let result = pairing_check_bn254(&[p], &[q]).expect("Identity G1 and G2 should succeed");
+    assert!(result, "e(0,0) = 1");
+
+    // Test 4: Successful pairing check - e(P,Q) * e(-P,Q) = 1
+    let p = [
+        0x0000000000000001,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000002,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let neg_p = neg_bn254(&p);
+    let q = [
+        0x46DEBD5CD992F6ED,
+        0x674322D4F75EDADD,
+        0x426A00665E5C4479,
+        0x1800DEEF121F1E76,
+        0x97E485B7AEF312C2,
+        0xF1AA493335A9E712,
+        0x7260BFB731FB5D25,
+        0x198E9393920D483A,
+        0x4CE6CC0166FA7DAA,
+        0xE3D1E7690C43D37B,
+        0x4AAB71808DCB408F,
+        0x12C85EA5DB8C6DEB,
+        0x55ACDADCD122975B,
+        0xBC4B313370B38EF3,
+        0xEC9E99AD690C3395,
+        0x090689D0585FF075,
+    ];
+    let result =
+        pairing_check_bn254(&[p, neg_p], &[q, q]).expect("Bilinearity test should succeed");
+    assert!(result, "e(P,Q) * e(-P,Q) should equal 1");
+
+    // Test 5: Failed pairing check - e(P,Q) * e(P,Q) != 1
+    let result = pairing_check_bn254(&[p, p], &[q, q]).expect("Should compute but return false");
+    assert!(!result, "e(P,Q) * e(P,Q) should not equal 1");
+
+    // Test 6: G1 point not on curve (0, 1)
+    let bad_p = [
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000001,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let result = pairing_check_bn254(&[bad_p], &[q]);
+    assert!(result.is_err(), "G1 point (0,1) not on curve should fail");
+    assert_eq!(result.unwrap_err(), 3, "Should return G1_NOT_ON_CURVE error");
+
+    // Test 7: G1 field element >= P (x coordinate out of range)
+    let bad_p = [
+        P[0],
+        P[1],
+        P[2],
+        P[3],
+        0x0000000000000001,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let result = pairing_check_bn254(&[bad_p], &[q]);
+    assert!(result.is_err(), "G1.x >= P should fail");
+    assert_eq!(result.unwrap_err(), 2, "Should return G1_INVALID error");
+
+    // Test 8: G1 field element >= P (y coordinate out of range)
+    let bad_p = [
+        0x0000000000000001,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        P[0],
+        P[1],
+        P[2],
+        P[3],
+    ];
+    let result = pairing_check_bn254(&[bad_p], &[q]);
+    assert!(result.is_err(), "G1.y >= P should fail");
+    assert_eq!(result.unwrap_err(), 2, "Should return G1_INVALID error");
+
+    // Test 9: G2 point not on curve (1, 2, 3, 3)
+    let bad_q = [
+        0x0000000000000001,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000002,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000003,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000003,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let result = pairing_check_bn254(&[p], &[bad_q]);
+    assert!(result.is_err(), "G2 point not on curve should fail");
+    assert_eq!(result.unwrap_err(), 5, "Should return G2_NOT_ON_CURVE error");
+
+    // Test 10: G2 field element >= P (x1 coordinate)
+    let bad_q = [
+        P[0],
+        P[1],
+        P[2],
+        P[3],
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let result = pairing_check_bn254(&[p], &[bad_q]);
+    assert!(result.is_err(), "G2.x1 >= P should fail");
+    assert_eq!(result.unwrap_err(), 4, "Should return G2_INVALID error");
+
+    // Test 11: G2 field element >= P (x2 coordinate)
+    let bad_q = [
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        P[0],
+        P[1],
+        P[2],
+        P[3],
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let result = pairing_check_bn254(&[p], &[bad_q]);
+    assert!(result.is_err(), "G2.x2 >= P should fail");
+    assert_eq!(result.unwrap_err(), 4, "Should return G2_INVALID error");
+
+    // Test 12: G2 field element >= P (y1 coordinate)
+    let bad_q = [
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        P[0],
+        P[1],
+        P[2],
+        P[3],
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+    ];
+    let result = pairing_check_bn254(&[p], &[bad_q]);
+    assert!(result.is_err(), "G2.y1 >= P should fail");
+    assert_eq!(result.unwrap_err(), 4, "Should return G2_INVALID error");
+
+    // Test 13: G2 field element >= P (y2 coordinate)
+    let bad_q = [
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        0x0000000000000000,
+        P[0],
+        P[1],
+        P[2],
+        P[3],
+    ];
+    let result = pairing_check_bn254(&[p], &[bad_q]);
+    assert!(result.is_err(), "G2.y2 >= P should fail");
+    assert_eq!(result.unwrap_err(), 4, "Should return G2_INVALID error");
+
+    // Test 14: G2 not in subgroup (on curve but not in G2)
+    let bad_q = [
+        0xE642D1780FA77460,
+        0x940C7100CC3B163F,
+        0x9E35DB46F7250AFC,
+        0x1ED91A62C98A6383,
+        0x9E87C23424EE0063,
+        0x12859810070565E9,
+        0x03CE49ABC798B83F,
+        0x181BAE8231C1F263,
+        0x6B283DE32DD4D366,
+        0xFE4EED8EF8036477,
+        0x49D7F9C268537017,
+        0x1B2D40EFDB1326CC,
+        0xE0A118CFA3E0D8D7,
+        0x9A3C9ECF0C83F1D7,
+        0x28D70CD532462E40,
+        0x07D105D0066EC703,
+    ];
+    let result = pairing_check_bn254(&[p], &[bad_q]);
+    assert!(result.is_err(), "G2 not in subgroup should fail");
+    assert_eq!(result.unwrap_err(), 6, "Should return G2_NOT_IN_SUBGROUP error");
+
+    // Test 15: Multiple pairs with mixed valid/identity points
+    let p1 = p;
+    let p2 = IDENTITY_G1;
+    let p3 = neg_p;
+    let q1 = q;
+    let q2 = q;
+    let q3 = q;
+    let result = pairing_check_bn254(&[p1, p2, p3], &[q1, q2, q3])
+        .expect("Mixed valid/identity should succeed");
+    assert!(result, "e(P,Q) * e(0,Q) * e(-P,Q) = 1");
+}
+
+pub fn pairing_check_c_tests() {
+    // Test 1: Empty pairing (0 pairs) - should return success (0)
+    let input: Vec<u8> = vec![];
+    let result = unsafe { bn254_pairing_check_c(input.as_ptr(), 0) };
+    assert_eq!(result, 0, "Empty pairing should return success");
+
+    let input: Vec<u8> = vec![
+        0x19, 0x2c, 0x20, 0x7a, 0xe0, 0x49, 0x1a, 0xc1, 0xb7, 0x46, 0x73, 0xd0, 0xf0, 0x51, 0x26,
+        0xdc, 0x5a, 0x3c, 0x4f, 0xa0, 0xe6, 0xd2, 0x77, 0x49, 0x2f, 0xe6, 0xf3, 0xf6, 0xeb, 0xb4,
+        0x88, 0x0c, 0x16, 0x8b, 0x04, 0x3b, 0xbb, 0xd7, 0xae, 0x8e, 0x60, 0x60, 0x6a, 0x7a, 0xdf,
+        0x85, 0xc3, 0x60, 0x2d, 0x0c, 0xd1, 0x95, 0xaf, 0x87, 0x5a, 0xd0, 0x61, 0xb5, 0xa6, 0xb1,
+        0xef, 0x19, 0xb6, 0x45, 0x07, 0xca, 0xa9, 0xe6, 0x1f, 0xc8, 0x43, 0xcf, 0x2f, 0x37, 0x69,
+        0x88, 0x4e, 0x74, 0x67, 0xdd, 0x34, 0x1a, 0x07, 0xfa, 0xc1, 0x37, 0x4f, 0x90, 0x1d, 0x6e,
+        0x0d, 0xa3, 0xf4, 0x7f, 0xd2, 0xec, 0x2b, 0x31, 0xee, 0x53, 0xcc, 0xd0, 0x44, 0x9d, 0xe5,
+        0xb9, 0x96, 0xcb, 0x81, 0x59, 0x06, 0x6b, 0xa3, 0x98, 0x07, 0x8e, 0xc2, 0x82, 0x10, 0x2f,
+        0x01, 0x62, 0x65, 0xdd, 0xec, 0x59, 0xc3, 0x54, 0x1b, 0x38, 0x87, 0x0e, 0x41, 0x3a, 0x29,
+        0xc6, 0xb0, 0xb7, 0x09, 0xe0, 0x70, 0x5b, 0x55, 0xab, 0x61, 0xcc, 0xc2, 0xce, 0x24, 0xbb,
+        0xee, 0x32, 0x2f, 0x97, 0xbb, 0x40, 0xb1, 0x73, 0x2a, 0x4b, 0x28, 0xd2, 0x55, 0x30, 0x8f,
+        0x12, 0xe8, 0x1d, 0xc1, 0x63, 0x63, 0xf0, 0xf4, 0xf1, 0x41, 0x0e, 0x1e, 0x9d, 0xd2, 0x97,
+        0xcc, 0xc7, 0x90, 0x32, 0xc0, 0x37, 0x9a, 0xeb, 0x70, 0x78, 0x22, 0xf9,
+    ];
+    let result = unsafe { bn254_pairing_check_c(input.as_ptr(), 1) };
+    assert_eq!(result, 1, "Valid input but invalid pairing should return failure");
+}
+
+pub fn pairing_tests() {
     let mut one = [0; 48];
     one[0] = 1;
 
@@ -262,73 +571,3 @@ pub fn pairing_valid_tests() {
     assert_eq!(e1, exp_fp12_bn254(24, &e4));
     assert_eq!(e1, e5);
 }
-
-// pub fn pairing_invalid_tests() {
-//     // P not in range
-//     let p = [P[0], P[1], P[2], P[3], 0, 0, 0, 0];
-//     let q = IDENTITY_G2;
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 1);
-
-//     let p = [0, 0, 0, 0, P[0], P[1], P[2], P[3]];
-//     let q = IDENTITY_G2;
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 2);
-
-//     // Q not in range
-//     let p = IDENTITY_G1;
-//     let q = [P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 3);
-
-//     let p = IDENTITY_G1;
-//     let q = [0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0, 0, 0, 0, 0];
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 4);
-
-//     let p = IDENTITY_G1;
-//     let q = [0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3], 0, 0, 0, 0];
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 5);
-
-//     let p = IDENTITY_G1;
-//     let q = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, P[0], P[1], P[2], P[3]];
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 6);
-
-//     // P not in E nor G1
-//     let p = [1, 0, 0, 0, 1, 0, 0, 0];
-//     let q = IDENTITY_G2;
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 7);
-
-//     // Q not in E'
-//     let p = IDENTITY_G1;
-//     let mut q = IDENTITY_G2;
-//     q[0] = 1;
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 8);
-
-//     // Q not in G2
-//     let p = IDENTITY_G1;
-//     let q = [
-//         0xE642D1780FA77460,
-//         0x940C7100CC3B163F,
-//         0x9E35DB46F7250AFC,
-//         0x1ED91A62C98A6383,
-//         0x9E87C23424EE0063,
-//         0x12859810070565E9,
-//         0x03CE49ABC798B83F,
-//         0x181BAE8231C1F263,
-//         0x6B283DE32DD4D366,
-//         0xFE4EED8EF8036477,
-//         0x49D7F9C268537017,
-//         0x1B2D40EFDB1326CC,
-//         0xE0A118CFA3E0D8D7,
-//         0x9A3C9ECF0C83F1D7,
-//         0x28D70CD532462E40,
-//         0x07D105D0066EC703,
-//     ];
-//     let (_, error_code) = pairing_bn254(&p, &q);
-//     assert_eq!(error_code, 9);
-// }
