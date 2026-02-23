@@ -1837,12 +1837,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "json"
-version = "0.12.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "078e285eafdfb6c4b434e0d31e8cfcb5115b651496faca5749b88fafd4f23bfd"
-
-[[package]]
 name = "k256"
 version = "0.13.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1898,6 +1892,10 @@ checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 
 [[package]]
 name = "lib-c"
+version = "0.16.0"
+
+[[package]]
+name = "lib-float"
 version = "0.16.0"
 
 [[package]]
@@ -3078,9 +3076,6 @@ dependencies = [
 [[package]]
 name = "riscv"
 version = "0.16.0"
-dependencies = [
- "elf",
-]
 
 [[package]]
 name = "rlp"
@@ -3436,15 +3431,6 @@ checksum = "9a8e94ea7f378bd32cbbd37198a4a91436180c5bb472411e48b5ec2e2124ae9e"
 dependencies = [
  "serde_core",
  "serde_derive",
-]
-
-[[package]]
-name = "serde_arrays"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94a16b99c5ea4fe3daccd14853ad260ec00ea043b2708d1fd1da3106dcd8d9df"
-dependencies = [
- "serde",
 ]
 
 [[package]]
@@ -4708,10 +4694,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
- "witness",
  "zisk-core",
- "zisk-pil",
- "zstd",
 ]
 
 [[package]]
@@ -4720,32 +4703,16 @@ version = "0.16.0"
 dependencies = [
  "elf",
  "fields",
- "indexmap 2.13.0",
- "json",
  "lib-c",
+ "lib-float",
  "paste",
  "precompiles-helpers",
  "rayon",
  "riscv",
  "serde",
- "serde_json",
  "sha2",
  "tiny-keccak 2.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "zisk-pil",
  "ziskos-hints",
-]
-
-[[package]]
-name = "zisk-pil"
-version = "0.16.0"
-dependencies = [
- "fields",
- "proofman",
- "proofman-common",
- "proofman-macros",
- "rayon",
- "serde",
- "serde_arrays",
 ]
 
 [[package]]
@@ -4770,8 +4737,8 @@ dependencies = [
  "rand 0.8.5",
  "serde",
  "sha2",
- "static_assertions",
  "tiny-keccak 2.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "tokio",
  "zisk-common",
 ]
 
@@ -4782,10 +4749,8 @@ dependencies = [
  "anyhow",
  "bincode",
  "cfg-if",
- "elliptic-curve",
  "fields",
  "getrandom 0.2.17",
- "k256",
  "lazy_static",
  "lib-c",
  "num-bigint",
@@ -4796,7 +4761,6 @@ dependencies = [
  "rand 0.8.5",
  "serde",
  "sha2",
- "static_assertions",
  "tiny-keccak 2.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -4805,31 +4769,3 @@ name = "zmij"
 version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3ff05f8caa9038894637571ae6b9e29466c1f4f829d26c9b28f869a29cbe3445"
-
-[[package]]
-name = "zstd"
-version = "0.13.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e91ee311a569c327171651566e07972200e76fcfe2242a4fa446149a3881c08a"
-dependencies = [
- "zstd-safe",
-]
-
-[[package]]
-name = "zstd-safe"
-version = "7.2.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f49c4d5f0abb602a93fb8736af2a4f4dd9512e36f7f570d66e65ff867ed3b9d"
-dependencies = [
- "zstd-sys",
-]
-
-[[package]]
-name = "zstd-sys"
-version = "2.0.16+zstd.1.5.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91e19ebc2adc8f83e43039e79776e3fda8ca919132d68a1fed6a5faca2683748"
-dependencies = [
- "cc",
- "pkg-config",
-]
