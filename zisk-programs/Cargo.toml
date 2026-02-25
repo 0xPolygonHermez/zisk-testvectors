@@ -17,7 +17,7 @@ members = [
     "modexp/program",
     "secp256k1/program",
     "secp256r1/program",
-    "revm/program",
+    # "revm/program", # TODO: Update crypto dependency and enable this
     "blake2/program"
 ]
 resolver = "2"
@@ -32,11 +32,11 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/blake2b" }
-precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/blake2b" }
+# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/blake2b" }
+# precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/blake2b" }
 # Local development
-# ziskos = { path = "../../zisk/ziskos/entrypoint" }
-# precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
+ziskos = { path = "../../zisk/ziskos/entrypoint" }
+precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
 
 rand = "0.8"
 
