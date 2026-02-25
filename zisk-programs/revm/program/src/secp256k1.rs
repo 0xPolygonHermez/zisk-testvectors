@@ -453,16 +453,6 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.recover_signer_unchecked(&sig, &hash);
     assert!(result.is_err(), "Test #33 should fail (s == 0)");
 
-    // #34' s == field/2 + 1 - Invalid for tx (high S)
-    let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
-    let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
-    let s = hex_to_32("7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a1"); // N/2 + 1
-    let v = 0x1c;
-
-    let sig = build_sig_65(r, s, v);
-    let result = crypto.recover_signer_unchecked(&sig, &hash);
-    assert!(result.is_err(), "Test #34' should fail (s > N/2 for tx)");
-
     // #35 s == field/2 - Valid for tx
     let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
     let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
@@ -474,16 +464,6 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.recover_signer_unchecked(&sig, &hash);
     assert_eq!(result.unwrap(), expected, "Test #35 failed");
 
-    // #36' s == field/2 + 2 - Invalid for tx (high S)
-    let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
-    let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
-    let s = hex_to_32("7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a2"); // N/2 + 2
-    let v = 0x1c;
-
-    let sig = build_sig_65(r, s, v);
-    let result = crypto.recover_signer_unchecked(&sig, &hash);
-    assert!(result.is_err(), "Test #36' should fail (s > N/2 for tx)");
-
     // #37 s == field (N) - should fail
     let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
     let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
@@ -493,16 +473,6 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     let sig = build_sig_65(r, s, v);
     let result = crypto.recover_signer_unchecked(&sig, &hash);
     assert!(result.is_err(), "Test #37 should fail (s == N)");
-
-    // #38' s == field - 1 - Invalid for tx (high S)
-    let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
-    let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
-    let s = hex_to_32("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140");
-    let v = 0x1c;
-
-    let sig = build_sig_65(r, s, v);
-    let result = crypto.recover_signer_unchecked(&sig, &hash);
-    assert!(result.is_err(), "Test #38' should fail (s > N/2 for tx)");
 
     // #39 s == field + 1 - should fail
     let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");

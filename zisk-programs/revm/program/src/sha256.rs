@@ -14,8 +14,7 @@ pub fn sha256_tests(crypto: &CustomEvmCrypto) {
     sha256_basic_tests(crypto);
     sha256_unaligned_tests(crypto);
     sha256_nist_tests(crypto);
-    // TODO: Fix and finish
-    // sha256_length_tests(crypto);
+    sha256_length_tests(crypto);
     println!("All SHA256 tests passed!");
 }
 
@@ -127,7 +126,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("ece6c62719c2aee4fd0c4e9f5dc2ea7c34e4ac58e740b6e3c2bf3040b85a5f0a"),
+        hex_to_hash("4f23c2ca8c5c962e50cd31e221bfb6d0adca19111dca8e0c62598ff146dd19c4"),
         "sha256(0x00..0x1e)"
     );
 
@@ -136,7 +135,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("bb2e0ec2feac044660955e0ce00d16d5788fc18c82b8c9ac3c9f82c606fc33eb"),
+        hex_to_hash("630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"),
         "sha256(0x00..0x1f)"
     );
 
@@ -145,7 +144,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("4c95e3817f04d9f4e9a77a0a4c9f90a52e67b7e3c8f22c46c3e6c43a3abbe8e5"),
+        hex_to_hash("48d76eab30e51201f4f03ec7a85dab8510fb3409ccd15b54767f9b4435c9f54d"),
         "sha256(55 bytes of 0xAB)"
     );
 
@@ -154,7 +153,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("2c8a1b850a1e9e7d4bb9c2f5aabf27a1d06d6b0c3f8c5b8d4e2a1f3b5c7d9e0a"),
+        hex_to_hash("a8c9906ade2a2eff868fd8f97a570bbc01a13cddc32c3dfdc9a18f0618d69e55"),
         "sha256(56 bytes of 0xAB)"
     );
 
@@ -163,7 +162,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("f4d3b7c8e2a1f5d9c6b3e8a2f1d4c7b0e3a6f9d2c5b8e1a4f7d0c3b6e9a2f5d8"),
+        hex_to_hash("d1036ba30d050c74b1a5ab301fa29ff0c607a27cc55af3412577f7e06dbd190b"),
         "sha256(63 bytes of 0xAB)"
     );
 
@@ -172,7 +171,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("a8d627b7f5b3c8e2a1f9d4c7b0e3a6f5d2c8b1e4a7f0d3c6b9e2a5f8d1c4b7e0"),
+        hex_to_hash("ec65c8798ecf95902413c40f7b9e6d4b0068885f5f324aba1f9ba1c8e14aea61"),
         "sha256(64 bytes of 0xAB)"
     );
 
@@ -181,7 +180,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("b9e738c6f4d2a1e5c8b3f7d0a4e9c2b6f1d5a8e3c7b0f4d9a2e6c1b5f8d3a7e0"),
+        hex_to_hash("39cd843414d5125dd308568ace26d04e60b7fa6d2b1a901fb5184fa2eae0598b"),
         "sha256(65 bytes of 0xAB)"
     );
 
@@ -190,7 +189,7 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.sha256(&input);
     assert_eq!(
         result,
-        hex_to_hash("c7d4e1a8b5f2c9d6a3e0b7f4c1d8a5e2b9f6c3d0a7e4b1f8c5d2a9e6b3f0c7d4"),
+        hex_to_hash("885ef0783ff857466de0f1464fa28cf1fd9a9abaed41a330068966c6e3525505"),
         "sha256(128 bytes of 0xCD)"
     );
 

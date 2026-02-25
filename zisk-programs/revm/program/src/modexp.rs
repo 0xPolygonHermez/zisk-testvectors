@@ -9,10 +9,9 @@ fn hex_to_vec(hex: &str) -> Vec<u8> {
 
 pub fn modexp_tests(crypto: &CustomEvmCrypto) {
     modexp_early_return_tests(crypto);
-    // TODO: Fix and enable the following tests
-    // modexp_256bit_tests(crypto);
-    // modexp_512bit_tests(crypto);
-    // modexp_4096bit_tests(crypto);
+    modexp_256bit_tests(crypto);
+    modexp_512bit_tests(crypto);
+    modexp_4096bit_tests(crypto);
     println!("All Modexp tests passed!");
 }
 
@@ -120,7 +119,7 @@ fn modexp_256bit_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.modexp(&base, &exp, &modulus).unwrap();
     assert_eq!(
         result,
-        hex_to_vec("112d31d5b3022f6091e14f57c2c8c6ee7b12c4c73a50a91e0c9669a5b93e8247"),
+        hex_to_vec("285a542908e6755b8bbc45af189aec21aaaa60c16c4dc2bf43e9228f869d68ae"),
         "BN254 scalar field modexp"
     );
 
@@ -140,20 +139,17 @@ fn modexp_512bit_tests(crypto: &CustomEvmCrypto) {
     // 512-bit exponent tests
 
     // Simple 512-bit test: 2^(2^256 + 3) mod 7
-    // 2^3 mod 7 = 8 mod 7 = 1 (since 2^(2^256) mod 7 cycles)
     let base = hex_to_vec("02");
     let exp = hex_to_vec("00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000003");
     let modulus = hex_to_vec("07");
     let result = crypto.modexp(&base, &exp, &modulus).unwrap();
-    // The result depends on actual computation, let's use a simpler test
-    assert_eq!(result, hex_to_vec("01"), "2^(2^256 + 3) mod 7 should be 1");
+    assert_eq!(result, hex_to_vec("02"), "2^(2^256 + 3) mod 7 should be 2");
 
     // 3^65537 mod (2^512 - 1) - RSA-like exponent
     let base = hex_to_vec("03");
     let exp = hex_to_vec("010001"); // 65537
     let modulus = hex_to_vec("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     let result = crypto.modexp(&base, &exp, &modulus).unwrap();
-    // Result is deterministic but large, just verify it doesn't error
     assert_eq!(result.len(), 64, "512-bit modulus should give 64-byte result");
 }
 
