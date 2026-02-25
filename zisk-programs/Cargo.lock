@@ -1918,10 +1918,6 @@ version = "0.16.0"
 source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 
 [[package]]
-name = "lib-float"
-version = "0.16.0"
-
-[[package]]
 name = "libc"
 version = "0.2.180"
 source = "registry+https://github.com/rust-lang/crates.io-index"
