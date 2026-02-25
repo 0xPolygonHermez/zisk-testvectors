@@ -1,7 +1,7 @@
 [package]
 name = "zisk-programs"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
 
 [workspace.package]
 version = "0.1.0"
@@ -24,7 +24,7 @@ members = [
     "prover_killers/program",
     "secp256k1/program",
     "secp256r1/program",
-    #"revm/program",
+    "revm/program",
 ]
 resolver = "2"
 
@@ -51,6 +51,4 @@ serde = { version = "1.0", default-features = false, features = ["derive"] }
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
 
 [build-dependencies]
-zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
-# Local development
-# zisk-sdk = { path = "../../zisk/sdk" }
+zisk-sdk.workspace = true

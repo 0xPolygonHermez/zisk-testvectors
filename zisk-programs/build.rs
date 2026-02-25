@@ -13,7 +13,7 @@ fn main() {
     build_program("prover_killers/program");
     build_program("sha256/program");
     build_program("poseidon2/program");
-    // build_program("revm/program");
+    build_program("revm/program");
     build_program("secp256k1/program");
     build_program("secp256r1/program");
 
