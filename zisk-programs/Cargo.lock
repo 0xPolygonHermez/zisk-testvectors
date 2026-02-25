@@ -734,6 +734,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "blake2"
+version = "0.1.0"
+dependencies = [
+ "precompiles-helpers",
+ "rand 0.8.5",
+ "ziskos",
+]
+
+[[package]]
 name = "blake3"
 version = "1.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -919,6 +928,7 @@ dependencies = [
 [[package]]
 name = "circuit"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 
 [[package]]
 name = "clang-sys"
@@ -1900,6 +1910,12 @@ checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 [[package]]
 name = "lib-c"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
+
+[[package]]
+name = "lib-float"
+version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 
 [[package]]
 name = "lib-float"
@@ -2398,6 +2414,7 @@ dependencies = [
 [[package]]
 name = "precompiles-helpers"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 dependencies = [
  "ark-bls12-381",
  "ark-bn254",
@@ -3076,6 +3093,7 @@ dependencies = [
 [[package]]
 name = "riscv"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 
 [[package]]
 name = "rlp"
@@ -4676,6 +4694,7 @@ dependencies = [
 [[package]]
 name = "zisk-common"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 dependencies = [
  "anyhow",
  "bincode",
@@ -4700,6 +4719,7 @@ dependencies = [
 [[package]]
 name = "zisk-core"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 dependencies = [
  "elf",
  "fields",
@@ -4718,6 +4738,7 @@ dependencies = [
 [[package]]
 name = "ziskos"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 dependencies = [
  "anyhow",
  "bincode",
@@ -4745,6 +4766,7 @@ dependencies = [
 [[package]]
 name = "ziskos-hints"
 version = "0.16.0"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=feat%2Fblake2b#05232e18780ae01555587e9710f9543017731cc3"
 dependencies = [
  "anyhow",
  "bincode",
