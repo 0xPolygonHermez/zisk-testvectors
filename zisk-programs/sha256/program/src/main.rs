@@ -12,12 +12,9 @@ const ACTIVATE_CONSISTENCY_TEST: bool = false;
 
 fn main() {
     // Get the input from ziskos
-    let input: Vec<u8> = ziskos::io::read();
+    let num_sha256fs: u64 = ziskos::io::read();
 
     let mut rng = rand::thread_rng();
-
-    let num_sha256fs =
-        usize::from_le_bytes(input[..8].try_into().expect("Input should be at least 8 bytes"));
 
     if ACTIVATE_CONSISTENCY_TEST {
         println!("Running SHA256F consistency test for {} times", num_sha256fs);

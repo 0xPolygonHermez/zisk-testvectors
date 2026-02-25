@@ -1,3 +1,8 @@
+[package]
+name = "zisk-programs"
+version.workspace = true
+edition.workspace = true
+
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
@@ -14,6 +19,7 @@ members = [
     "fcall_msb/program",
     "keccak/program",
     "sha256/program",
+    "poseidon2/program",
     "modexp/program",
     "secp256k1/program",
     "secp256r1/program",
@@ -31,11 +37,17 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
 # Local development
-ziskos = { path = "../../zisk/ziskos/entrypoint" }
+# ziskos = { path = "../../zisk/ziskos/entrypoint" }
+# zisk-sdk = { path = "../../zisk/sdk" }
 
 rand = "0.8"
+serde = { version = "1.0", default-features = false, features = ["derive"] }
 
 [workspace.lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
+
+[build-dependencies]
+zisk-sdk.workspace = true

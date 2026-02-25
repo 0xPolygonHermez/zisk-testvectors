@@ -2,20 +2,26 @@
 ziskos::entrypoint!(main);
 
 use rand::Rng;
-use std::convert::TryInto;
 use tiny_keccak::{keccakf, Hasher, Keccak};
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct HashInput {
+    hash: u64,
+    full_keccak: bool,
+    num_keccaks: u64,
+}
 
 fn main() {
     // Get the input from ziskos
-    let input: Vec<u8> = ziskos::io::read();
+    let hash_input: HashInput = ziskos::io::read();
 
-    let full_keccak = input[8] == 1;
+    let full_keccak = hash_input.full_keccak;
     if full_keccak {
         println!("Computing the full keccak...");
 
-        let keccak_input = input[..8].to_vec();
-        let input_number =
-            u64::from_le_bytes(input[..8].try_into().expect("Input should be at least 8 bytes"));
+        let keccak_input = hash_input.hash.to_le_bytes().to_vec();
+        let input_number = hash_input.hash;
         println!("Number to hash:  0x{:X}", input_number);
 
         let output = full_keccak_hash(&keccak_input);
@@ -28,9 +34,7 @@ fn main() {
     } else {
         let mut rng = rand::thread_rng();
 
-        let num_keccaks = usize::from_le_bytes(
-            input[9..17].try_into().expect("Input should be at least 8 bytes"),
-        );
+        let num_keccaks = hash_input.num_keccaks as usize;
         println!("Number of keccakf to compute: {:?}", num_keccaks);
         for _ in 0..num_keccaks {
             keccakf_apply(&mut rng);

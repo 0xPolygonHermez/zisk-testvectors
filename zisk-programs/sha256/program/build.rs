@@ -1,6 +1,8 @@
-use std::fs::{self, File};
-use std::io::{self, Write};
+use std::fs;
+use std::io;
 use std::path::Path;
+
+use zisk_sdk::ZiskIO;
 
 // Define constants for the directory and file names
 const OUTPUT_DIR: &str = "build/";
@@ -18,8 +20,10 @@ fn main() -> io::Result<()> {
 
     // Create the file and write the inputs
     let file_path = output_dir.join(FILE_NAME);
-    let mut file = File::create(&file_path)?;
-    file.write_all(&num_sha256fs.to_le_bytes())?;
+    
+    let stdin = zisk_sdk::ZiskStdin::new();
+    stdin.write(&num_sha256fs);
+    stdin.save(&file_path).expect("Failed to write input to file");
 
     Ok(())
 }
