@@ -10,12 +10,9 @@ const ACTIVATE_CONSISTENCY_TEST: bool = false;
 
 fn main() {
     // Get the input from ziskos
-    let input = ziskos::io::read_vec();
+    let num_blake2s: u64 = ziskos::io::read();
 
     let mut rng = rand::thread_rng();
-
-    let num_blake2s =
-        usize::from_le_bytes(input[..8].try_into().expect("Input should be at least 8 bytes"));
 
     if ACTIVATE_CONSISTENCY_TEST {
         println!("Running BLAKE2 consistency test for {} times", num_blake2s);
@@ -49,7 +46,6 @@ fn blake2_apply(rng: &mut rand::rngs::ThreadRng) {
 
     let mut state_copy = state.clone();
 
-    
     let mut params = SyscallBlake2bRoundParams { index, state: &mut state, input: &input };
     syscall_blake2b_round(&mut params);
 

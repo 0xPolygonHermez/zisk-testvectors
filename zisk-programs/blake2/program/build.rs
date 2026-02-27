@@ -1,13 +1,13 @@
-use std::fs::{self, File};
-use std::io::{self, Write};
+use std::fs;
+use std::io;
 use std::path::Path;
 
-// Define constants for the directory and file names
-const OUTPUT_DIR: &str = "build/";
-const FILE_NAME: &str = "input.bin";
+use zisk_sdk::ZiskIO;
+
+const OUTPUT_DIR: &str = "../inputs";
 
 fn main() -> io::Result<()> {
-    let num_blake2s: u64 = 10;
+    let num_blake2s: u64 = 1;
 
     // Ensure the output directory exists
     let output_dir = Path::new(OUTPUT_DIR);
@@ -16,9 +16,12 @@ fn main() -> io::Result<()> {
     }
 
     // Create the file and write the inputs
-    let file_path = output_dir.join(FILE_NAME);
-    let mut file = File::create(&file_path)?;
-    file.write_all(&num_blake2s.to_le_bytes())?;
+    let file_name = format!("input_blake2_{}.bin", num_blake2s);
+    let file_path = output_dir.join(file_name);
+
+    let stdin = zisk_sdk::ZiskStdin::new();
+    stdin.write(&num_blake2s);
+    stdin.save(&file_path).expect("Failed to write input to file");
 
     Ok(())
 }

@@ -1,15 +1,13 @@
-use std::fs::{self, File};
-use std::io::{self, Write};
+use std::fs;
+use std::io;
 use std::path::Path;
 
-// Define constants for the directory and file names
-const OUTPUT_DIR: &str = "build/";
-const FILE_NAME: &str = "input.bin";
+use zisk_sdk::ZiskIO;
+
+const OUTPUT_DIR: &str = "../inputs";
 
 fn main() -> io::Result<()> {
-    let number_to_hash: u64 = 0x17ef89033aa11845;
-    let full_keccak: bool = false;
-    let num_keccaks: u64 = 1;
+    let num_keccakfs: u64 = 1;
 
     // Ensure the output directory exists
     let output_dir = Path::new(OUTPUT_DIR);
@@ -18,11 +16,12 @@ fn main() -> io::Result<()> {
     }
 
     // Create the file and write the inputs
-    let file_path = output_dir.join(FILE_NAME);
-    let mut file = File::create(&file_path)?;
-    file.write_all(&number_to_hash.to_le_bytes())?;
-    file.write_all(&[full_keccak as u8])?;
-    file.write_all(&num_keccaks.to_le_bytes())?;
+    let file_name = format!("input_keccakf_{}.bin", num_keccakfs);
+    let file_path = output_dir.join(file_name);
+
+    let stdin = zisk_sdk::ZiskStdin::new();
+    stdin.write(&num_keccakfs);
+    stdin.save(&file_path).expect("Failed to write input to file");
 
     Ok(())
 }
