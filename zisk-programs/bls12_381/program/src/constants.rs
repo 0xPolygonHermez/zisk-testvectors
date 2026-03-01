@@ -54,15 +54,7 @@ pub const G2: [u64; 24] = [
 ];
 
 /// Identity element in G1
-pub const IDENTITY_G1: [u64; 12] = {
-    let mut tmp = [0u64; 12];
-    tmp[6] = 1;
-    tmp
-};
+pub const IDENTITY_G1: [u64; 12] = [0u64; 12];
 
 /// Identity element in G2
-pub const IDENTITY_G2: [u64; 24] = {
-    let mut tmp = [0u64; 24];
-    tmp[12] = 1;
-    tmp
-};
+pub const IDENTITY_G2: [u64; 24] = [0u64; 24];

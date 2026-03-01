@@ -7,7 +7,6 @@ members = [
     "add256/program",
     "arith_eq_384_gen/program",
     "arith_eq_gen/program",
-    "arith_eq_pow/program",
     "bls12_381/program",
     "bn254/program",
     "diagnostic/program",
@@ -16,10 +15,10 @@ members = [
     "keccak/program",
     "sha256/program",
     "modexp/program",
-    "prover_killers/program",
     "secp256k1/program",
-    "blst/program",
-    "substrate_bn/program",
+    "secp256r1/program",
+    # "revm/program", # TODO: Update crypto dependency and enable this
+    "blake2/program"
 ]
 resolver = "2"
 
@@ -34,19 +33,14 @@ opt-level = 3
 
 [workspace.dependencies]
 # ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+# zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+# precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
 # Local development
 ziskos = { path = "../../zisk/ziskos/entrypoint" }
+zisk-sdk = { path = "../../zisk/sdk" }
+precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
+
 rand = "0.8"
-
-blst = { version = "0.3.15", features = ["portable"] }
-substrate-bn = { version = "0.6.0" }
-
-[patch.crates-io]
-blst = { git = "https://github.com/0xPolygonHermez/zisk-patch-blst.git", branch = "zisk-patch/v0.3.15" }
-# substrate-bn = { git = "https://github.com/0xPolygonHermez/zisk-patch-bn.git", tag = "patch-0.6.0-zisk-0.15.0" }
-# Local development
-# blst = { path = "../../patches/zisk-patch-blst/bindings/rust" }
-substrate-bn = { path = "../../patches/zisk-patch-bn" }
 
 [workspace.lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }

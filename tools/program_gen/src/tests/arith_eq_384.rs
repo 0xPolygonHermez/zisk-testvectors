@@ -217,7 +217,7 @@ pub fn generate_arith_eq_384_tests(output_path: &Path, limit: Option<usize>) -> 
     }
 
     // Write to file
-    let file_name = "arith_eq_384_tests";
+    let file_name = "arith_eq_384";
     let fn_name = "test_arith_eq_384";
     let output_file = output_path.join(format!("{}.rs", file_name));
     builder.generate_to_file(output_file.to_str().unwrap(), fn_name);
