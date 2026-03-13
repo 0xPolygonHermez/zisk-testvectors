@@ -14,17 +14,17 @@ members = [
     "arith_eq_gen/program",
     "bls12_381/program",
     "bn254/program",
-    # "diagnostic/program",
+    "diagnostic/program",
     "fcall/program",
     "fcall_msb/program",
     "keccak/program",
     "sha256/program",
     "poseidon2/program",
     "modexp/program",
-    "prover_killers/program",
     "secp256k1/program",
     "secp256r1/program",
-    "revm/program",
+    # "revm/program", # TODO: Update crypto dependency and enable this
+    "blake2/program"
 ]
 resolver = "2"
 
@@ -38,11 +38,13 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
-zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+# zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
+# precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
 # Local development
-# ziskos = { path = "../../zisk/ziskos/entrypoint" }
-# zisk-sdk = { path = "../../zisk/sdk" }
+ziskos = { path = "../../zisk/ziskos/entrypoint" }
+zisk-sdk = { path = "../../zisk/sdk" }
+precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
 
 rand = "0.8"
 serde = { version = "1.0", default-features = false, features = ["derive"] }

@@ -1,17 +1,16 @@
 [package]
-name = "keccak"
+name = "blake2"
 version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
 ziskos = { workspace = true }
+precompiles-helpers = { workspace = true }
+
 rand = { workspace = true }
-serde = { workspace = true }
 
 [build-dependencies]
 zisk-sdk = { workspace = true }
-serde = { workspace = true }
-tiny-keccak = { version = "2.0.2", features = ["keccak"] }
 
 [lints]
 workspace = true

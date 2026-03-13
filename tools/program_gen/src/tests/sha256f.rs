@@ -39,7 +39,7 @@ pub fn generate_sha256f_tests(output_path: &Path, limit: Option<usize>) -> (Stri
     }
 
     // Write to file
-    let file_name = "sha256f_tests";
+    let file_name = "sha256f";
     let fn_name = "test_sha256f";
     let output_file = output_path.join(format!("{}.rs", file_name));
     builder.generate_to_file(output_file.to_str().unwrap(), fn_name);

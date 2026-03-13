@@ -2,25 +2,12 @@ use std::fs;
 use std::io;
 use std::path::Path;
 
-use serde::{Serialize, Deserialize};
 use zisk_sdk::ZiskIO;
 
-const OUTPUT_DIR: &str = "build/";
-const FILE_NAME: &str = "input.bin";
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct HashInput {
-    hash: u64,
-    full_keccak: bool,
-    num_keccaks: u64,
-}
+const OUTPUT_DIR: &str = "../inputs";
 
 fn main() -> io::Result<()> {
-    let hash_input = HashInput {
-        hash: 0x17ef89033aa11845,
-        full_keccak: false,
-        num_keccaks: 1,
-    };
+    let num_keccakfs: u64 = 1;
     
     // Ensure the output directory exists
     let output_dir = Path::new(OUTPUT_DIR);
@@ -29,10 +16,11 @@ fn main() -> io::Result<()> {
     }
 
     // Create the file and write the inputs
-    let file_path = output_dir.join(FILE_NAME);
-    
+    let file_name = format!("input_keccakf_{}.bin", num_keccakfs);
+    let file_path = output_dir.join(file_name);
+
     let stdin = zisk_sdk::ZiskStdin::new();
-    stdin.write(&hash_input);
+    stdin.write(&num_keccakfs);
     stdin.save(&file_path).expect("Failed to write input to file");
 
     Ok(())

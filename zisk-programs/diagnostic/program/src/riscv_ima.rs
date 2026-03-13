@@ -30,17 +30,17 @@ pub fn diagnostic_riscv_ima() {
     or(0xFFFF_FFFF_FFFF_FFF1, 0xFFFF_FFFF_FFFF_FFFE, 0xFFFF_FFFF_FFFF_FFFF);
     or(0xFFFF_0000_FFFF_0000, 0xFFFF_0000_0000_0000, 0xFFFF_0000_FFFF_0000);
     or(0x0000_0000_0000_0000, 0xFFFF_0000_0000_0000, 0xFFFF_0000_0000_0000);
-    or(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000);
+    or(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000); // FROP
 
     xor(0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF, 0x0000_0000_0000_0000);
     xor(0xFFFF_0000_FFFF_0000, 0xFFFF_FFFF_0000_0000, 0x0000_FFFF_FFFF_0000);
     xor(0x0000_0000_0000_0000, 0xFFFF_FFFF_0000_0000, 0xFFFF_FFFF_0000_0000);
-    xor(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000);
+    xor(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000); // FROP
 
     and(0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF, 0xFFFF_FFFF_FFFF_FFFF);
     and(0xFFFF_0000_FFFF_0000, 0xFFFF_FFFF_0000_0000, 0xFFFF_0000_0000_0000);
     and(0x0000_0000_0000_0000, 0xFFFF_FFFF_0000_0000, 0x0000_0000_0000_0000);
-    and(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000);
+    and(0x0000_0000_0000_0000, 0x0000_0000_0000_0000, 0x0000_0000_0000_0000); // FROP
 
     div(0xFFFF_FFFF_FFFF, 0x1_0000_0000, 0xFFFF);
     divu(0xFFFF_FFFF_FFFF_FFFF, 0x1_0000_0000, 0xFFFF_FFFF);
@@ -50,7 +50,7 @@ pub fn diagnostic_riscv_ima() {
     rem(0xFFFF_0000_FFFF, 0x1_0000_0000, 0xFFFF);
     remu(0xFFFF_0000_FFFF, 0x1_0000_0000, 0xFFFF);
     rem_w(0xFF_00FF, 0x1_0000, 0xFF);
-    remu_w(0xFF_00FF, 0x1_0000, 0xFF);
+    remu_w(0xFF_00FF, 0x1_0000, 0xFF); // TODO: This one seems not to work
 
     mul(0xFFFF_FFFF, 0x1_0000, 0xFFFF_FFFF_0000);
     mulh(0xFFFF_FFFF, 0x1_0000, 0x0);
@@ -241,17 +241,16 @@ fn or(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = a | b;
 
-    // // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "or {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    // Use RISCV inline assembly to ensure ZisK instruction is called
+    unsafe {
+        std::arch::asm!(
+            "or {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -274,17 +273,16 @@ fn xor(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = a ^ b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "xor {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "xor {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -307,17 +305,16 @@ fn and(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = a & b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "and {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "and {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -344,17 +341,16 @@ fn div(input_a: i64, input_b: i64, expected_c: i64) {
     let a: i64 = input_a;
     let b: i64 = input_b;
     let c: i64;
-    c = a / b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "divu {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "div {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -364,17 +360,16 @@ fn divu(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = a / b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "divu {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "divu {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -384,17 +379,16 @@ fn div_w(input_a: i32, input_b: i32, expected_c: i32) {
     let a: i32 = input_a;
     let b: i32 = input_b;
     let c: i32;
-    c = a / b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "divw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "divw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -404,17 +398,16 @@ fn divu_w(input_a: u32, input_b: u32, expected_c: u32) {
     let a: u32 = input_a;
     let b: u32 = input_b;
     let c: u32;
-    c = a / b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "divuw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "divuw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -428,17 +421,16 @@ fn rem(input_a: i64, input_b: i64, expected_c: i64) {
     let a: i64 = input_a;
     let b: i64 = input_b;
     let c: i64;
-    c = a % b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "rem {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "rem {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -448,17 +440,16 @@ fn remu(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = a % b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "remu {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "remu {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -468,17 +459,16 @@ fn rem_w(input_a: i32, input_b: i32, expected_c: i32) {
     let a: i32 = input_a;
     let b: i32 = input_b;
     let c: i32;
-    c = a % b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "remw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "remw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -488,17 +478,16 @@ fn remu_w(input_a: u32, input_b: u32, expected_c: u32) {
     let a: u32 = input_a;
     let b: u32 = input_b;
     let c: u32;
-    c = a % b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "remuw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "remuw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -512,17 +501,16 @@ fn mul(input_a: i64, input_b: i64, expected_c: i64) {
     let a: i64 = input_a;
     let b: i64 = input_b;
     let c: i64;
-    c = a * b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    /*unsafe {
+    unsafe {
         std::arch::asm!(
             "mul {result}, {input1}, {input2}",
             result = out(reg) c,
             input1 = in(reg) a,
             input2 = in(reg) b,
         );
-    }*/
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -570,7 +558,6 @@ fn mulsuh(input_a: i64, input_b: u64, expected_c: i64) {
     let a: i64 = input_a;
     let b: u64 = input_b;
     let c: i64;
-    //c = a * b as i64;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
     unsafe {
@@ -590,36 +577,19 @@ fn mul_w(input_a: i32, input_b: i32, expected_c: i32) {
     let a: i32 = input_a;
     let b: i32 = input_b;
     let c: i32;
-    c = a * b;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    /*unsafe {
+    unsafe {
         std::arch::asm!(
             "mulw {result}, {input1}, {input2}",
             result = out(reg) c,
             input1 = in(reg) a,
             input2 = in(reg) b,
         );
-    }*/
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
-
-// fn signextend_b(input_a: i8, expected: i64) {
-//     let a: i8 = input_a;
-//     let c: i64;
-
-//     // Use RISCV inline assembly to ensure ZisK instruction is called
-//     unsafe {
-//         std::arch::asm!(
-//             "lb {result}, {input1}",
-//             result = out(reg) c,
-//             input1 = in(reg) a,
-//         );
-//     }
-
-//     assert_eq!(c, expected);
-// }
 
 /*********/
 /* shift */
@@ -630,18 +600,16 @@ fn sll_w(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = ((Wrapping(a as u32) << (b & 0x3f) as usize).0 as i32) as u64;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "sllw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
-    println!("sll_w: {} << {} = {}", a, b, c);
+    unsafe {
+        std::arch::asm!(
+            "sllw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -664,17 +632,16 @@ fn srl_w(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = ((Wrapping(a as u32) >> (b & 0x3f) as usize).0 as i32) as u64;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "srlw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "srlw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -697,17 +664,16 @@ fn sra_w(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = (Wrapping(a as i32) >> (b & 0x3f) as usize).0 as u64;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "sraw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "sraw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -770,17 +736,16 @@ fn sub_w(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = (Wrapping(a as i32) - Wrapping(b as i32)).0 as u64;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "subw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "subw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }
@@ -789,17 +754,16 @@ fn add_w(input_a: u64, input_b: u64, expected_c: u64) {
     let a: u64 = input_a;
     let b: u64 = input_b;
     let c: u64;
-    c = (Wrapping(a as i32) + Wrapping(b as i32)).0 as u64;
 
     // Use RISCV inline assembly to ensure ZisK instruction is called
-    // unsafe {
-    //     std::arch::asm!(
-    //         "addw {result}, {input1}, {input2}",
-    //         result = out(reg) c,
-    //         input1 = in(reg) a,
-    //         input2 = in(reg) b,
-    //     );
-    // }
+    unsafe {
+        std::arch::asm!(
+            "addw {result}, {input1}, {input2}",
+            result = out(reg) c,
+            input1 = in(reg) a,
+            input2 = in(reg) b,
+        );
+    }
 
     assert_eq!(c, expected_c); // Check result
 }

@@ -10,7 +10,9 @@ pub fn test_keccakf() {
 
     // Test #0: keccakf
     let mut state = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    syscall_keccak_f(&mut state);
+    unsafe {
+        syscall_keccak_f(&mut state);
+    }
     let expected_out: [u64; 25] = [
         17376452488221285863,
         9571781953733019530,
@@ -68,7 +70,9 @@ pub fn test_keccakf() {
         8500057116360352059,
         16929593379567477321,
     ];
-    syscall_keccak_f(&mut state);
+    unsafe {
+        syscall_keccak_f(&mut state);
+    }
     let expected_out: [u64; 25] = [
         3268651591693945660,
         7652509465582220653,
