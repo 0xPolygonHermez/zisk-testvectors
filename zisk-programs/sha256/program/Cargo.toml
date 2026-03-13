@@ -14,6 +14,3 @@ zisk-sdk = { workspace = true }
 
 [lints]
 workspace = true
-
-[build-dependencies]
-zisk-sdk = { workspace = true }

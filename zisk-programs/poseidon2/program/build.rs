@@ -2,14 +2,10 @@ use std::fs;
 use std::io;
 use std::path::Path;
 
-use zisk_sdk::ZiskIO;
-
-// Define constants for the directory and file names
 const OUTPUT_DIR: &str = "build/";
-const FILE_NAME: &str = "input.bin";
 
 fn main() -> io::Result<()> {
-    let hash_values: [u64; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    let num_poseidon2s: u64 = 1;
 
     // Ensure the output directory exists
     let output_dir = Path::new(OUTPUT_DIR);
@@ -18,10 +14,11 @@ fn main() -> io::Result<()> {
     }
 
     // Create the file and write the inputs
-    let file_path = output_dir.join(FILE_NAME);
+    let file_name = format!("input_poseidon2_{}.bin", num_poseidon2s);
+    let file_path = output_dir.join(file_name);
    
     let stdin = zisk_sdk::ZiskStdin::new();
-    stdin.write(&hash_values);
+    stdin.write(&num_poseidon2s);
     stdin.save(&file_path).expect("Failed to write input to file");
 
     Ok(())

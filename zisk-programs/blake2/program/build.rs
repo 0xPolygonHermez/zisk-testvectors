@@ -2,8 +2,6 @@ use std::fs;
 use std::io;
 use std::path::Path;
 
-use zisk_sdk::ZiskIO;
-
 const OUTPUT_DIR: &str = "../inputs";
 
 fn main() -> io::Result<()> {
