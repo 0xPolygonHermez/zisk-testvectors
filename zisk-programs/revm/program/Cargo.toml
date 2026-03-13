@@ -14,9 +14,8 @@ alloy-primitives = { version = "1.5.4", default-features = false, features = ["n
 
 alloy-consensus = { version = "1.6.0", default-features = false, features = ["crypto-backend"] }
 
-# crypto = { git = "https://github.com/0xPolygonHermez/zisk-eth-client.git", branch = "feat/new-patch-style" }
-# Local development
-crypto = { path = "../../../../patches/zisk-eth-client/crates/crypto" }
+guest-reth = { git = "https://github.com/0xPolygonHermez/zisk-eth-client.git", tag = "v0.7.0" }
+# guest-reth = { path = "../../../../patches/zisk-eth-client/crates/guest-reth" }
 
 [lints]
 workspace = true

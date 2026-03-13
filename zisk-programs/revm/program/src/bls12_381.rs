@@ -1,4 +1,4 @@
-use crypto::CustomEvmCrypto;
+use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
 pub fn bls12_381_tests(crypto: &CustomEvmCrypto) {

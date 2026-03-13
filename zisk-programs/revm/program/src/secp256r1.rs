@@ -1,4 +1,4 @@
-use crypto::CustomEvmCrypto;
+use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
 /// Convert hex string (without 0x prefix) to 32-byte array

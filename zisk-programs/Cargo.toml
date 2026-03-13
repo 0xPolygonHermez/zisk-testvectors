@@ -18,7 +18,7 @@ members = [
     "modexp/program",
     "secp256k1/program",
     "secp256r1/program",
-    # "revm/program", # TODO: Update crypto dependency and enable this
+    "revm/program",
     "blake2/program"
 ]
 resolver = "2"
@@ -41,6 +41,11 @@ precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", tag
 # precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
 
 rand = "0.8"
+
+# This is needed for revm to work
+[patch."https://github.com/paradigmxyz/stateless.git"]
+stateless = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git", branch = "zisk/68cd8e73" }
+# stateless = { path = "../zisk-patch-stateless/crates/stateless" }
 
 [workspace.lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }

@@ -1,6 +1,7 @@
 use alloy_consensus::crypto::CryptoProvider;
 use alloy_primitives::Address;
-use crypto::CustomEvmCrypto;
+
+use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
 /// Helper to convert v (27 or 28) to recid (0 or 1)
