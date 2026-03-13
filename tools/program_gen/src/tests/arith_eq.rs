@@ -312,7 +312,7 @@ pub fn generate_arith_eq_tests(output_path: &Path, limit: Option<usize>) -> (Str
     }
 
     // Write to file
-    let file_name = "arith_eq_tests";
+    let file_name = "arith_eq";
     let fn_name = "test_arith_eq";
     let output_file = output_path.join(format!("{}.rs", file_name));
     builder.generate_to_file(output_file.to_str().unwrap(), fn_name);

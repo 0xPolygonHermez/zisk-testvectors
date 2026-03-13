@@ -1,10 +1,7 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use ziskos::{
-    read_input,
-    syscalls::{syscall_sha256_f, SyscallSha256Params},
-};
+use ziskos::syscalls::{syscall_sha256_f, SyscallSha256Params};
 
 #[allow(deprecated)]
 use generic_array::{typenum::U64, GenericArray};
@@ -15,12 +12,9 @@ const ACTIVATE_CONSISTENCY_TEST: bool = false;
 
 fn main() {
     // Get the input from ziskos
-    let input: Vec<u8> = read_input();
+    let num_sha256fs: u64 = ziskos::io::read();
 
     let mut rng = rand::thread_rng();
-
-    let num_sha256fs =
-        usize::from_le_bytes(input[..8].try_into().expect("Input should be at least 8 bytes"));
 
     if ACTIVATE_CONSISTENCY_TEST {
         println!("Running SHA256F consistency test for {} times", num_sha256fs);

@@ -22,7 +22,7 @@ pub fn generate_keccakf_tests(output_path: &Path, limit: Option<usize>) -> (Stri
                 "keccakf",
                 &[
                     &format!("let mut state = {:?};", test.state_in),
-                    "syscall_keccak_f(&mut state);",
+                    "unsafe { syscall_keccak_f(&mut state); }",
                     &format!("let expected_out: [u64; 25] = {:?};", test.state_out),
                     "assert_eq!(state, expected_out);",
                 ],
@@ -31,7 +31,7 @@ pub fn generate_keccakf_tests(output_path: &Path, limit: Option<usize>) -> (Stri
     }
 
     // Write to file
-    let file_name = "keccakf_tests";
+    let file_name = "keccakf";
     let fn_name = "test_keccakf";
     let output_file = output_path.join(format!("{}.rs", file_name));
     builder.generate_to_file(output_file.to_str().unwrap(), fn_name);

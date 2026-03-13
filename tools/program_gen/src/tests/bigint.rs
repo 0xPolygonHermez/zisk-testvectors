@@ -41,7 +41,7 @@ pub fn generate_bigint_tests(output_path: &Path, limit: Option<usize>) -> (Strin
     }
 
     // Write to file
-    let file_name = "bigint_tests";
+    let file_name = "bigint";
     let fn_name = "test_bigint";
     let output_file = output_path.join(format!("{}.rs", file_name));
     builder.generate_to_file(output_file.to_str().unwrap(), fn_name);
