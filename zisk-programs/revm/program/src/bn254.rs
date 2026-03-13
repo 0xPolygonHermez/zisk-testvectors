@@ -1,4 +1,4 @@
-use crypto::CustomEvmCrypto;
+use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
 /// Helper to convert a decimal string to 32-byte big-endian array

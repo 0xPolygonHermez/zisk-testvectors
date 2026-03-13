@@ -17,7 +17,7 @@ use secp256k1::secp256k1_tests;
 use secp256r1::secp256r1_tests;
 use sha256::sha256_tests;
 
-use crypto::CustomEvmCrypto;
+use guest_reth::CustomEvmCrypto;
 
 fn main() {
     let crypto = CustomEvmCrypto::default();

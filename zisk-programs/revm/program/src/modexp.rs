@@ -1,4 +1,4 @@
-use crypto::CustomEvmCrypto;
+use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
 /// Helper to convert a hex string to bytes

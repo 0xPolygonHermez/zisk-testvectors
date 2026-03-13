@@ -8,13 +8,11 @@ name = "program_gen"
 path = "src/main.rs"
 
 [dependencies]
+precomp-arith-eq = { workspace = true }
+precomp-arith-eq-384 = { workspace = true }
+
 clap = { workspace = true }
 env = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 hex = { workspace = true }
-precomp-arith-eq = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/ziskos" }
-precomp-arith-eq-384 = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/ziskos" }
-# Local development
-# precomp-arith-eq = { path = "../../../zisk/precompiles/arith_eq" }
-# precomp-arith-eq-384 = { path = "../../../zisk/precompiles/arith_eq_384" }
