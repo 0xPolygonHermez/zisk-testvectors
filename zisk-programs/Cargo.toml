@@ -14,6 +14,7 @@ members = [
     "fcall_msb/program",
     "keccak/program",
     "sha256/program",
+    "poseidon2/program",
     "modexp/program",
     "secp256k1/program",
     "secp256r1/program",
@@ -32,13 +33,12 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-# ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
-# zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
-# precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.16.0" }
-# Local development
-ziskos = { path = "../../zisk/ziskos/entrypoint" }
-zisk-sdk = { path = "../../zisk/sdk" }
-precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
+precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
+# ziskos = { path = "../../zisk/ziskos/entrypoint" }
+# zisk-sdk = { path = "../../zisk/sdk" }
+# precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
 
 rand = "0.8"
 
