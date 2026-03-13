@@ -1654,7 +1654,7 @@ dependencies = [
 
 [[package]]
 name = "program_gen"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "clap",
  "env",
@@ -1789,7 +1789,7 @@ dependencies = [
 
 [[package]]
 name = "prover_killers"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "clap",
  "hex",
