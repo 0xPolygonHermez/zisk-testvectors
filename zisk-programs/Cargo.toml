@@ -7,19 +7,19 @@ members = [
     "add256/program",
     "arith_eq_384_gen/program",
     "arith_eq_gen/program",
+    "blake2/program",
     "bls12_381/program",
     "bn254/program",
     "diagnostic/program",
     "fcall/program",
     "fcall_msb/program",
     "keccak/program",
-    "sha256/program",
-    "poseidon2/program",
     "modexp/program",
+    "poseidon2/program",
+    "revm/program",
     "secp256k1/program",
     "secp256r1/program",
-    "revm/program",
-    "blake2/program"
+    "sha256/program",
 ]
 resolver = "2"
 
@@ -33,9 +33,9 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
-zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
-precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/zisklib-func" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/zisklib-func" }
+precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/zisklib-func" }
 # ziskos = { path = "../../zisk/ziskos/entrypoint" }
 # zisk-sdk = { path = "../../zisk/sdk" }
 # precompiles-helpers = { path = "../../zisk/precompiles/helpers" }

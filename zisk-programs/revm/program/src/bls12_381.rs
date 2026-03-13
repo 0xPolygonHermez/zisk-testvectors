@@ -2486,7 +2486,7 @@ fn g1_msm_tests(crypto: &CustomEvmCrypto) {
 
     for test in &tests {
         // G1 MSM input: multiple (padded G1Point + scalar) pairs, each 160 bytes
-        if test.input.len() % 160 != 0 || test.input.is_empty() {
+        if test.input.len() % 160 != 0 {
             println!("Skipping {} - invalid input length {}", test.name, test.input.len());
             continue;
         }
@@ -2507,7 +2507,7 @@ fn g1_msm_tests(crypto: &CustomEvmCrypto) {
     let fail_tests = parse_fail_yaml(fail_yaml);
 
     for test in &fail_tests {
-        if test.input.len() % 160 != 0 || test.input.is_empty() {
+        if test.input.len() % 160 != 0 {
             continue;
         }
         let pairs = parse_g1_msm_pairs(&test.input);
@@ -2591,7 +2591,7 @@ fn g2_msm_tests(crypto: &CustomEvmCrypto) {
 
     for test in &tests {
         // G2 MSM input: multiple (padded G2Point + scalar) pairs, each 288 bytes
-        if test.input.len() % 288 != 0 || test.input.is_empty() {
+        if test.input.len() % 288 != 0 {
             println!("Skipping {} - invalid input length {}", test.name, test.input.len());
             continue;
         }
@@ -2612,7 +2612,7 @@ fn g2_msm_tests(crypto: &CustomEvmCrypto) {
     let fail_tests = parse_fail_yaml(fail_yaml);
 
     for test in &fail_tests {
-        if test.input.len() % 288 != 0 || test.input.is_empty() {
+        if test.input.len() % 288 != 0 {
             continue;
         }
         let pairs = parse_g2_msm_pairs(&test.input);
@@ -2679,18 +2679,18 @@ fn fp_to_g1_tests(crypto: &CustomEvmCrypto) {
         );
     }
 
-    // let fail_yaml = include_str!("bls-tests/fail_map_fp_to_G1/fail-map_fp_to_G1_bls.yaml");
-    // let fail_tests = parse_fail_yaml(fail_yaml);
+    let fail_yaml = include_str!("bls-tests/fail_map_fp_to_G1/fail-map_fp_to_G1_bls.yaml");
+    let fail_tests = parse_fail_yaml(fail_yaml);
 
-    // for test in &fail_tests {
-    //     if test.input.len() != 64 {
-    //         continue;
-    //     }
-    //     let mut fe = [0u8; 48];
-    //     fe.copy_from_slice(&test.input[16..64]);
-    //     let result = crypto.bls12_381_fp_to_g1(&fe);
-    //     assert!(result.is_err(), "FP to G1 {} should fail: {}", test.name, test.expected_error);
-    // }
+    for test in &fail_tests {
+        if test.input.len() != 64 {
+            continue;
+        }
+        let mut fe = [0u8; 48];
+        fe.copy_from_slice(&test.input[16..64]);
+        let result = crypto.bls12_381_fp_to_g1(&fe);
+        assert!(result.is_err(), "FP to G1 {} should fail: {}", test.name, test.expected_error);
+    }
 
     println!("All BLS12-381 FP to G1 tests passed!");
 }
@@ -2719,20 +2719,20 @@ fn fp2_to_g2_tests(crypto: &CustomEvmCrypto) {
         );
     }
 
-    // let fail_yaml = include_str!("bls-tests/fail_map_fp2_to_G2/fail-map_fp2_to_G2_bls.yaml");
-    // let fail_tests = parse_fail_yaml(fail_yaml);
+    let fail_yaml = include_str!("bls-tests/fail_map_fp2_to_G2/fail-map_fp2_to_G2_bls.yaml");
+    let fail_tests = parse_fail_yaml(fail_yaml);
 
-    // for test in &fail_tests {
-    //     if test.input.len() != 128 {
-    //         continue;
-    //     }
-    //     let mut fe0 = [0u8; 48];
-    //     let mut fe1 = [0u8; 48];
-    //     fe0.copy_from_slice(&test.input[16..64]);
-    //     fe1.copy_from_slice(&test.input[80..128]);
-    //     let result = crypto.bls12_381_fp2_to_g2(&fe0, &fe1);
-    //     assert!(result.is_err(), "FP2 to G2 {} should fail: {}", test.name, test.expected_error);
-    // }
+    for test in &fail_tests {
+        if test.input.len() != 128 {
+            continue;
+        }
+        let mut fe0 = [0u8; 48];
+        let mut fe1 = [0u8; 48];
+        fe0.copy_from_slice(&test.input[16..64]);
+        fe1.copy_from_slice(&test.input[80..128]);
+        let result = crypto.bls12_381_fp2_to_g2((fe0, fe1));
+        assert!(result.is_err(), "FP2 to G2 {} should fail: {}", test.name, test.expected_error);
+    }
 
     println!("All BLS12-381 FP2 to G2 tests passed!");
 }
