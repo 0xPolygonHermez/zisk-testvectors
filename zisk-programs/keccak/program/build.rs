@@ -6,7 +6,7 @@ const OUTPUT_DIR: &str = "../inputs";
 
 fn main() -> io::Result<()> {
     let num_keccakfs: u64 = 1;
-    
+
     // Ensure the output directory exists
     let output_dir = Path::new(OUTPUT_DIR);
     if !output_dir.exists() {

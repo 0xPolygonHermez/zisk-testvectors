@@ -15,7 +15,7 @@ pub fn sha256_tests(crypto: &CustomEvmCrypto) {
     sha256_unaligned_tests(crypto);
     sha256_nist_tests(crypto);
     sha256_length_tests(crypto);
-    println!("All SHA256 tests passed!");
+    println!("All Sha256 tests passed!");
 }
 
 fn sha256_basic_tests(crypto: &CustomEvmCrypto) {
@@ -192,8 +192,6 @@ fn sha256_length_tests(crypto: &CustomEvmCrypto) {
         hex_to_hash("885ef0783ff857466de0f1464fa28cf1fd9a9abaed41a330068966c6e3525505"),
         "sha256(128 bytes of 0xCD)"
     );
-
-    println!("  - Length boundary tests passed.");
 }
 
 fn sha256_unaligned_tests(crypto: &CustomEvmCrypto) {

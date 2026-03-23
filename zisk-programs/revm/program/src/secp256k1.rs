@@ -4,6 +4,49 @@ use alloy_primitives::Address;
 use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
+use crate::common::{parse_precompile_json, ExpectedOutcome, PrecompileTestCase};
+
+struct EcRecoverTestCase {
+    name: String,
+    hash: [u8; 32],
+    v: u8,
+    r: [u8; 32],
+    s: [u8; 32],
+    expected: Option<[u8; 32]>,
+}
+
+fn parse_ecrecover_test(test: &PrecompileTestCase) -> Result<EcRecoverTestCase, String> {
+    let mut input = test.input.clone();
+    input.resize(128, 0);
+
+    let mut hash = [0u8; 32];
+    hash.copy_from_slice(&input[0..32]);
+
+    if !(input[32..63].iter().all(|&b| b == 0) && matches!(input[63], 27 | 28)) {
+        return Err(format!("Invalid v in test {}", test.name));
+    }
+    let v = input[63];
+
+    let mut r = [0u8; 32];
+    r.copy_from_slice(&input[64..96]);
+
+    let mut s = [0u8; 32];
+    s.copy_from_slice(&input[96..128]);
+
+    let expected = match &test.expected {
+        ExpectedOutcome::Success(bytes) if bytes.is_empty() => None,
+        ExpectedOutcome::Success(bytes) => {
+            let mut addr = [0u8; 32];
+            let len = bytes.len().min(32);
+            addr[..len].copy_from_slice(&bytes[..len]);
+            Some(addr)
+        }
+        ExpectedOutcome::Failure(_) => None,
+    };
+
+    Ok(EcRecoverTestCase { name: test.name.clone(), hash, v, r, s, expected })
+}
+
 /// Helper to convert v (27 or 28) to recid (0 or 1)
 fn v_to_recid(v: u8) -> u8 {
     v - 27
@@ -40,16 +83,11 @@ fn hex_to_address(hex: &str) -> Address {
     Address::from_slice(&bytes)
 }
 
-pub fn secp256k1_tests(crypto: &CustomEvmCrypto) {
-    ecrecover_tx_tests(crypto);
-    ecrecover_precompile_tests(crypto);
-}
-
 // ============================================================
 // ecrecover_tx tests (using recover_signer_unchecked)
 // These allow low S values only (s < N/2)
 // ============================================================
-fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
+pub fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     /////////
     // Valid tests
     //////////
@@ -565,14 +603,10 @@ fn ecrecover_tx_tests(crypto: &CustomEvmCrypto) {
     let result = crypto.recover_signer_unchecked(&sig, &hash);
     assert_eq!(result.unwrap(), expected, "Masked ECGX 248-bit test failed");
 
-    println!("All EcRecover TX tests passed!");
+    println!("All EcRecover Tx tests passed!");
 }
 
-// ============================================================
-// ecrecover_precompiled tests (using secp256k1_ecrecover)
-// These allow high S values (s < N)
-// ============================================================
-fn ecrecover_precompile_tests(crypto: &CustomEvmCrypto) {
+pub fn ecrecover_precompile_tests(crypto: &CustomEvmCrypto) {
     // #34 s == field/2 + 1. Valid for precompile
     let hash = hex_to_32("456e9aea5e197a1f1af7a3e85a3212fa4049a3ba34c2289b4c860fc0b0c64ef3");
     let r = hex_to_32("9242685bf161793cc25603c231bc2f568eb630ea16aa137d2664ac8038825608");
@@ -683,6 +717,54 @@ fn ecrecover_precompile_tests(crypto: &CustomEvmCrypto) {
     let sig = build_sig(r, s);
     let result = crypto.secp256k1_ecrecover(&sig, recid, &hash);
     assert!(result.is_err(), "Precompile s>=N should fail");
+
+    // Geth test vectors
+    let tests = parse_precompile_json(include_str!("testdata/precompiles/ecRecover.json"));
+    for test in &tests {
+        let t = match parse_ecrecover_test(test) {
+            Ok(t) => t,
+            Err(e) => {
+                assert!(
+                    matches!(test.expected, ExpectedOutcome::Success(ref b) if b.is_empty())
+                        || matches!(test.expected, ExpectedOutcome::Failure(_)),
+                    "ecRecover {} has invalid input ({}) but expects success",
+                    test.name,
+                    e
+                );
+                continue;
+            }
+        };
+
+        // The JSON uses the raw precompile interface (v as 27/28)
+        let recid = t.v - 27;
+        let sig = build_sig(t.r, t.s);
+
+        match t.expected {
+            Some(expected_padded) => {
+                let result = crypto.secp256k1_ecrecover(&sig, recid, &t.hash);
+                assert!(result.is_ok(), "ecRecover {} should succeed", t.name);
+                let output = result.unwrap();
+                assert_eq!(
+                    output,
+                    expected_padded,
+                    "ecRecover {} mismatch:\n  got = 0x{}\n  expected = 0x{}",
+                    t.name,
+                    hex::encode(output),
+                    hex::encode(expected_padded)
+                );
+            }
+            None => {
+                // Expected to fail OR return empty
+                let result = crypto.secp256k1_ecrecover(&sig, recid, &t.hash);
+                assert!(
+                    result.is_err(),
+                    "ecRecover {} should fail but got 0x{}",
+                    t.name,
+                    result.map(|r| hex::encode(r)).unwrap_or_default()
+                );
+            }
+        }
+    }
 
     println!("All EcRecover Precompile tests passed!");
 }

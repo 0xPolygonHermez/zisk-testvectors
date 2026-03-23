@@ -33,13 +33,25 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/zisklib-func" }
-zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/zisklib-func" }
-precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "feat/zisklib-func" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/arraylib" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/arraylib" }
+precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "fix/arraylib" }
 # ziskos = { path = "../../zisk/ziskos/entrypoint" }
 # zisk-sdk = { path = "../../zisk/sdk" }
 # precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
 
+guest-reth = { git = "https://github.com/0xPolygonHermez/zisk-eth-client.git", tag = "v0.7.0" }
+# guest-reth = { path = "../../../../patches/zisk-eth-client/crates/guest-reth" }
+
+revm = { version = "34.0.0", default-features = false }
+
+alloy-primitives = { version = "1.5.4", default-features = false }
+alloy-consensus = { version = "1.6.0", default-features = false }
+
+hex = "0.4"
+num-bigint = "0.4"
+serde = "1.0"
+serde_json = "1.0"
 rand = "0.8"
 
 # This is needed for revm to work

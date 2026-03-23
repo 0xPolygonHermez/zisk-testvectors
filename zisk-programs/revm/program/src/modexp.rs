@@ -1,10 +1,42 @@
 use guest_reth::CustomEvmCrypto;
 use revm::precompile::Crypto;
 
-/// Helper to convert a hex string to bytes
-fn hex_to_vec(hex: &str) -> Vec<u8> {
-    let hex = hex.trim_start_matches("0x");
-    hex::decode(hex).expect("valid hex")
+use crate::common::{hex_to_vec, parse_precompile_json, PrecompileTestCase};
+
+struct ModexpTestCase {
+    name: String,
+    base: Vec<u8>,
+    exp: Vec<u8>,
+    modulus: Vec<u8>,
+    expected: Vec<u8>,
+}
+
+fn be_bytes_to_usize(bytes: &[u8]) -> usize {
+    let mut val: usize = 0;
+    for &b in bytes {
+        val = (val << 8) | (b as usize);
+    }
+    val
+}
+
+fn parse_modexp_test(test: &PrecompileTestCase) -> Option<ModexpTestCase> {
+    if test.input.len() < 96 {
+        return None;
+    }
+    let base_len = be_bytes_to_usize(&test.input[0..32]);
+    let exp_len = be_bytes_to_usize(&test.input[32..64]);
+    let mod_len = be_bytes_to_usize(&test.input[64..96]);
+    let data = &test.input[96..];
+    if data.len() < base_len + exp_len + mod_len {
+        return None;
+    }
+    Some(ModexpTestCase {
+        name: test.name.clone(),
+        base: data[..base_len].to_vec(),
+        exp: data[base_len..base_len + exp_len].to_vec(),
+        modulus: data[base_len + exp_len..base_len + exp_len + mod_len].to_vec(),
+        expected: test.expected.unwrap_success().clone(),
+    })
 }
 
 pub fn modexp_tests(crypto: &CustomEvmCrypto) {
@@ -12,7 +44,27 @@ pub fn modexp_tests(crypto: &CustomEvmCrypto) {
     modexp_256bit_tests(crypto);
     modexp_512bit_tests(crypto);
     modexp_4096bit_tests(crypto);
+    modexp_json_tests(crypto);
     println!("All Modexp tests passed!");
+}
+
+fn modexp_json_tests(crypto: &CustomEvmCrypto) {
+    let json_files: &[(&str, &str)] = &[
+        ("modexp_eip198", include_str!("testdata/precompiles/modexp.json")),
+        ("modexp_eip2565", include_str!("testdata/precompiles/modexp_eip2565.json")),
+        ("modexp_eip7883", include_str!("testdata/precompiles/modexp_eip7883.json")),
+    ];
+
+    for (file_name, json_content) in json_files {
+        let tests = parse_precompile_json(json_content);
+        for test in &tests {
+            let Some(parsed) = parse_modexp_test(test) else { continue };
+            let result = crypto.modexp(&parsed.base, &parsed.exp, &parsed.modulus);
+            assert!(result.is_ok(), "Modexp {} ({}) should succeed", parsed.name, file_name);
+            let result = result.unwrap();
+            assert_eq!(result, parsed.expected, "Modexp {} ({}) mismatch", parsed.name, file_name);
+        }
+    }
 }
 
 fn modexp_early_return_tests(crypto: &CustomEvmCrypto) {
