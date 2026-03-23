@@ -16,7 +16,7 @@ fn main() -> io::Result<()> {
     // Create the file and write the inputs
     let file_name = format!("input_poseidon2_{}.bin", num_poseidon2s);
     let file_path = output_dir.join(file_name);
-   
+
     let stdin = zisk_sdk::ZiskStdin::new();
     stdin.write(&num_poseidon2s);
     stdin.save(&file_path).expect("Failed to write input to file");

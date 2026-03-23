@@ -4,18 +4,19 @@ version = { workspace = true }
 edition = { workspace = true }
 
 [dependencies]
-hex = "0.4"
-num-bigint = "0.4"
-ziskos = { workspace = true }
+hex.workspace = true
+num-bigint.workspace = true
+serde.workspace = true
+serde_json.workspace = true
 
-revm = { version = "34.0.0", default-features = false }
+ziskos.workspace = true
 
-alloy-primitives = { version = "1.5.4", default-features = false, features = ["native-keccak"] }
+revm.workspace = true
 
-alloy-consensus = { version = "1.6.0", default-features = false, features = ["crypto-backend"] }
+alloy-primitives = { workspace = true, features = ["native-keccak"] }
+alloy-consensus = { workspace = true, features = ["crypto-backend"] }
 
-guest-reth = { git = "https://github.com/0xPolygonHermez/zisk-eth-client.git", tag = "v0.7.0" }
-# guest-reth = { path = "../../../../patches/zisk-eth-client/crates/guest-reth" }
+guest-reth.workspace = true
 
 [lints]
 workspace = true
