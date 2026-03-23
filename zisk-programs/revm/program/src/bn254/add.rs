@@ -218,7 +218,7 @@ pub fn ecadd_tests(crypto: &CustomEvmCrypto) {
     assert_eq!(result, expected, "Test 10d: P + P (doubling) failed");
 
     // Geth test vectors
-    for test in &parse_precompile_json(include_str!("../testdata/precompiles////bn256Add.json")) {
+    for test in &parse_precompile_json(include_str!("../testdata/precompiles/bn256Add.json")) {
         let t = parse_ecadd_test(test);
         let result = crypto.bn254_g1_add(&t.p1, &t.p2);
         assert!(result.is_ok(), "bn254Add {} should succeed", t.name);

@@ -15,7 +15,7 @@ pub fn sha256_tests(crypto: &CustomEvmCrypto) {
     sha256_unaligned_tests(crypto);
     sha256_nist_tests(crypto);
     sha256_length_tests(crypto);
-    println!("All Sha256 tests passed!");
+    println!("All SHA256 tests passed!");
 }
 
 fn sha256_basic_tests(crypto: &CustomEvmCrypto) {
