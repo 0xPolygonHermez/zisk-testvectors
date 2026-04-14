@@ -1,6 +1,6 @@
 {
-  "test_type": "Sha256f",
-  "sha256f": [
+  "name": "Sha256f",
+  "data": [
     {
       "state_in": "0x5be0cd191f83d9ab9b05688c510e527fa54ff53a3c6ef372bb67ae856a09e667",
       "input": "0x0000000000000080",

@@ -1,18 +1,28 @@
-mod arith_eq;
-mod arith_eq_384;
-mod bigint;
+mod arith256;
+mod arith384;
+mod blake2;
+mod bls12_381;
+mod bn254;
 mod builder;
 mod keccakf;
+mod poseidon2;
+mod secp256k1;
+mod secp256r1;
 mod sha256f;
 mod utils;
 
-pub use arith_eq::generate_arith_eq_tests;
-pub use arith_eq_384::generate_arith_eq_384_tests;
-pub use bigint::generate_bigint_tests;
+pub use arith256::generate_arith256_tests;
+pub use arith384::generate_arith384_tests;
+pub use blake2::generate_blake2_tests;
+pub use bls12_381::generate_bls12_381_tests;
+pub use bn254::generate_bn254_tests;
 pub use builder::ProgramBuilder;
 pub use keccakf::generate_keccakf_tests;
+pub use poseidon2::generate_poseidon2_tests;
+pub use secp256k1::generate_secp256k1_tests;
+pub use secp256r1::generate_secp256r1_tests;
 pub use sha256f::generate_sha256f_tests;
-pub use utils::{load_bigint_test_data, load_keccakf_test_data, load_sha256f_test_data};
+pub use utils::{load_test_data_from_json, TestData};
 
 use std::fs::File;
 use std::io::{BufWriter, Write};

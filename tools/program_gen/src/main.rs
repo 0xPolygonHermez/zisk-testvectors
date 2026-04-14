@@ -7,8 +7,10 @@ use std::{
 mod tests;
 
 use tests::{
-    generate_arith_eq_384_tests, generate_arith_eq_tests, generate_bigint_tests,
-    generate_cargo_toml, generate_keccakf_tests, generate_main_file, generate_sha256f_tests,
+    generate_arith256_tests, generate_arith384_tests, generate_blake2_tests,
+    generate_bls12_381_tests, generate_bn254_tests, generate_cargo_toml, generate_keccakf_tests,
+    generate_main_file, generate_poseidon2_tests, generate_secp256k1_tests,
+    generate_secp256r1_tests, generate_sha256f_tests,
 };
 
 const MINIMAL_TESTS: usize = 5;
@@ -64,19 +66,34 @@ fn main() {
     // Generate each test module and collect their info
     let mut modules = Vec::new();
 
-    let (fn_name, file_name) = generate_arith_eq_tests(&output_dir, max_tests);
+    let (fn_name, file_name) = generate_arith256_tests(&output_dir, max_tests);
     modules.push((fn_name, file_name));
 
-    let (fn_name, file_name) = generate_arith_eq_384_tests(&output_dir, max_tests);
+    let (fn_name, file_name) = generate_arith384_tests(&output_dir, max_tests);
     modules.push((fn_name, file_name));
 
-    let (fn_name, file_name) = generate_bigint_tests(&output_dir, max_tests);
+    let (fn_name, file_name) = generate_bls12_381_tests(&output_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_bn254_tests(&output_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_secp256k1_tests(&output_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_secp256r1_tests(&output_dir, max_tests);
     modules.push((fn_name, file_name));
 
     let (fn_name, file_name) = generate_keccakf_tests(&output_dir, max_tests);
     modules.push((fn_name, file_name));
 
     let (fn_name, file_name) = generate_sha256f_tests(&output_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_blake2_tests(&output_dir, max_tests);
+    modules.push((fn_name, file_name));
+
+    let (fn_name, file_name) = generate_poseidon2_tests(&output_dir, max_tests);
     modules.push((fn_name, file_name));
 
     // Only generate main.rs and Cargo.toml if not using custom output path

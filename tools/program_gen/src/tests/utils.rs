@@ -17,24 +17,11 @@ pub struct Add256 {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct BigIntPre {
-    #[serde(default)]
-    pub add256: Vec<Add256>,
-    // Add other bigint test case vectors here as needed
-}
-
-#[derive(Debug, Deserialize)]
 pub struct Keccakf {
     #[serde(deserialize_with = "parse_hex_to_u64_array")]
     pub state_in: [u64; 25],
     #[serde(deserialize_with = "parse_hex_to_u64_array")]
     pub state_out: [u64; 25],
-}
-
-#[derive(Debug, Deserialize)]
-pub struct KeccakfPre {
-    #[serde(default)]
-    pub keccakf: Vec<Keccakf>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -48,17 +35,33 @@ pub struct Sha256f {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct Sha256fPre {
-    #[serde(default)]
-    pub sha256f: Vec<Sha256f>,
+pub struct Blake2 {
+    #[serde(deserialize_with = "parse_hex_to_u64")]
+    pub index: u64, // a number in [0,10)
+    #[serde(deserialize_with = "parse_hex_to_u64_array")]
+    pub state_in: [u64; 16],
+    #[serde(deserialize_with = "parse_hex_to_u64_array")]
+    pub input: [u64; 16],
+    #[serde(deserialize_with = "parse_hex_to_u64_array")]
+    pub state_out: [u64; 16],
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(tag = "test_type")]
+pub struct Poseidon2 {
+    #[serde(deserialize_with = "parse_hex_to_u64_array")]
+    pub state_in: [u64; 16],
+    #[serde(deserialize_with = "parse_hex_to_u64_array")]
+    pub state_out: [u64; 16],
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(tag = "name", content = "data")]
 pub enum TestData {
-    BigInt(BigIntPre),
-    Keccakf(KeccakfPre),
-    Sha256f(Sha256fPre),
+    Add256(Vec<Add256>),
+    Keccakf(Vec<Keccakf>),
+    Sha256f(Vec<Sha256f>),
+    Blake2(Vec<Blake2>),
+    Poseidon2(Vec<Poseidon2>),
     // Add other test data types here as needed
 }
 
@@ -69,27 +72,6 @@ pub fn load_test_data_from_json(json_path: &str) -> TestData {
         .unwrap_or_else(|_| panic!("Failed to read test data file: {}", json_path));
     serde_json::from_str(&data)
         .unwrap_or_else(|_| panic!("Failed to parse test data JSON: {}", json_path))
-}
-
-pub fn load_bigint_test_data(json_path: &str) -> BigIntPre {
-    match load_test_data_from_json(json_path) {
-        TestData::BigInt(data) => data,
-        other => panic!("Expected BigInt test data, but got: {:?}", other),
-    }
-}
-
-pub fn load_keccakf_test_data(json_path: &str) -> KeccakfPre {
-    match load_test_data_from_json(json_path) {
-        TestData::Keccakf(data) => data,
-        other => panic!("Expected Keccakf test data, but got: {:?}", other),
-    }
-}
-
-pub fn load_sha256f_test_data(json_path: &str) -> Sha256fPre {
-    match load_test_data_from_json(json_path) {
-        TestData::Sha256f(data) => data,
-        other => panic!("Expected Sha256f test data, but got: {:?}", other),
-    }
 }
 
 fn parse_hex_to_u64_array<'de, D, const N: usize>(deserializer: D) -> Result<[u64; N], D::Error>

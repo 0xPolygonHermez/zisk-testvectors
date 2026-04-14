@@ -521,7 +521,7 @@ dependencies = [
 [[package]]
 name = "circuit"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 
 [[package]]
 name = "clang-sys"
@@ -1168,12 +1168,12 @@ checksum = "09edd9e8b54e49e587e4f6295a7d29c3ea94d469cb40ab8ca70b288248a81db2"
 [[package]]
 name = "lib-c"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 
 [[package]]
 name = "lib-float"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 
 [[package]]
 name = "libc"
@@ -1255,7 +1255,7 @@ dependencies = [
 [[package]]
 name = "mem-common"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "clap",
  "fields",
@@ -1543,7 +1543,7 @@ dependencies = [
 [[package]]
 name = "precomp-arith-eq"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "ark-bn254",
  "ark-ff",
@@ -1580,7 +1580,7 @@ dependencies = [
 [[package]]
 name = "precomp-arith-eq-384"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "ark-bls12-381",
  "ark-bn254",
@@ -1617,7 +1617,7 @@ dependencies = [
 [[package]]
 name = "precompiles-common"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "fields",
  "mem-common",
@@ -1629,7 +1629,7 @@ dependencies = [
 [[package]]
 name = "precompiles-helpers"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "ark-bls12-381",
  "ark-bn254",
@@ -2044,7 +2044,7 @@ dependencies = [
 [[package]]
 name = "riscv"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 
 [[package]]
 name = "rustc-hash"
@@ -2354,7 +2354,7 @@ checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
 [[package]]
 name = "sm-mem"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "fields",
  "mem-common",
@@ -3521,7 +3521,7 @@ dependencies = [
 [[package]]
 name = "zisk-common"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "anyhow",
  "bincode",
@@ -3546,7 +3546,7 @@ dependencies = [
 [[package]]
 name = "zisk-core"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "elf",
  "fields",
@@ -3566,12 +3566,12 @@ dependencies = [
 [[package]]
 name = "zisk-definitions"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 
 [[package]]
 name = "zisk-pil"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "fields",
  "proofman-common",
@@ -3584,7 +3584,7 @@ dependencies = [
 [[package]]
 name = "zisk-verifier"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "proofman-verifier",
 ]
@@ -3592,7 +3592,7 @@ dependencies = [
 [[package]]
 name = "ziskos-hints"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "anyhow",
  "bincode",
@@ -3618,7 +3618,7 @@ dependencies = [
 [[package]]
 name = "zkvm-interface"
 version = "0.17.0"
-source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#4e0bf68d2abbbbe51ecdc43cf10aeae68dce5a2b"
+source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=ziskos-enlarge#f8027d7aee97d83b4d98b740a62cccb2b8101763"
 dependencies = [
  "bindgen 0.72.1",
 ]

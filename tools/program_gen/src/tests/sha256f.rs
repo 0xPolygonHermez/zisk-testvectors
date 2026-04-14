@@ -1,16 +1,19 @@
 use std::path::Path;
 
-use super::{load_sha256f_test_data, ProgramBuilder};
+use super::{load_test_data_from_json, ProgramBuilder, TestData};
 
 pub fn generate_sha256f_tests(output_path: &Path, limit: Option<usize>) -> (String, String) {
     let mut builder = ProgramBuilder::new("Sha256f");
 
     let limit = limit.unwrap_or(usize::MAX);
 
-    let test_data = load_sha256f_test_data("src/tests/test_data/sha256f_tests.json");
-
     // ========== Sha256f Test Group ==========
-    if !test_data.sha256f.is_empty() {
+    let test_data = match load_test_data_from_json("src/tests/test_data/sha256f_tests.json") {
+        TestData::Sha256f(data) => data,
+        other => panic!("Expected Sha256f test data, but got: {:?}", other),
+    };
+
+    if !test_data.is_empty() {
         builder.add_test_group("Sha256f Tests");
         builder.add_header_to_current_group(&[
             "let mut state: [u64; 4] = [0, 0, 0, 0];",
@@ -18,7 +21,7 @@ pub fn generate_sha256f_tests(output_path: &Path, limit: Option<usize>) -> (Stri
             "let mut params = SyscallSha256Params { state: &mut state, input: &input };",
         ]);
 
-        for (index, test) in test_data.sha256f.iter().enumerate() {
+        for (index, test) in test_data.iter().enumerate() {
             if index >= limit {
                 break;
             }

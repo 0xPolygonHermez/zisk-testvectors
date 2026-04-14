@@ -1,6 +1,6 @@
 {
-  "test_type": "BigInt",
-  "add256": [
+  "name": "Add256",
+  "data": [
     {
       "a": "0x00",
       "b": "0x00",

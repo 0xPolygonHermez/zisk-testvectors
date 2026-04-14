@@ -2,19 +2,19 @@ use std::path::Path;
 
 use super::{load_test_data_from_json, ProgramBuilder, TestData};
 
-pub fn generate_keccakf_tests(output_path: &Path, limit: Option<usize>) -> (String, String) {
-    let mut builder = ProgramBuilder::new("Keccakf");
+pub fn generate_poseidon2_tests(output_path: &Path, limit: Option<usize>) -> (String, String) {
+    let mut builder = ProgramBuilder::new("Poseidon2");
 
     let limit = limit.unwrap_or(usize::MAX);
 
-    // ========== Keccakf Test Group ==========
-    let test_data = match load_test_data_from_json("src/tests/test_data/keccakf_tests.json") {
-        TestData::Keccakf(data) => data,
-        other => panic!("Expected Keccakf test data, but got: {:?}", other),
+    // ========== Poseidon2 Test Group ==========
+    let test_data = match load_test_data_from_json("src/tests/test_data/poseidon2_tests.json") {
+        TestData::Poseidon2(data) => data,
+        other => panic!("Expected Poseidon2 test data, but got: {:?}", other),
     };
 
     if !test_data.is_empty() {
-        builder.add_test_group("Keccakf Tests");
+        builder.add_test_group("Poseidon2 Tests");
 
         for (index, test) in test_data.iter().enumerate() {
             if index >= limit {
@@ -22,11 +22,11 @@ pub fn generate_keccakf_tests(output_path: &Path, limit: Option<usize>) -> (Stri
             }
 
             builder.add_test_to_current_group(
-                "keccakf",
+                "poseidon2",
                 &[
                     &format!("let mut state = {:?};", test.state_in),
-                    "unsafe { syscall_keccak_f(&mut state); }",
-                    &format!("let expected_out: [u64; 25] = {:?};", test.state_out),
+                    "unsafe { syscall_poseidon2(&mut state); }",
+                    &format!("let expected_out: [u64; 16] = {:?};", test.state_out),
                     "assert_eq!(state, expected_out);",
                 ],
             );
@@ -34,8 +34,8 @@ pub fn generate_keccakf_tests(output_path: &Path, limit: Option<usize>) -> (Stri
     }
 
     // Write to file
-    let file_name = "keccakf";
-    let fn_name = "test_keccakf";
+    let file_name = "poseidon2";
+    let fn_name = "test_poseidon2";
     let output_file = output_path.join(format!("{}.rs", file_name));
     builder.generate_to_file(output_file.to_str().unwrap(), fn_name);
     (file_name.to_string(), fn_name.to_string())
