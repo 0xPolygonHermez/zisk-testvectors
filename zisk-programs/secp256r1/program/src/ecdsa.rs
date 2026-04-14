@@ -1,4 +1,4 @@
-use ziskos::zisklib::secp256r1_ecdsa_verify;
+use ziskos::zisklib::ecdsa_verify_secp256r1;
 
 use crate::constants::{G_X, G_Y};
 
@@ -18,14 +18,14 @@ pub fn ecdsa_tests() {
     let z = [0x7a419feca605023, 0x36e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
     let r = [0xb8cc6af9bd5c2e18, 0xffe50d85a1eee859, 0x80a6d9d1190a436e, 0x2ba3a8be6b94d5ec];
     let s = [0x77a67f79e6fadd76, 0x525fe710fab9aa7c, 0x3c7b11eb6c4e0ae7, 0x4cd60b855d442f5b];
-    assert!(secp256r1_ecdsa_verify(&pk, &z, &r, &s));
+    assert!(ecdsa_verify_secp256r1(&pk, &z, &r, &s));
 
     // zero hash tests: take any public key (x,y) and set the signature (r,y) = (x,x)
     let z2 = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
     let r2 = G_X;
     let s2 = G_X;
     let pk2 = [G_X[0], G_X[1], G_X[2], G_X[3], G_Y[0], G_Y[1], G_Y[2], G_Y[3]];
-    assert!(secp256r1_ecdsa_verify(&pk2, &z2, &r2, &s2));
+    assert!(ecdsa_verify_secp256r1(&pk2, &z2, &r2, &s2));
 
     let z3 = [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
     let r3 = [0x69c8c4df6c732838, 0x2903269919f70860, 0xdcfe467828128bad, 0x2927b10512bae3ed];
@@ -40,7 +40,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk3, &z3, &r3, &s3));
+    assert!(ecdsa_verify_secp256r1(&pk3, &z3, &r3, &s3));
 
     // 1] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #1: signature malleability
     let z4 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -56,7 +56,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk4, &z4, &r4, &s4));
+    assert!(ecdsa_verify_secp256r1(&pk4, &z4, &r4, &s4));
 
     // same test but with the s = n - s
     let z5 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -72,7 +72,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk5, &z5, &r5, &s5));
+    assert!(ecdsa_verify_secp256r1(&pk5, &z5, &r5, &s5));
 
     // 2] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #3: Modified r or s, e.g. by adding or subtracting the order of the group
     let z6 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -88,7 +88,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk6, &z6, &r6, &s6));
+    assert!(!ecdsa_verify_secp256r1(&pk6, &z6, &r6, &s6));
 
     // 3] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #5: Modified r or s, e.g. by adding or subtracting the order of the group
     let z7 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -104,7 +104,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk7, &z7, &r7, &s7));
+    assert!(!ecdsa_verify_secp256r1(&pk7, &z7, &r7, &s7));
 
     // 4] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #8: Modified r or s, e.g. by adding or subtracting the order of the group
     let z8 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -120,7 +120,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk8, &z8, &r8, &s8));
+    assert!(!ecdsa_verify_secp256r1(&pk8, &z8, &r8, &s8));
 
     // 5] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #9: Signature with special case values for r and s
     let z9 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -136,7 +136,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk9, &z9, &r9, &s9));
+    assert!(!ecdsa_verify_secp256r1(&pk9, &z9, &r9, &s9));
 
     // 6] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #10: Signature with special case values for r and s
     let z10 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -152,7 +152,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk10, &z10, &r10, &s10));
+    assert!(!ecdsa_verify_secp256r1(&pk10, &z10, &r10, &s10));
 
     // 7] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #11: Signature with special case values for r and s
     let z11 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -168,7 +168,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk11, &z11, &r11, &s11));
+    assert!(!ecdsa_verify_secp256r1(&pk11, &z11, &r11, &s11));
 
     // 8] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #12: Signature with special case values for r and s
     let z12 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -184,7 +184,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk12, &z12, &r12, &s12));
+    assert!(!ecdsa_verify_secp256r1(&pk12, &z12, &r12, &s12));
 
     // 9] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #13: Signature with special case values for r and s
     let z13 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -200,7 +200,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk13, &z13, &r13, &s13));
+    assert!(!ecdsa_verify_secp256r1(&pk13, &z13, &r13, &s13));
 
     // 10] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #14: Signature with special case values for r and s
     let z14 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -216,7 +216,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk14, &z14, &r14, &s14));
+    assert!(!ecdsa_verify_secp256r1(&pk14, &z14, &r14, &s14));
 
     // 11] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #15: Signature with special case values for r and s
     let z15 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -232,7 +232,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk15, &z15, &r15, &s15));
+    assert!(!ecdsa_verify_secp256r1(&pk15, &z15, &r15, &s15));
 
     // 12] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #16: Signature with special case values for r and s
     let z16 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -248,7 +248,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk16, &z16, &r16, &s16));
+    assert!(!ecdsa_verify_secp256r1(&pk16, &z16, &r16, &s16));
 
     // 13] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #17: Signature with special case values for r and s
     let z17 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -264,7 +264,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk17, &z17, &r17, &s17));
+    assert!(!ecdsa_verify_secp256r1(&pk17, &z17, &r17, &s17));
 
     // 14] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #18: Signature with special case values for r and s
     let z18 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -280,7 +280,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk18, &z18, &r18, &s18));
+    assert!(!ecdsa_verify_secp256r1(&pk18, &z18, &r18, &s18));
 
     // 15] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #19: Signature with special case values for r and s
     let z19 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -296,7 +296,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk19, &z19, &r19, &s19));
+    assert!(!ecdsa_verify_secp256r1(&pk19, &z19, &r19, &s19));
 
     // 16] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #20: Signature with special case values for r and s
     let z20 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -312,7 +312,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk20, &z20, &r20, &s20));
+    assert!(!ecdsa_verify_secp256r1(&pk20, &z20, &r20, &s20));
 
     // 17] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #21: Signature with special case values for r and s
     let z21 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -328,7 +328,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk21, &z21, &r21, &s21));
+    assert!(!ecdsa_verify_secp256r1(&pk21, &z21, &r21, &s21));
 
     // 18] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #22: Signature with special case values for r and s
     let z22 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -344,7 +344,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk22, &z22, &r22, &s22));
+    assert!(!ecdsa_verify_secp256r1(&pk22, &z22, &r22, &s22));
 
     // 19] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #23: Signature with special case values for r and s
     let z23 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -360,7 +360,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk23, &z23, &r23, &s23));
+    assert!(!ecdsa_verify_secp256r1(&pk23, &z23, &r23, &s23));
 
     // 20] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #24: Signature with special case values for r and s
     let z24 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -376,7 +376,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk24, &z24, &r24, &s24));
+    assert!(!ecdsa_verify_secp256r1(&pk24, &z24, &r24, &s24));
 
     // 21] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #25: Signature with special case values for r and s
     let z25 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -392,7 +392,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk25, &z25, &r25, &s25));
+    assert!(!ecdsa_verify_secp256r1(&pk25, &z25, &r25, &s25));
 
     // 22] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #26: Signature with special case values for r and s
     let z26 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -408,7 +408,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk26, &z26, &r26, &s26));
+    assert!(!ecdsa_verify_secp256r1(&pk26, &z26, &r26, &s26));
 
     // 23] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #27: Signature with special case values for r and s
     let z27 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -424,7 +424,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk27, &z27, &r27, &s27));
+    assert!(!ecdsa_verify_secp256r1(&pk27, &z27, &r27, &s27));
 
     // 24] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #28: Signature with special case values for r and s
     let z28 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -440,7 +440,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk28, &z28, &r28, &s28));
+    assert!(!ecdsa_verify_secp256r1(&pk28, &z28, &r28, &s28));
 
     // 25] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #29: Signature with special case values for r and s
     let z29 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -456,7 +456,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk29, &z29, &r29, &s29));
+    assert!(!ecdsa_verify_secp256r1(&pk29, &z29, &r29, &s29));
 
     // 26] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #30: Signature with special case values for r and s
     let z30 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -472,7 +472,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk30, &z30, &r30, &s30));
+    assert!(!ecdsa_verify_secp256r1(&pk30, &z30, &r30, &s30));
 
     // 27] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #31: Signature with special case values for r and s
     let z31 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -488,7 +488,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk31, &z31, &r31, &s31));
+    assert!(!ecdsa_verify_secp256r1(&pk31, &z31, &r31, &s31));
 
     // 28] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #32: Signature with special case values for r and s
     let z32 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -504,7 +504,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk32, &z32, &r32, &s32));
+    assert!(!ecdsa_verify_secp256r1(&pk32, &z32, &r32, &s32));
 
     // 29] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #33: Signature with special case values for r and s
     let z33 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -520,7 +520,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk33, &z33, &r33, &s33));
+    assert!(!ecdsa_verify_secp256r1(&pk33, &z33, &r33, &s33));
 
     // 30] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #34: Signature with special case values for r and s
     let z34 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -536,7 +536,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk34, &z34, &r34, &s34));
+    assert!(!ecdsa_verify_secp256r1(&pk34, &z34, &r34, &s34));
 
     // 31] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #35: Signature with special case values for r and s
     let z35 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -552,7 +552,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk35, &z35, &r35, &s35));
+    assert!(!ecdsa_verify_secp256r1(&pk35, &z35, &r35, &s35));
 
     // 32] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #36: Signature with special case values for r and s
     let z36 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -568,7 +568,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk36, &z36, &r36, &s36));
+    assert!(!ecdsa_verify_secp256r1(&pk36, &z36, &r36, &s36));
 
     // 33] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #37: Signature with special case values for r and s
     let z37 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -584,7 +584,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk37, &z37, &r37, &s37));
+    assert!(!ecdsa_verify_secp256r1(&pk37, &z37, &r37, &s37));
 
     // 34] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #38: Signature with special case values for r and s
     let z38 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -600,7 +600,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk38, &z38, &r38, &s38));
+    assert!(!ecdsa_verify_secp256r1(&pk38, &z38, &r38, &s38));
 
     // 35] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #39: Signature with special case values for r and s
     let z39 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -616,7 +616,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk39, &z39, &r39, &s39));
+    assert!(!ecdsa_verify_secp256r1(&pk39, &z39, &r39, &s39));
 
     // 36] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #40: Signature with special case values for r and s
     let z40 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -632,7 +632,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk40, &z40, &r40, &s40));
+    assert!(!ecdsa_verify_secp256r1(&pk40, &z40, &r40, &s40));
 
     // 37] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #41: Signature with special case values for r and s
     let z41 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -648,7 +648,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk41, &z41, &r41, &s41));
+    assert!(!ecdsa_verify_secp256r1(&pk41, &z41, &r41, &s41));
 
     // 38] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #42: Signature with special case values for r and s
     let z42 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -664,7 +664,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk42, &z42, &r42, &s42));
+    assert!(!ecdsa_verify_secp256r1(&pk42, &z42, &r42, &s42));
 
     // 39] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #43: Signature with special case values for r and s
     let z43 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -680,7 +680,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk43, &z43, &r43, &s43));
+    assert!(!ecdsa_verify_secp256r1(&pk43, &z43, &r43, &s43));
 
     // 40] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #44: Signature with special case values for r and s
     let z44 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -696,7 +696,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk44, &z44, &r44, &s44));
+    assert!(!ecdsa_verify_secp256r1(&pk44, &z44, &r44, &s44));
 
     // 41] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #45: Signature with special case values for r and s
     let z45 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -712,7 +712,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk45, &z45, &r45, &s45));
+    assert!(!ecdsa_verify_secp256r1(&pk45, &z45, &r45, &s45));
 
     // 42] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #46: Signature with special case values for r and s
     let z46 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -728,7 +728,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk46, &z46, &r46, &s46));
+    assert!(!ecdsa_verify_secp256r1(&pk46, &z46, &r46, &s46));
 
     // 43] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #47: Signature with special case values for r and s
     let z47 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -744,7 +744,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk47, &z47, &r47, &s47));
+    assert!(!ecdsa_verify_secp256r1(&pk47, &z47, &r47, &s47));
 
     // 44] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #48: Signature with special case values for r and s
     let z48 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -760,7 +760,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk48, &z48, &r48, &s48));
+    assert!(!ecdsa_verify_secp256r1(&pk48, &z48, &r48, &s48));
 
     // 45] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #49: Signature with special case values for r and s
     let z49 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -776,7 +776,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk49, &z49, &r49, &s49));
+    assert!(!ecdsa_verify_secp256r1(&pk49, &z49, &r49, &s49));
 
     // 46] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #50: Signature with special case values for r and s
     let z50 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -792,7 +792,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk50, &z50, &r50, &s50));
+    assert!(!ecdsa_verify_secp256r1(&pk50, &z50, &r50, &s50));
 
     // 47] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #51: Signature with special case values for r and s
     let z51 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -808,7 +808,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk51, &z51, &r51, &s51));
+    assert!(!ecdsa_verify_secp256r1(&pk51, &z51, &r51, &s51));
 
     // 48] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #52: Signature with special case values for r and s
     let z52 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -824,7 +824,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk52, &z52, &r52, &s52));
+    assert!(!ecdsa_verify_secp256r1(&pk52, &z52, &r52, &s52));
 
     // 49] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #53: Signature with special case values for r and s
     let z53 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -840,7 +840,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk53, &z53, &r53, &s53));
+    assert!(!ecdsa_verify_secp256r1(&pk53, &z53, &r53, &s53));
 
     // 50] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #54: Signature with special case values for r and s
     let z54 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -856,7 +856,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk54, &z54, &r54, &s54));
+    assert!(!ecdsa_verify_secp256r1(&pk54, &z54, &r54, &s54));
 
     // 51] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #55: Signature with special case values for r and s
     let z55 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -872,7 +872,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk55, &z55, &r55, &s55));
+    assert!(!ecdsa_verify_secp256r1(&pk55, &z55, &r55, &s55));
 
     // 52] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #56: Signature with special case values for r and s
     let z56 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -888,7 +888,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk56, &z56, &r56, &s56));
+    assert!(!ecdsa_verify_secp256r1(&pk56, &z56, &r56, &s56));
 
     // 53] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #57: Signature with special case values for r and s
     let z57 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -904,7 +904,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk57, &z57, &r57, &s57));
+    assert!(!ecdsa_verify_secp256r1(&pk57, &z57, &r57, &s57));
 
     // 54] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #58: Edge case for Shamir multiplication
     let z58 = [0x2fa50c772ed6f807, 0x2f2627416faf2f07, 0xc422f44dea4ed1a5, 0x70239dd877f7c944];
@@ -920,7 +920,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk58, &z58, &r58, &s58));
+    assert!(ecdsa_verify_secp256r1(&pk58, &z58, &r58, &s58));
 
     // 55] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #59: special case hash
     let z59 = [0x7ead3645f356e7a9, 0x84bcd58a1bb5e747, 0xccf17803ebe2bd08, 0x00000000690ed426];
@@ -936,7 +936,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk59, &z59, &r59, &s59));
+    assert!(ecdsa_verify_secp256r1(&pk59, &z59, &r59, &s59));
 
     // 56] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #60: special case hash
     let z60 = [0x140697ad25770d91, 0xf696ad3ebb5ee47f, 0x525c6035725235c2, 0x7300000000213f2a];
@@ -952,7 +952,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk60, &z60, &r60, &s60));
+    assert!(ecdsa_verify_secp256r1(&pk60, &z60, &r60, &s60));
 
     // 57] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #61: special case hash
     let z61 = [0x4a0161c27fe06045, 0x8afd25daadeb3edb, 0xe0635b245f0b9797, 0xddf2000000005e0b];
@@ -968,7 +968,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk61, &z61, &r61, &s61));
+    assert!(ecdsa_verify_secp256r1(&pk61, &z61, &r61, &s61));
 
     // 58] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #62: special case hash
     let z62 = [0x5be1ec355d0841a0, 0x642b8499588b8985, 0x4769c4ecb9e164d6, 0x67ab190000000078];
@@ -984,7 +984,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk62, &z62, &r62, &s62));
+    assert!(ecdsa_verify_secp256r1(&pk62, &z62, &r62, &s62));
 
     // 59] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #63: special case hash
     let z63 = [0xe296b6350fc311cf, 0x02095dff252ee905, 0x76d7dbeffe125eaf, 0xa2bf094600000000];
@@ -1000,7 +1000,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk63, &z63, &r63, &s63));
+    assert!(ecdsa_verify_secp256r1(&pk63, &z63, &r63, &s63));
 
     // 60] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #64: special case hash
     let z64 = [0x29e15c544e4f0e65, 0xa0a3531711608581, 0x00e1e75e624a06b3, 0x3554e827c7000000];
@@ -1016,7 +1016,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk64, &z64, &r64, &s64));
+    assert!(ecdsa_verify_secp256r1(&pk64, &z64, &r64, &s64));
 
     // 61] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #65: special case hash
     let z65 = [0x26e3a54b9fc6965c, 0x3255ea4c9fd0cb34, 0x000026941a0f0bb5, 0x9b6cd3b812610000];
@@ -1032,7 +1032,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk65, &z65, &r65, &s65));
+    assert!(ecdsa_verify_secp256r1(&pk65, &z65, &r65, &s65));
 
     // 62] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #66: special case hash
     let z66 = [0x77162f93c4ae0186, 0x82a52baa51c71ca8, 0x000000e7561c26fc, 0x883ae39f50bf0100];
@@ -1048,7 +1048,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk66, &z66, &r66, &s66));
+    assert!(ecdsa_verify_secp256r1(&pk66, &z66, &r66, &s66));
 
     // 63] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #67: special case hash
     let z67 = [0x01fe9fce011d0ba6, 0x10540f420fb4ff74, 0x0000000000fa7cd0, 0xa1ce5d6e5ecaf28b];
@@ -1064,7 +1064,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk67, &z67, &r67, &s67));
+    assert!(ecdsa_verify_secp256r1(&pk67, &z67, &r67, &s67));
 
     // 64] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #68: special case hash
     let z68 = [0x5494cdffd5ee8054, 0x97330012a8ee836c, 0x9300000000383453, 0x8ea5f645f373f580];
@@ -1080,7 +1080,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk68, &z68, &r68, &s68));
+    assert!(ecdsa_verify_secp256r1(&pk68, &z68, &r68, &s68));
 
     // 65] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #69: special case hash
     let z69 = [0x8d9c1bbdcb5ef305, 0xd65ce93eabb7d60d, 0xa734000000008792, 0x660570d323e9f75f];
@@ -1096,7 +1096,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk69, &z69, &r69, &s69));
+    assert!(ecdsa_verify_secp256r1(&pk69, &z69, &r69, &s69));
 
     // 66] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #70: special case hash
     let z70 = [0x46ada2de4c568c34, 0x8d35f1f45cf9c3bf, 0x7dde8800000000e9, 0xd0462673154cce58];
@@ -1112,7 +1112,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk70, &z70, &r70, &s70));
+    assert!(ecdsa_verify_secp256r1(&pk70, &z70, &r70, &s70));
 
     // 67] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #71: special case hash
     let z71 = [0xb83e7b4418d7278f, 0x0caef15a6171059a, 0x80cedfef00000000, 0xbd90640269a78226];
@@ -1128,7 +1128,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk71, &z71, &r71, &s71));
+    assert!(ecdsa_verify_secp256r1(&pk71, &z71, &r71, &s71));
 
     // 68] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #72: special case hash
     let z72 = [0x4beae8e284788a73, 0x00d2dcceb301c54b, 0x512e41222a000000, 0x33239a52d72f1311];
@@ -1144,7 +1144,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk72, &z72, &r72, &s72));
+    assert!(ecdsa_verify_secp256r1(&pk72, &z72, &r72, &s72));
 
     // 69] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #73: special case hash
     let z73 = [0x1dc84c2d941ffaf1, 0x00007ee4a21a1cbe, 0x1365d4e6d95c0000, 0xb8d64fbcd4a1c10f];
@@ -1160,7 +1160,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk73, &z73, &r73, &s73));
+    assert!(ecdsa_verify_secp256r1(&pk73, &z73, &r73, &s73));
 
     // 70] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #74: special case hash
     let z74 = [0x4088b20fe0e9d84a, 0x0000003a227420db, 0xa3fef3183ed09200, 0x01603d3982bf77d7];
@@ -1176,7 +1176,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk74, &z74, &r74, &s74));
+    assert!(ecdsa_verify_secp256r1(&pk74, &z74, &r74, &s74));
 
     // 71] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #75: special case hash
     let z75 = [0xb7e9eb0cfbff7363, 0x000000004d89ef50, 0x599aa02e6cf66d9c, 0x9ea6994f1e0384c8];
@@ -1192,7 +1192,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk75, &z75, &r75, &s75));
+    assert!(ecdsa_verify_secp256r1(&pk75, &z75, &r75, &s75));
 
     // 72] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #76: special case hash
     let z76 = [0xf692bc670905b18c, 0x4700000000e2fa5b, 0x693979371a01068a, 0xd03215a8401bcf16];
@@ -1208,7 +1208,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk76, &z76, &r76, &s76));
+    assert!(ecdsa_verify_secp256r1(&pk76, &z76, &r76, &s76));
 
     // 73] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #77: special case hash
     let z77 = [0xfd5f64b582e3bb14, 0xc87e000000008408, 0x9c84bf83f0300e5d, 0x307bfaaffb650c88];
@@ -1224,7 +1224,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk77, &z77, &r77, &s77));
+    assert!(ecdsa_verify_secp256r1(&pk77, &z77, &r77, &s77));
 
     // 74] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #78: special case hash
     let z78 = [0xaf574bb4d54ea6b8, 0x51527c00000000e4, 0x33324d36bb0c1575, 0xbab5c4f4df540d7b];
@@ -1240,7 +1240,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk78, &z78, &r78, &s78));
+    assert!(ecdsa_verify_secp256r1(&pk78, &z78, &r78, &s78));
 
     // 75] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #79: special case hash
     let z79 = [0xc3b869197ef5e15e, 0xc2456f5b00000000, 0xe4f58d8036f9c36e, 0xd4ba47f6ae28f274];
@@ -1256,7 +1256,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk79, &z79, &r79, &s79));
+    assert!(ecdsa_verify_secp256r1(&pk79, &z79, &r79, &s79));
 
     // 76] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #80: special case hash
     let z80 = [0x00801e47f8c184e1, 0xfe0f10aafd000000, 0xf29f1fa00984342a, 0x79fd19c7235ea212];
@@ -1272,7 +1272,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk80, &z80, &r80, &s80));
+    assert!(ecdsa_verify_secp256r1(&pk80, &z80, &r80, &s80));
 
     // 77] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #81: special case hash
     let z81 = [0x0000a37ea6700cda, 0x79cbeb7ac9730000, 0xaf9aba5c0583462d, 0x8c291e8eeaa45adb];
@@ -1288,7 +1288,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk81, &z81, &r81, &s81));
+    assert!(ecdsa_verify_secp256r1(&pk81, &z81, &r81, &s81));
 
     // 78] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #82: special case hash
     let z82 = [0x0000003c278a6b21, 0xf4cdcf66c3f78a00, 0x9803efbfb8140732, 0x0eaae8641084fa97];
@@ -1304,7 +1304,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk82, &z82, &r82, &s82));
+    assert!(ecdsa_verify_secp256r1(&pk82, &z82, &r82, &s82));
 
     // 79] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #83: special case hash
     let z83 = [0x00000000afc0f89d, 0xef17c6d96e13846c, 0x0068399bf01bab42, 0xe02716d01fb23a5a];
@@ -1320,7 +1320,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk83, &z83, &r83, &s83));
+    assert!(ecdsa_verify_secp256r1(&pk83, &z83, &r83, &s83));
 
     // 80] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #84: special case hash
     let z84 = [0x9a00000000fc7de1, 0x9061768af89d0065, 0x194e9a16bc7dab2a, 0x9eb0bf583a1a6b9a];
@@ -1336,7 +1336,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk84, &z84, &r84, &s84));
+    assert!(ecdsa_verify_secp256r1(&pk84, &z84, &r84, &s84));
 
     // 81] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #85: special case hash
     let z85 = [0x690e00000000cd15, 0x6e1030cb53d9a82b, 0x2c214f0d5e72ef28, 0x62aac98818b3b84a];
@@ -1352,7 +1352,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk85, &z85, &r85, &s85));
+    assert!(ecdsa_verify_secp256r1(&pk85, &z85, &r85, &s85));
 
     // 82] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #86: special case hash
     let z86 = [0x464b9300000000c8, 0xd2b6f552ea4b6895, 0xf29ae43732e513ef, 0x3760a7f37cf96218];
@@ -1368,7 +1368,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk86, &z86, &r86, &s86));
+    assert!(ecdsa_verify_secp256r1(&pk86, &z86, &r86, &s86));
 
     // 83] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #87: special case hash
     let z87 = [0xbb6ff6c800000000, 0x6b4320bea836cd9c, 0x3834f2098c088009, 0x0da0a1d2851d3302];
@@ -1384,7 +1384,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk87, &z87, &r87, &s87));
+    assert!(ecdsa_verify_secp256r1(&pk87, &z87, &r87, &s87));
 
     // 84] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #88: special case hash
     let z88 = [0xa764a231e82d289a, 0x0fe975f735887194, 0x086fd567aafd598f, 0xffffffff293886d3];
@@ -1400,7 +1400,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk88, &z88, &r88, &s88));
+    assert!(ecdsa_verify_secp256r1(&pk88, &z88, &r88, &s88));
 
     // 85] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #89: special case hash
     let z89 = [0x0e8d9ca99527e7b7, 0x26acdc4ce127ec2e, 0xe3c03445a072e243, 0x7bffffffff2376d1];
@@ -1416,7 +1416,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk89, &z89, &r89, &s89));
+    assert!(ecdsa_verify_secp256r1(&pk89, &z89, &r89, &s89));
 
     // 86] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #90: special case hash
     let z90 = [0xfd016807e97fa395, 0xbc80872602a6e467, 0x51b085377605a224, 0xa2b5ffffffffebb2];
@@ -1432,7 +1432,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk90, &z90, &r90, &s90));
+    assert!(ecdsa_verify_secp256r1(&pk90, &z90, &r90, &s90));
 
     // 87] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #91: special case hash
     let z91 = [0x7b83d0967d4b20c0, 0xc1a3c256870d45a6, 0x1b96fa5f097fcf3c, 0x641227ffffffff6f];
@@ -1448,7 +1448,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk91, &z91, &r91, &s91));
+    assert!(ecdsa_verify_secp256r1(&pk91, &z91, &r91, &s91));
 
     // 88] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #92: special case hash
     let z92 = [0x8df56f36600e0f8b, 0xba20352117750229, 0xabad03e2fc662dc3, 0x958415d8ffffffff];
@@ -1464,7 +1464,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk92, &z92, &r92, &s92));
+    assert!(ecdsa_verify_secp256r1(&pk92, &z92, &r92, &s92));
 
     // 89] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #93: special case hash
     let z93 = [0x954521b6975420f8, 0xe13deb04e1fbe8fb, 0xff1281093536f47f, 0xf1d8de4858ffffff];
@@ -1480,7 +1480,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk93, &z93, &r93, &s93));
+    assert!(ecdsa_verify_secp256r1(&pk93, &z93, &r93, &s93));
 
     // 90] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #94: special case hash
     let z94 = [0x876b95c81fc31def, 0x32dc5d47c05ef6f1, 0xffff10782dd14a3b, 0x0927895f2802ffff];
@@ -1496,7 +1496,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk94, &z94, &r94, &s94));
+    assert!(ecdsa_verify_secp256r1(&pk94, &z94, &r94, &s94));
 
     // 91] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #95: special case hash
     let z95 = [0x24cf6a0c3ac80589, 0x0a57c3063fb5a306, 0xffffff4f332862a1, 0x60907984aa7e8eff];
@@ -1512,7 +1512,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk95, &z95, &r95, &s95));
+    assert!(ecdsa_verify_secp256r1(&pk95, &z95, &r95, &s95));
 
     // 92] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #96: special case hash
     let z96 = [0x42d6b9b8cd6ae1e2, 0x50f9a5f50636ea69, 0xffffffff0af42cda, 0xc6ff198484939170];
@@ -1528,7 +1528,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk96, &z96, &r96, &s96));
+    assert!(ecdsa_verify_secp256r1(&pk96, &z96, &r96, &s96));
 
     // 93] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #97: special case hash
     let z97 = [0x16dfbe4d27d7e68d, 0x9b9e0956cc43135d, 0x75ffffffff807479, 0xde030419345ca15c];
@@ -1544,7 +1544,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk97, &z97, &r97, &s97));
+    assert!(ecdsa_verify_secp256r1(&pk97, &z97, &r97, &s97));
 
     // 94] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #98: special case hash
     let z98 = [0x7e1ab78caaaac6ff, 0x665604d34acb1903, 0x2b88fffffffff6c8, 0x6f0e3eeaf42b2813];
@@ -1560,7 +1560,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk98, &z98, &r98, &s98));
+    assert!(ecdsa_verify_secp256r1(&pk98, &z98, &r98, &s98));
 
     // 95] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #99: special case hash
     let z99 = [0x2cb222d1f8017ab9, 0x48f7c0591ddcae7d, 0x3708d1ffffffffbe, 0xcdb549f773b3e62b];
@@ -1576,7 +1576,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk99, &z99, &r99, &s99));
+    assert!(ecdsa_verify_secp256r1(&pk99, &z99, &r99, &s99));
 
     // 96] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #100: special case hash
     let z100 = [0x24d8fd6f0edb0484, 0x9fd64886c1dc4f99, 0x1df4989bffffffff, 0x2c3f26f96a3ac005];
@@ -1592,7 +1592,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk100, &z100, &r100, &s100));
+    assert!(ecdsa_verify_secp256r1(&pk100, &z100, &r100, &s100));
 
     // 97] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #101: special case hash
     let z101 = [0x8476397c04edf411, 0xff5c31d89fda6a6b, 0x2cb7d53f9affffff, 0xac18f8418c55a250];
@@ -1608,7 +1608,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk101, &z101, &r101, &s101));
+    assert!(ecdsa_verify_secp256r1(&pk101, &z101, &r101, &s101));
 
     // 98] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #102: special case hash
     let z102 = [0x3e5a6ab8cf0ee610, 0xffffa2fd3e289368, 0xb24094f72bb5ffff, 0x4f9618f98e2d3a15];
@@ -1624,7 +1624,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk102, &z102, &r102, &s102));
+    assert!(ecdsa_verify_secp256r1(&pk102, &z102, &r102, &s102));
 
     // 99] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #103: special case hash
     let z103 = [0x04caae73ab0bc75a, 0xffffff67edf7c402, 0x9cc21d31d37a25ff, 0x422e82a3d56ed10a];
@@ -1640,7 +1640,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk103, &z103, &r103, &s103));
+    assert!(ecdsa_verify_secp256r1(&pk103, &z103, &r103, &s103));
 
     // 100] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #104: special case hash
     let z104 = [0x2d9890b5cf95d018, 0x17a5ffffffffa084, 0x6e7b329ff738fbb4, 0x7075d245ccc3281b];
@@ -1656,7 +1656,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk104, &z104, &r104, &s104));
+    assert!(ecdsa_verify_secp256r1(&pk104, &z104, &r104, &s104));
 
     // 101] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #105: special case hash
     let z105 = [0xc1847eb76c217a95, 0x7e280ebeffffffff, 0x9443d593fa4fd659, 0x3c80de54cd922698];
@@ -1672,7 +1672,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk105, &z105, &r105, &s105));
+    assert!(ecdsa_verify_secp256r1(&pk105, &z105, &r105, &s105));
 
     // 102] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #106: special case hash
     let z106 = [0xffc7906aa794b39b, 0x0ce891a8cdffffff, 0x980bef3d697ea277, 0xde21754e29b85601];
@@ -1688,7 +1688,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk106, &z106, &r106, &s106));
+    assert!(ecdsa_verify_secp256r1(&pk106, &z106, &r106, &s106));
 
     // 103] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #107: special case hash
     let z107 = [0xffff2f1f2f57881c, 0x599e4d5f7289ffff, 0x84dd59623fb531bb, 0x8f65d92927cfb86a];
@@ -1704,7 +1704,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk107, &z107, &r107, &s107));
+    assert!(ecdsa_verify_secp256r1(&pk107, &z107, &r107, &s107));
 
     // 104] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #108: special case hash
     let z108 = [0xfffffffafc8c3ca8, 0x2cc7cd0e8426cbff, 0x160bea3877dace8a, 0x6b63e9a74e092120];
@@ -1720,7 +1720,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk108, &z108, &r108, &s108));
+    assert!(ecdsa_verify_secp256r1(&pk108, &z108, &r108, &s108));
 
     // 105] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #109: special case hash
     let z109 = [0xffffffffe852512e, 0xd094586e249c8699, 0xb6d75219444e8b43, 0xfc28259702a03845];
@@ -1736,7 +1736,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk109, &z109, &r109, &s109));
+    assert!(ecdsa_verify_secp256r1(&pk109, &z109, &r109, &s109));
 
     // 106] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #110: special case hash
     let z110 = [0x1757ffffffffe20a, 0x74ecbcd52e8ceb57, 0xcee044ee8e8db7f7, 0x1273b4502ea4e3bc];
@@ -1752,7 +1752,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk110, &z110, &r110, &s110));
+    assert!(ecdsa_verify_secp256r1(&pk110, &z110, &r110, &s110));
 
     // 107] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #111: special case hash
     let z111 = [0xfb49ffffffffff6e, 0x4f8c53a15b96e602, 0x0c566c66228d8181, 0x08fb565610a79baa];
@@ -1768,7 +1768,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk111, &z111, &r111, &s111));
+    assert!(ecdsa_verify_secp256r1(&pk111, &z111, &r111, &s111));
 
     // 108] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #112: special case hash
     let z112 = [0x28ecaefeffffffff, 0xa2403f748e97d7cd, 0x87715fcb1aa4e79a, 0xd59291cc2cf89f30];
@@ -1784,7 +1784,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk112, &z112, &r112, &s112));
+    assert!(ecdsa_verify_secp256r1(&pk112, &z112, &r112, &s112));
 
     // 109] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #113: k*G has a large x-coordinate
     let z113 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1800,7 +1800,7 @@ pub fn ecdsa_tests() {
         0x50d5d3d29f99ae6e,
         0xc5011e6ef2c42dcd,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk113, &z113, &r113, &s113));
+    assert!(ecdsa_verify_secp256r1(&pk113, &z113, &r113, &s113));
 
     // 110] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #114: r too large
     let z114 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1816,7 +1816,7 @@ pub fn ecdsa_tests() {
         0x50d5d3d29f99ae6e,
         0xc5011e6ef2c42dcd,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk114, &z114, &r114, &s114));
+    assert!(!ecdsa_verify_secp256r1(&pk114, &z114, &r114, &s114));
 
     // 111] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #115: r,s are large
     let z115 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1832,7 +1832,7 @@ pub fn ecdsa_tests() {
         0x59095d12b75af069,
         0x19235271228c7867,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk115, &z115, &r115, &s115));
+    assert!(ecdsa_verify_secp256r1(&pk115, &z115, &r115, &s115));
 
     // 112] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #116: r and s^-1 have a large Hamming weight
     let z116 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1848,7 +1848,7 @@ pub fn ecdsa_tests() {
         0x7a06dfb41871c940,
         0x11feb97390d9826e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk116, &z116, &r116, &s116));
+    assert!(ecdsa_verify_secp256r1(&pk116, &z116, &r116, &s116));
 
     // 113] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #117: r and s^-1 have a large Hamming weight
     let z117 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1864,7 +1864,7 @@ pub fn ecdsa_tests() {
         0x1bb5ac6feaf753bc,
         0x95c37eba9ee8171c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk117, &z117, &r117, &s117));
+    assert!(ecdsa_verify_secp256r1(&pk117, &z117, &r117, &s117));
 
     // 114] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #118: small r and s
     let z118 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1880,7 +1880,7 @@ pub fn ecdsa_tests() {
         0xb369fec9c2665d8e,
         0x5d47723c8fbe580b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk118, &z118, &r118, &s118));
+    assert!(ecdsa_verify_secp256r1(&pk118, &z118, &r118, &s118));
 
     // 115] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #120: small r and s
     let z119 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1896,7 +1896,7 @@ pub fn ecdsa_tests() {
         0xc5c9c3c4c9be7f0d,
         0x6170ed77d8d0a14f,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk119, &z119, &r119, &s119));
+    assert!(ecdsa_verify_secp256r1(&pk119, &z119, &r119, &s119));
 
     // 116] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #122: small r and s
     let z120 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1912,7 +1912,7 @@ pub fn ecdsa_tests() {
         0xd7b147fb6c3d22af,
         0xef6edf62a4497c1b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk120, &z120, &r120, &s120));
+    assert!(ecdsa_verify_secp256r1(&pk120, &z120, &r120, &s120));
 
     // 117] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #124: small r and s
     let z121 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1928,7 +1928,7 @@ pub fn ecdsa_tests() {
         0x24b2603606f4c04d,
         0x70af6a8ce44cb412,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk121, &z121, &r121, &s121));
+    assert!(ecdsa_verify_secp256r1(&pk121, &z121, &r121, &s121));
 
     // 118] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #126: r is larger than n
     let z122 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1944,7 +1944,7 @@ pub fn ecdsa_tests() {
         0x24b2603606f4c04d,
         0x70af6a8ce44cb412,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk122, &z122, &r122, &s122));
+    assert!(!ecdsa_verify_secp256r1(&pk122, &z122, &r122, &s122));
 
     // 119] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #127: s is larger than n
     let z123 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1960,7 +1960,7 @@ pub fn ecdsa_tests() {
         0xce4dacea0f50d1f2,
         0x20f13051e0eecdcf,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk123, &z123, &r123, &s123));
+    assert!(!ecdsa_verify_secp256r1(&pk123, &z123, &r123, &s123));
 
     // 120] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #128: small r and s^-1
     let z124 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1976,7 +1976,7 @@ pub fn ecdsa_tests() {
         0x21782bf5e275c714,
         0x971f4a3206605bec,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk124, &z124, &r124, &s124));
+    assert!(ecdsa_verify_secp256r1(&pk124, &z124, &r124, &s124));
 
     // 121] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #129: smallish r and s^-1
     let z125 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -1992,7 +1992,7 @@ pub fn ecdsa_tests() {
         0xe00238198d040690,
         0xfa9cbc123c919b19,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk125, &z125, &r125, &s125));
+    assert!(ecdsa_verify_secp256r1(&pk125, &z125, &r125, &s125));
 
     // 122] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #130: 100-bit r and small s^-1
     let z126 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2008,7 +2008,7 @@ pub fn ecdsa_tests() {
         0x26e709863e6a486d,
         0xe9d7be1ab01a0bf6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk126, &z126, &r126, &s126));
+    assert!(ecdsa_verify_secp256r1(&pk126, &z126, &r126, &s126));
 
     // 123] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #131: small r and 100 bit s^-1
     let z127 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2024,7 +2024,7 @@ pub fn ecdsa_tests() {
         0x2b8da095bf6d7942,
         0xfe9993df4b57939b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk127, &z127, &r127, &s127));
+    assert!(ecdsa_verify_secp256r1(&pk127, &z127, &r127, &s127));
 
     // 124] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #132: 100-bit r and s^-1
     let z128 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2040,7 +2040,7 @@ pub fn ecdsa_tests() {
         0xdce351fc2a549893,
         0xdd59e04c214f7b18,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk128, &z128, &r128, &s128));
+    assert!(ecdsa_verify_secp256r1(&pk128, &z128, &r128, &s128));
 
     // 125] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #133: r and s^-1 are close to n
     let z129 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2056,7 +2056,7 @@ pub fn ecdsa_tests() {
         0x535196770a58047a,
         0x915c1ebe7bf00df8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk129, &z129, &r129, &s129));
+    assert!(ecdsa_verify_secp256r1(&pk129, &z129, &r129, &s129));
 
     // 126] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #134: s == 1
     let z130 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2072,7 +2072,7 @@ pub fn ecdsa_tests() {
         0xae9b875cf07bd55e,
         0x05bd13834715e1db,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk130, &z130, &r130, &s130));
+    assert!(ecdsa_verify_secp256r1(&pk130, &z130, &r130, &s130));
 
     // 127] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #135: s == 0
     let z131 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2088,7 +2088,7 @@ pub fn ecdsa_tests() {
         0xae9b875cf07bd55e,
         0x05bd13834715e1db,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk131, &z131, &r131, &s131));
+    assert!(!ecdsa_verify_secp256r1(&pk131, &z131, &r131, &s131));
 
     // 128] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #136: point at infinity during verify
     let z132 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2104,7 +2104,7 @@ pub fn ecdsa_tests() {
         0x8456863f33c3a85d,
         0x1b134ee58cc58327,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk132, &z132, &r132, &s132));
+    assert!(!ecdsa_verify_secp256r1(&pk132, &z132, &r132, &s132));
 
     // 129] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #137: edge case for signature malleability
     let z133 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2120,7 +2120,7 @@ pub fn ecdsa_tests() {
         0x247cd2e7d0c8b129,
         0xf94ad887ac94d527,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk133, &z133, &r133, &s133));
+    assert!(ecdsa_verify_secp256r1(&pk133, &z133, &r133, &s133));
 
     // 130] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #138: edge case for signature malleability
     let z134 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2136,7 +2136,7 @@ pub fn ecdsa_tests() {
         0xfdb39b2324f220a5,
         0x97bed1af17850117,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk134, &z134, &r134, &s134));
+    assert!(ecdsa_verify_secp256r1(&pk134, &z134, &r134, &s134));
 
     // 131] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #139: u1 == 1
     let z135 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2152,7 +2152,7 @@ pub fn ecdsa_tests() {
         0x3d726960f069ad71,
         0x66d2d3c7dcd518b2,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk135, &z135, &r135, &s135));
+    assert!(ecdsa_verify_secp256r1(&pk135, &z135, &r135, &s135));
 
     // 132] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #140: u1 == n - 1
     let z136 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2168,7 +2168,7 @@ pub fn ecdsa_tests() {
         0xcb36131fff95ed12,
         0x33e2b50ec09807ac,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk136, &z136, &r136, &s136));
+    assert!(ecdsa_verify_secp256r1(&pk136, &z136, &r136, &s136));
 
     // 133] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #141: u2 == 1
     let z137 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2184,7 +2184,7 @@ pub fn ecdsa_tests() {
         0x3da7257e737f3979,
         0x8db06908e64b2861,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk137, &z137, &r137, &s137));
+    assert!(ecdsa_verify_secp256r1(&pk137, &z137, &r137, &s137));
 
     // 134] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #142: u2 == n - 1
     let z138 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2200,7 +2200,7 @@ pub fn ecdsa_tests() {
         0x3c8b8400e57b4ed7,
         0xe8528fb7c006b398,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk138, &z138, &r138, &s138));
+    assert!(ecdsa_verify_secp256r1(&pk138, &z138, &r138, &s138));
 
     // 135] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #143: edge case for u1
     let z139 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2216,7 +2216,7 @@ pub fn ecdsa_tests() {
         0xc2e0aadd5a133117,
         0x4f417f3bc9a88075,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk139, &z139, &r139, &s139));
+    assert!(ecdsa_verify_secp256r1(&pk139, &z139, &r139, &s139));
 
     // 136] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #144: edge case for u1
     let z140 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2232,7 +2232,7 @@ pub fn ecdsa_tests() {
         0xcf89cff53c40e265,
         0x1de3f0640e8ac6ed,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk140, &z140, &r140, &s140));
+    assert!(ecdsa_verify_secp256r1(&pk140, &z140, &r140, &s140));
 
     // 137] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #145: edge case for u1
     let z141 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2248,7 +2248,7 @@ pub fn ecdsa_tests() {
         0x389b946f64ad56c8,
         0x986c723ea4843d48,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk141, &z141, &r141, &s141));
+    assert!(ecdsa_verify_secp256r1(&pk141, &z141, &r141, &s141));
 
     // 138] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #146: edge case for u1
     let z142 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2264,7 +2264,7 @@ pub fn ecdsa_tests() {
         0x1f1c409dc2d872d4,
         0x6337fe5cf8c4604b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk142, &z142, &r142, &s142));
+    assert!(ecdsa_verify_secp256r1(&pk142, &z142, &r142, &s142));
 
     // 139] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #147: edge case for u1
     let z143 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2280,7 +2280,7 @@ pub fn ecdsa_tests() {
         0xd987ca730f0405c2,
         0x3877d25a8080dc02,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk143, &z143, &r143, &s143));
+    assert!(ecdsa_verify_secp256r1(&pk143, &z143, &r143, &s143));
 
     // 140] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #148: edge case for u1
     let z144 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2296,7 +2296,7 @@ pub fn ecdsa_tests() {
         0x45abdce8a8e4da75,
         0x5e79c4cb2c245b8c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk144, &z144, &r144, &s144));
+    assert!(ecdsa_verify_secp256r1(&pk144, &z144, &r144, &s144));
 
     // 141] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #149: edge case for u1
     let z145 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2312,7 +2312,7 @@ pub fn ecdsa_tests() {
         0x2a20d371e9702254,
         0xdeb6adc462f7058f,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk145, &z145, &r145, &s145));
+    assert!(ecdsa_verify_secp256r1(&pk145, &z145, &r145, &s145));
 
     // 142] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #150: edge case for u1
     let z146 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2328,7 +2328,7 @@ pub fn ecdsa_tests() {
         0x5bd7b8d76a25fc95,
         0x6237050779f52b61,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk146, &z146, &r146, &s146));
+    assert!(ecdsa_verify_secp256r1(&pk146, &z146, &r146, &s146));
 
     // 143] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #151: edge case for u1
     let z147 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2344,7 +2344,7 @@ pub fn ecdsa_tests() {
         0xaab8745eac1cd690,
         0x03ce5516406bf8cf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk147, &z147, &r147, &s147));
+    assert!(ecdsa_verify_secp256r1(&pk147, &z147, &r147, &s147));
 
     // 144] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #152: edge case for u1
     let z148 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2360,7 +2360,7 @@ pub fn ecdsa_tests() {
         0x36d6556e8ad5f523,
         0xb4c104ab3c677e4b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk148, &z148, &r148, &s148));
+    assert!(ecdsa_verify_secp256r1(&pk148, &z148, &r148, &s148));
 
     // 145] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #153: edge case for u1
     let z149 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2376,7 +2376,7 @@ pub fn ecdsa_tests() {
         0x4ad3cc86e57321de,
         0x4a2039f31c109702,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk149, &z149, &r149, &s149));
+    assert!(ecdsa_verify_secp256r1(&pk149, &z149, &r149, &s149));
 
     // 146] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #154: edge case for u1
     let z150 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2392,7 +2392,7 @@ pub fn ecdsa_tests() {
         0xdcf273f5dc357e58,
         0xcf701ec962fb4a11,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk150, &z150, &r150, &s150));
+    assert!(ecdsa_verify_secp256r1(&pk150, &z150, &r150, &s150));
 
     // 147] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #155: edge case for u1
     let z151 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2408,7 +2408,7 @@ pub fn ecdsa_tests() {
         0x3287de9ffe90355f,
         0xc05d49337b964981,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk151, &z151, &r151, &s151));
+    assert!(ecdsa_verify_secp256r1(&pk151, &z151, &r151, &s151));
 
     // 148] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #156: edge case for u1
     let z152 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2424,7 +2424,7 @@ pub fn ecdsa_tests() {
         0xeb59ca974d039fc0,
         0xbfad4c2e6f263fe5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk152, &z152, &r152, &s152));
+    assert!(ecdsa_verify_secp256r1(&pk152, &z152, &r152, &s152));
 
     // 149] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #157: edge case for u2
     let z153 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2440,7 +2440,7 @@ pub fn ecdsa_tests() {
         0xb51dfe592f5cfd56,
         0xa37e0a51f258b7ae,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk153, &z153, &r153, &s153));
+    assert!(ecdsa_verify_secp256r1(&pk153, &z153, &r153, &s153));
 
     // 150] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #158: edge case for u2
     let z154 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2456,7 +2456,7 @@ pub fn ecdsa_tests() {
         0x3f9b1ae0124890f0,
         0x805f51efcc480340,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk154, &z154, &r154, &s154));
+    assert!(ecdsa_verify_secp256r1(&pk154, &z154, &r154, &s154));
 
     // 151] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #159: edge case for u2
     let z155 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2472,7 +2472,7 @@ pub fn ecdsa_tests() {
         0x11ef3e075eddda9a,
         0x6d2589ac655edc9a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk155, &z155, &r155, &s155));
+    assert!(ecdsa_verify_secp256r1(&pk155, &z155, &r155, &s155));
 
     // 152] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #160: edge case for u2
     let z156 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2488,7 +2488,7 @@ pub fn ecdsa_tests() {
         0x18d6d11dc062165f,
         0x49aa8ff283d0f77c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk156, &z156, &r156, &s156));
+    assert!(ecdsa_verify_secp256r1(&pk156, &z156, &r156, &s156));
 
     // 153] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #161: edge case for u2
     let z157 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2504,7 +2504,7 @@ pub fn ecdsa_tests() {
         0x67d6ecfe81e2b0f9,
         0xf97e3e468b7d0db8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk157, &z157, &r157, &s157));
+    assert!(ecdsa_verify_secp256r1(&pk157, &z157, &r157, &s157));
 
     // 154] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #162: edge case for u2
     let z158 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2520,7 +2520,7 @@ pub fn ecdsa_tests() {
         0x75336256768f7c19,
         0x5ef2f3aebf5b3174,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk158, &z158, &r158, &s158));
+    assert!(ecdsa_verify_secp256r1(&pk158, &z158, &r158, &s158));
 
     // 155] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #163: edge case for u2
     let z159 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2536,7 +2536,7 @@ pub fn ecdsa_tests() {
         0x54035597375d9086,
         0xe6bdf56033f84a50,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk159, &z159, &r159, &s159));
+    assert!(ecdsa_verify_secp256r1(&pk159, &z159, &r159, &s159));
 
     // 156] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #164: edge case for u2
     let z160 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2552,7 +2552,7 @@ pub fn ecdsa_tests() {
         0xf554355564646de9,
         0x68612569d39e2bb9,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk160, &z160, &r160, &s160));
+    assert!(ecdsa_verify_secp256r1(&pk160, &z160, &r160, &s160));
 
     // 157] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #165: edge case for u2
     let z161 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2568,7 +2568,7 @@ pub fn ecdsa_tests() {
         0xc773867582997c2b,
         0x9ab443ff6f901e30,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk161, &z161, &r161, &s161));
+    assert!(ecdsa_verify_secp256r1(&pk161, &z161, &r161, &s161));
 
     // 158] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #166: edge case for u2
     let z162 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2584,7 +2584,7 @@ pub fn ecdsa_tests() {
         0x174889f3ebcf1b7a,
         0x033dd0e91134c734,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk162, &z162, &r162, &s162));
+    assert!(ecdsa_verify_secp256r1(&pk162, &z162, &r162, &s162));
 
     // 159] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #167: edge case for u2
     let z163 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2600,7 +2600,7 @@ pub fn ecdsa_tests() {
         0xa432b7585a49b3a6,
         0xff83986e6875e41e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk163, &z163, &r163, &s163));
+    assert!(ecdsa_verify_secp256r1(&pk163, &z163, &r163, &s163));
 
     // 160] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #168: edge case for u2
     let z164 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2616,7 +2616,7 @@ pub fn ecdsa_tests() {
         0xbc9ae82911f0b527,
         0xe11c65bd8ca92dc8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk164, &z164, &r164, &s164));
+    assert!(ecdsa_verify_secp256r1(&pk164, &z164, &r164, &s164));
 
     // 161] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #169: edge case for u2
     let z165 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2632,7 +2632,7 @@ pub fn ecdsa_tests() {
         0x70394a4bc9f892d5,
         0xef6d63e2bc5c0895,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk165, &z165, &r165, &s165));
+    assert!(ecdsa_verify_secp256r1(&pk165, &z165, &r165, &s165));
 
     // 162] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #170: edge case for u2
     let z166 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2648,7 +2648,7 @@ pub fn ecdsa_tests() {
         0x88eb81421a361ccc,
         0x8911e7f8cc365a8a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk166, &z166, &r166, &s166));
+    assert!(ecdsa_verify_secp256r1(&pk166, &z166, &r166, &s166));
 
     // 163] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #171: point duplication during verification
     let z167 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2664,7 +2664,7 @@ pub fn ecdsa_tests() {
         0x004e92d8d940cf56,
         0x838a40f2a36092e9,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk167, &z167, &r167, &s167));
+    assert!(ecdsa_verify_secp256r1(&pk167, &z167, &r167, &s167));
 
     // 164] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #172: duplication bug
     let z168 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2680,7 +2680,7 @@ pub fn ecdsa_tests() {
         0xffb16d2726bf30a9,
         0x7c75bf0c5c9f6d17,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk168, &z168, &r168, &s168));
+    assert!(!ecdsa_verify_secp256r1(&pk168, &z168, &r168, &s168));
 
     // 165] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #173: point with x-coordinate 0
     let z169 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2696,7 +2696,7 @@ pub fn ecdsa_tests() {
         0x9b59f7602bb222fa,
         0x47e6f50dcc40ad5d,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk169, &z169, &r169, &s169));
+    assert!(!ecdsa_verify_secp256r1(&pk169, &z169, &r169, &s169));
 
     // 166] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #175: comparison with point at infinity
     let z170 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2712,7 +2712,7 @@ pub fn ecdsa_tests() {
         0x10d849349226d21d,
         0x45d5c8200c89f2fa,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk170, &z170, &r170, &s170));
+    assert!(!ecdsa_verify_secp256r1(&pk170, &z170, &r170, &s170));
 
     // 167] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #176: extreme value for k and edgecase s
     let z171 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2728,7 +2728,7 @@ pub fn ecdsa_tests() {
         0x547b212f6bb14c88,
         0xd7d3fd10b2be668c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk171, &z171, &r171, &s171));
+    assert!(ecdsa_verify_secp256r1(&pk171, &z171, &r171, &s171));
 
     // 168] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #177: extreme value for k and s^-1
     let z172 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2744,7 +2744,7 @@ pub fn ecdsa_tests() {
         0xbd343572b3e56192,
         0xbc3b4b5e65ab887b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk172, &z172, &r172, &s172));
+    assert!(ecdsa_verify_secp256r1(&pk172, &z172, &r172, &s172));
 
     // 169] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #178: extreme value for k and s^-1
     let z173 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2760,7 +2760,7 @@ pub fn ecdsa_tests() {
         0x684b410be8d0f749,
         0xcee9960283045075,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk173, &z173, &r173, &s173));
+    assert!(ecdsa_verify_secp256r1(&pk173, &z173, &r173, &s173));
 
     // 170] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #179: extreme value for k and s^-1
     let z174 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2776,7 +2776,7 @@ pub fn ecdsa_tests() {
         0x2674acb750592978,
         0x8f2b743df34ad0f7,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk174, &z174, &r174, &s174));
+    assert!(ecdsa_verify_secp256r1(&pk174, &z174, &r174, &s174));
 
     // 171] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #180: extreme value for k and s^-1
     let z175 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2792,7 +2792,7 @@ pub fn ecdsa_tests() {
         0xcdc7dfe7384c8e5c,
         0x8673d6cb6076e1cf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk175, &z175, &r175, &s175));
+    assert!(ecdsa_verify_secp256r1(&pk175, &z175, &r175, &s175));
 
     // 172] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #181: extreme value for k
     let z176 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2808,7 +2808,7 @@ pub fn ecdsa_tests() {
         0x38912bd9ea6c4fde,
         0x3195a3762fea29ed,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk176, &z176, &r176, &s176));
+    assert!(ecdsa_verify_secp256r1(&pk176, &z176, &r176, &s176));
 
     // 173] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #182: extreme value for k and edgecase s
     let z177 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2824,7 +2824,7 @@ pub fn ecdsa_tests() {
         0x7144d5b459982f52,
         0x5de37fee5c97bcaf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk177, &z177, &r177, &s177));
+    assert!(ecdsa_verify_secp256r1(&pk177, &z177, &r177, &s177));
 
     // 174] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #183: extreme value for k and s^-1
     let z178 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2840,7 +2840,7 @@ pub fn ecdsa_tests() {
         0xcf9b22f7a2e582bd,
         0x7bbb8de662c7b9b1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk178, &z178, &r178, &s178));
+    assert!(ecdsa_verify_secp256r1(&pk178, &z178, &r178, &s178));
 
     // 175] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #184: extreme value for k and s^-1
     let z179 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2856,7 +2856,7 @@ pub fn ecdsa_tests() {
         0x35b55fa385b0f764,
         0x0a1c6e954e321084,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk179, &z179, &r179, &s179));
+    assert!(ecdsa_verify_secp256r1(&pk179, &z179, &r179, &s179));
 
     // 176] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #185: extreme value for k and s^-1
     let z180 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2872,7 +2872,7 @@ pub fn ecdsa_tests() {
         0x4f378d96adb0a408,
         0xe22dc3b3c103824a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk180, &z180, &r180, &s180));
+    assert!(ecdsa_verify_secp256r1(&pk180, &z180, &r180, &s180));
 
     // 177] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #186: extreme value for k and s^-1
     let z181 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2888,7 +2888,7 @@ pub fn ecdsa_tests() {
         0x193a6096fc77a2b0,
         0x2e424b690957168d,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk181, &z181, &r181, &s181));
+    assert!(ecdsa_verify_secp256r1(&pk181, &z181, &r181, &s181));
 
     // 178] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #187: extreme value for k
     let z182 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2904,7 +2904,7 @@ pub fn ecdsa_tests() {
         0x238578d43aec54f7,
         0x4c6845442d66935b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk182, &z182, &r182, &s182));
+    assert!(ecdsa_verify_secp256r1(&pk182, &z182, &r182, &s182));
 
     // 179] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #188: testing point duplication
     let z183 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2920,7 +2920,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk183, &z183, &r183, &s183));
+    assert!(!ecdsa_verify_secp256r1(&pk183, &z183, &r183, &s183));
 
     // 180] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #189: testing point duplication
     let z184 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2936,7 +2936,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk184, &z184, &r184, &s184));
+    assert!(!ecdsa_verify_secp256r1(&pk184, &z184, &r184, &s184));
 
     // 181] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #190: testing point duplication
     let z185 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2952,7 +2952,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk185, &z185, &r185, &s185));
+    assert!(!ecdsa_verify_secp256r1(&pk185, &z185, &r185, &s185));
 
     // 182] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #191: testing point duplication
     let z186 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -2968,7 +2968,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk186, &z186, &r186, &s186));
+    assert!(!ecdsa_verify_secp256r1(&pk186, &z186, &r186, &s186));
 
     // 183] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #192: pseudorandom signature
     let z187 = [0xa495991b7852b855, 0x27ae41e4649b934c, 0x9afbf4c8996fb924, 0xe3b0c44298fc1c14];
@@ -2984,7 +2984,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk187, &z187, &r187, &s187));
+    assert!(ecdsa_verify_secp256r1(&pk187, &z187, &r187, &s187));
 
     // 184] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #193: pseudorandom signature
     let z188 = [0xf59ec9dd1bb8c7b3, 0xe807bdf4c5332f19, 0x2856e7be399007c9, 0xdc1921946f4af96a];
@@ -3000,7 +3000,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk188, &z188, &r188, &s188));
+    assert!(ecdsa_verify_secp256r1(&pk188, &z188, &r188, &s188));
 
     // 185] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #194: pseudorandom signature
     let z189 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3016,7 +3016,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk189, &z189, &r189, &s189));
+    assert!(ecdsa_verify_secp256r1(&pk189, &z189, &r189, &s189));
 
     // 186] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #195: pseudorandom signature
     let z190 = [0x7f1b40c4cbd36f90, 0x93262cf06340c4fa, 0xdbb5f2c353e632c3, 0xde47c9b27eb8d300];
@@ -3032,7 +3032,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk190, &z190, &r190, &s190));
+    assert!(ecdsa_verify_secp256r1(&pk190, &z190, &r190, &s190));
 
     // 187] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #196: x-coordinate of the public key has many trailing 0's
     let z191 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3048,7 +3048,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk191, &z191, &r191, &s191));
+    assert!(ecdsa_verify_secp256r1(&pk191, &z191, &r191, &s191));
 
     // 188] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #197: x-coordinate of the public key has many trailing 0's
     let z192 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3064,7 +3064,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk192, &z192, &r192, &s192));
+    assert!(ecdsa_verify_secp256r1(&pk192, &z192, &r192, &s192));
 
     // 189] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #198: x-coordinate of the public key has many trailing 0's
     let z193 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3080,7 +3080,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk193, &z193, &r193, &s193));
+    assert!(ecdsa_verify_secp256r1(&pk193, &z193, &r193, &s193));
 
     // 190] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #199: y-coordinate of the public key has many trailing 0's
     let z194 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3096,7 +3096,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk194, &z194, &r194, &s194));
+    assert!(ecdsa_verify_secp256r1(&pk194, &z194, &r194, &s194));
 
     // 191] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #200: y-coordinate of the public key has many trailing 0's
     let z195 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3112,7 +3112,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk195, &z195, &r195, &s195));
+    assert!(ecdsa_verify_secp256r1(&pk195, &z195, &r195, &s195));
 
     // 192] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #201: y-coordinate of the public key has many trailing 0's
     let z196 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3128,7 +3128,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk196, &z196, &r196, &s196));
+    assert!(ecdsa_verify_secp256r1(&pk196, &z196, &r196, &s196));
 
     // 193] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #202: y-coordinate of the public key has many trailing 1's
     let z197 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3144,7 +3144,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk197, &z197, &r197, &s197));
+    assert!(ecdsa_verify_secp256r1(&pk197, &z197, &r197, &s197));
 
     // 194] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #203: y-coordinate of the public key has many trailing 1's
     let z198 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3160,7 +3160,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk198, &z198, &r198, &s198));
+    assert!(ecdsa_verify_secp256r1(&pk198, &z198, &r198, &s198));
 
     // 195] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #204: y-coordinate of the public key has many trailing 1's
     let z199 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3176,7 +3176,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk199, &z199, &r199, &s199));
+    assert!(ecdsa_verify_secp256r1(&pk199, &z199, &r199, &s199));
 
     // 196] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #205: x-coordinate of the public key has many trailing 1's
     let z200 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3192,7 +3192,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk200, &z200, &r200, &s200));
+    assert!(ecdsa_verify_secp256r1(&pk200, &z200, &r200, &s200));
 
     // 197] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #206: x-coordinate of the public key has many trailing 1's
     let z201 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3208,7 +3208,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk201, &z201, &r201, &s201));
+    assert!(ecdsa_verify_secp256r1(&pk201, &z201, &r201, &s201));
 
     // 198] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #207: x-coordinate of the public key has many trailing 1's
     let z202 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3224,7 +3224,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk202, &z202, &r202, &s202));
+    assert!(ecdsa_verify_secp256r1(&pk202, &z202, &r202, &s202));
 
     // 199] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #208: x-coordinate of the public key is large
     let z203 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3240,7 +3240,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk203, &z203, &r203, &s203));
+    assert!(ecdsa_verify_secp256r1(&pk203, &z203, &r203, &s203));
 
     // 200] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #209: x-coordinate of the public key is large
     let z204 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3256,7 +3256,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk204, &z204, &r204, &s204));
+    assert!(ecdsa_verify_secp256r1(&pk204, &z204, &r204, &s204));
 
     // 201] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #210: x-coordinate of the public key is large
     let z205 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3272,7 +3272,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk205, &z205, &r205, &s205));
+    assert!(ecdsa_verify_secp256r1(&pk205, &z205, &r205, &s205));
 
     // 202] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #211: x-coordinate of the public key is small
     let z206 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3288,7 +3288,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk206, &z206, &r206, &s206));
+    assert!(ecdsa_verify_secp256r1(&pk206, &z206, &r206, &s206));
 
     // 203] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #212: x-coordinate of the public key is small
     let z207 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3304,7 +3304,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk207, &z207, &r207, &s207));
+    assert!(ecdsa_verify_secp256r1(&pk207, &z207, &r207, &s207));
 
     // 204] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #213: x-coordinate of the public key is small
     let z208 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3320,7 +3320,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk208, &z208, &r208, &s208));
+    assert!(ecdsa_verify_secp256r1(&pk208, &z208, &r208, &s208));
 
     // 205] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #214: y-coordinate of the public key is small
     let z209 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3336,7 +3336,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk209, &z209, &r209, &s209));
+    assert!(ecdsa_verify_secp256r1(&pk209, &z209, &r209, &s209));
 
     // 206] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #215: y-coordinate of the public key is small
     let z210 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3352,7 +3352,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk210, &z210, &r210, &s210));
+    assert!(ecdsa_verify_secp256r1(&pk210, &z210, &r210, &s210));
 
     // 207] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #216: y-coordinate of the public key is small
     let z211 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3368,7 +3368,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk211, &z211, &r211, &s211));
+    assert!(ecdsa_verify_secp256r1(&pk211, &z211, &r211, &s211));
 
     // 208] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #217: y-coordinate of the public key is large
     let z212 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3384,7 +3384,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk212, &z212, &r212, &s212));
+    assert!(ecdsa_verify_secp256r1(&pk212, &z212, &r212, &s212));
 
     // 209] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #218: y-coordinate of the public key is large
     let z213 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3400,7 +3400,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk213, &z213, &r213, &s213));
+    assert!(ecdsa_verify_secp256r1(&pk213, &z213, &r213, &s213));
 
     // 210] wycheproof/ecdsa_secp256r1_sha256_p1363_test.json EcdsaP1363Verify SHA-256 #219: y-coordinate of the public key is large
     let z214 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -3416,7 +3416,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk214, &z214, &r214, &s214));
+    assert!(ecdsa_verify_secp256r1(&pk214, &z214, &r214, &s214));
 
     // 211] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #1: signature malleability
     let z215 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3432,7 +3432,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk215, &z215, &r215, &s215));
+    assert!(ecdsa_verify_secp256r1(&pk215, &z215, &r215, &s215));
 
     // 212] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #2: Legacy:ASN encoding of s misses leading 0
     let z216 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3448,7 +3448,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk216, &z216, &r216, &s216));
+    assert!(ecdsa_verify_secp256r1(&pk216, &z216, &r216, &s216));
 
     // 213] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #3: valid
     let z217 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3464,7 +3464,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk217, &z217, &r217, &s217));
+    assert!(ecdsa_verify_secp256r1(&pk217, &z217, &r217, &s217));
 
     // 214] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #118: modify first byte of integer
     let z218 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3480,7 +3480,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk218, &z218, &r218, &s218));
+    assert!(!ecdsa_verify_secp256r1(&pk218, &z218, &r218, &s218));
 
     // 215] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #120: modify last byte of integer
     let z219 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3496,7 +3496,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk219, &z219, &r219, &s219));
+    assert!(!ecdsa_verify_secp256r1(&pk219, &z219, &r219, &s219));
 
     // 216] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #121: modify last byte of integer
     let z220 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3512,7 +3512,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk220, &z220, &r220, &s220));
+    assert!(!ecdsa_verify_secp256r1(&pk220, &z220, &r220, &s220));
 
     // 217] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #124: truncated integer
     let z221 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3528,7 +3528,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk221, &z221, &r221, &s221));
+    assert!(!ecdsa_verify_secp256r1(&pk221, &z221, &r221, &s221));
 
     // 218] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #133: Modified r or s, e.g. by adding or subtracting the order of the group
     let z222 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3544,7 +3544,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk222, &z222, &r222, &s222));
+    assert!(!ecdsa_verify_secp256r1(&pk222, &z222, &r222, &s222));
 
     // 219] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #134: Modified r or s, e.g. by adding or subtracting the order of the group
     let z223 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3560,7 +3560,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk223, &z223, &r223, &s223));
+    assert!(!ecdsa_verify_secp256r1(&pk223, &z223, &r223, &s223));
 
     // 220] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #137: Modified r or s, e.g. by adding or subtracting the order of the group
     let z224 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3576,7 +3576,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk224, &z224, &r224, &s224));
+    assert!(!ecdsa_verify_secp256r1(&pk224, &z224, &r224, &s224));
 
     // 221] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #139: Modified r or s, e.g. by adding or subtracting the order of the group
     let z225 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3592,7 +3592,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk225, &z225, &r225, &s225));
+    assert!(!ecdsa_verify_secp256r1(&pk225, &z225, &r225, &s225));
 
     // 222] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #143: Modified r or s, e.g. by adding or subtracting the order of the group
     let z226 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3608,7 +3608,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk226, &z226, &r226, &s226));
+    assert!(!ecdsa_verify_secp256r1(&pk226, &z226, &r226, &s226));
 
     // 223] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #177: Signature with special case values for r and s
     let z227 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3624,7 +3624,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk227, &z227, &r227, &s227));
+    assert!(!ecdsa_verify_secp256r1(&pk227, &z227, &r227, &s227));
 
     // 224] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #178: Signature with special case values for r and s
     let z228 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3640,7 +3640,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk228, &z228, &r228, &s228));
+    assert!(!ecdsa_verify_secp256r1(&pk228, &z228, &r228, &s228));
 
     // 225] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #179: Signature with special case values for r and s
     let z229 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3656,7 +3656,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk229, &z229, &r229, &s229));
+    assert!(!ecdsa_verify_secp256r1(&pk229, &z229, &r229, &s229));
 
     // 226] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #180: Signature with special case values for r and s
     let z230 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3672,7 +3672,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk230, &z230, &r230, &s230));
+    assert!(!ecdsa_verify_secp256r1(&pk230, &z230, &r230, &s230));
 
     // 227] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #181: Signature with special case values for r and s
     let z231 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3688,7 +3688,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk231, &z231, &r231, &s231));
+    assert!(!ecdsa_verify_secp256r1(&pk231, &z231, &r231, &s231));
 
     // 228] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #187: Signature with special case values for r and s
     let z232 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3704,7 +3704,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk232, &z232, &r232, &s232));
+    assert!(!ecdsa_verify_secp256r1(&pk232, &z232, &r232, &s232));
 
     // 229] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #188: Signature with special case values for r and s
     let z233 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3720,7 +3720,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk233, &z233, &r233, &s233));
+    assert!(!ecdsa_verify_secp256r1(&pk233, &z233, &r233, &s233));
 
     // 230] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #189: Signature with special case values for r and s
     let z234 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3736,7 +3736,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk234, &z234, &r234, &s234));
+    assert!(!ecdsa_verify_secp256r1(&pk234, &z234, &r234, &s234));
 
     // 231] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #190: Signature with special case values for r and s
     let z235 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3752,7 +3752,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk235, &z235, &r235, &s235));
+    assert!(!ecdsa_verify_secp256r1(&pk235, &z235, &r235, &s235));
 
     // 232] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #191: Signature with special case values for r and s
     let z236 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3768,7 +3768,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk236, &z236, &r236, &s236));
+    assert!(!ecdsa_verify_secp256r1(&pk236, &z236, &r236, &s236));
 
     // 233] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #197: Signature with special case values for r and s
     let z237 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3784,7 +3784,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk237, &z237, &r237, &s237));
+    assert!(!ecdsa_verify_secp256r1(&pk237, &z237, &r237, &s237));
 
     // 234] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #198: Signature with special case values for r and s
     let z238 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3800,7 +3800,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk238, &z238, &r238, &s238));
+    assert!(!ecdsa_verify_secp256r1(&pk238, &z238, &r238, &s238));
 
     // 235] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #199: Signature with special case values for r and s
     let z239 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3816,7 +3816,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk239, &z239, &r239, &s239));
+    assert!(!ecdsa_verify_secp256r1(&pk239, &z239, &r239, &s239));
 
     // 236] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #200: Signature with special case values for r and s
     let z240 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3832,7 +3832,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk240, &z240, &r240, &s240));
+    assert!(!ecdsa_verify_secp256r1(&pk240, &z240, &r240, &s240));
 
     // 237] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #201: Signature with special case values for r and s
     let z241 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3848,7 +3848,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk241, &z241, &r241, &s241));
+    assert!(!ecdsa_verify_secp256r1(&pk241, &z241, &r241, &s241));
 
     // 238] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #207: Signature with special case values for r and s
     let z242 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3864,7 +3864,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk242, &z242, &r242, &s242));
+    assert!(!ecdsa_verify_secp256r1(&pk242, &z242, &r242, &s242));
 
     // 239] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #208: Signature with special case values for r and s
     let z243 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3880,7 +3880,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk243, &z243, &r243, &s243));
+    assert!(!ecdsa_verify_secp256r1(&pk243, &z243, &r243, &s243));
 
     // 240] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #209: Signature with special case values for r and s
     let z244 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3896,7 +3896,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk244, &z244, &r244, &s244));
+    assert!(!ecdsa_verify_secp256r1(&pk244, &z244, &r244, &s244));
 
     // 241] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #210: Signature with special case values for r and s
     let z245 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3912,7 +3912,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk245, &z245, &r245, &s245));
+    assert!(!ecdsa_verify_secp256r1(&pk245, &z245, &r245, &s245));
 
     // 242] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #211: Signature with special case values for r and s
     let z246 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3928,7 +3928,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk246, &z246, &r246, &s246));
+    assert!(!ecdsa_verify_secp256r1(&pk246, &z246, &r246, &s246));
 
     // 243] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #217: Signature with special case values for r and s
     let z247 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3944,7 +3944,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk247, &z247, &r247, &s247));
+    assert!(!ecdsa_verify_secp256r1(&pk247, &z247, &r247, &s247));
 
     // 244] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #218: Signature with special case values for r and s
     let z248 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3960,7 +3960,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk248, &z248, &r248, &s248));
+    assert!(!ecdsa_verify_secp256r1(&pk248, &z248, &r248, &s248));
 
     // 245] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #219: Signature with special case values for r and s
     let z249 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3976,7 +3976,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk249, &z249, &r249, &s249));
+    assert!(!ecdsa_verify_secp256r1(&pk249, &z249, &r249, &s249));
 
     // 246] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #220: Signature with special case values for r and s
     let z250 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -3992,7 +3992,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk250, &z250, &r250, &s250));
+    assert!(!ecdsa_verify_secp256r1(&pk250, &z250, &r250, &s250));
 
     // 247] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #221: Signature with special case values for r and s
     let z251 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4008,7 +4008,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk251, &z251, &r251, &s251));
+    assert!(!ecdsa_verify_secp256r1(&pk251, &z251, &r251, &s251));
 
     // 248] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #230: Edge case for Shamir multiplication
     let z252 = [0x2fa50c772ed6f807, 0x2f2627416faf2f07, 0xc422f44dea4ed1a5, 0x70239dd877f7c944];
@@ -4024,7 +4024,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk252, &z252, &r252, &s252));
+    assert!(ecdsa_verify_secp256r1(&pk252, &z252, &r252, &s252));
 
     // 249] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #231: special case hash
     let z253 = [0x7ead3645f356e7a9, 0x84bcd58a1bb5e747, 0xccf17803ebe2bd08, 0x00000000690ed426];
@@ -4040,7 +4040,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk253, &z253, &r253, &s253));
+    assert!(ecdsa_verify_secp256r1(&pk253, &z253, &r253, &s253));
 
     // 250] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #232: special case hash
     let z254 = [0x140697ad25770d91, 0xf696ad3ebb5ee47f, 0x525c6035725235c2, 0x7300000000213f2a];
@@ -4056,7 +4056,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk254, &z254, &r254, &s254));
+    assert!(ecdsa_verify_secp256r1(&pk254, &z254, &r254, &s254));
 
     // 251] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #233: special case hash
     let z255 = [0x4a0161c27fe06045, 0x8afd25daadeb3edb, 0xe0635b245f0b9797, 0xddf2000000005e0b];
@@ -4072,7 +4072,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk255, &z255, &r255, &s255));
+    assert!(ecdsa_verify_secp256r1(&pk255, &z255, &r255, &s255));
 
     // 252] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #234: special case hash
     let z256 = [0x5be1ec355d0841a0, 0x642b8499588b8985, 0x4769c4ecb9e164d6, 0x67ab190000000078];
@@ -4088,7 +4088,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk256, &z256, &r256, &s256));
+    assert!(ecdsa_verify_secp256r1(&pk256, &z256, &r256, &s256));
 
     // 253] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #235: special case hash
     let z257 = [0xe296b6350fc311cf, 0x02095dff252ee905, 0x76d7dbeffe125eaf, 0xa2bf094600000000];
@@ -4104,7 +4104,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk257, &z257, &r257, &s257));
+    assert!(ecdsa_verify_secp256r1(&pk257, &z257, &r257, &s257));
 
     // 254] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #236: special case hash
     let z258 = [0x29e15c544e4f0e65, 0xa0a3531711608581, 0x00e1e75e624a06b3, 0x3554e827c7000000];
@@ -4120,7 +4120,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk258, &z258, &r258, &s258));
+    assert!(ecdsa_verify_secp256r1(&pk258, &z258, &r258, &s258));
 
     // 255] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #237: special case hash
     let z259 = [0x26e3a54b9fc6965c, 0x3255ea4c9fd0cb34, 0x000026941a0f0bb5, 0x9b6cd3b812610000];
@@ -4136,7 +4136,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk259, &z259, &r259, &s259));
+    assert!(ecdsa_verify_secp256r1(&pk259, &z259, &r259, &s259));
 
     // 256] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #238: special case hash
     let z260 = [0x77162f93c4ae0186, 0x82a52baa51c71ca8, 0x000000e7561c26fc, 0x883ae39f50bf0100];
@@ -4152,7 +4152,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk260, &z260, &r260, &s260));
+    assert!(ecdsa_verify_secp256r1(&pk260, &z260, &r260, &s260));
 
     // 257] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #239: special case hash
     let z261 = [0x01fe9fce011d0ba6, 0x10540f420fb4ff74, 0x0000000000fa7cd0, 0xa1ce5d6e5ecaf28b];
@@ -4168,7 +4168,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk261, &z261, &r261, &s261));
+    assert!(ecdsa_verify_secp256r1(&pk261, &z261, &r261, &s261));
 
     // 258] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #240: special case hash
     let z262 = [0x5494cdffd5ee8054, 0x97330012a8ee836c, 0x9300000000383453, 0x8ea5f645f373f580];
@@ -4184,7 +4184,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk262, &z262, &r262, &s262));
+    assert!(ecdsa_verify_secp256r1(&pk262, &z262, &r262, &s262));
 
     // 259] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #241: special case hash
     let z263 = [0x8d9c1bbdcb5ef305, 0xd65ce93eabb7d60d, 0xa734000000008792, 0x660570d323e9f75f];
@@ -4200,7 +4200,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk263, &z263, &r263, &s263));
+    assert!(ecdsa_verify_secp256r1(&pk263, &z263, &r263, &s263));
 
     // 260] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #242: special case hash
     let z264 = [0x46ada2de4c568c34, 0x8d35f1f45cf9c3bf, 0x7dde8800000000e9, 0xd0462673154cce58];
@@ -4216,7 +4216,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk264, &z264, &r264, &s264));
+    assert!(ecdsa_verify_secp256r1(&pk264, &z264, &r264, &s264));
 
     // 261] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #243: special case hash
     let z265 = [0xb83e7b4418d7278f, 0x0caef15a6171059a, 0x80cedfef00000000, 0xbd90640269a78226];
@@ -4232,7 +4232,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk265, &z265, &r265, &s265));
+    assert!(ecdsa_verify_secp256r1(&pk265, &z265, &r265, &s265));
 
     // 262] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #244: special case hash
     let z266 = [0x4beae8e284788a73, 0x00d2dcceb301c54b, 0x512e41222a000000, 0x33239a52d72f1311];
@@ -4248,7 +4248,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk266, &z266, &r266, &s266));
+    assert!(ecdsa_verify_secp256r1(&pk266, &z266, &r266, &s266));
 
     // 263] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #245: special case hash
     let z267 = [0x1dc84c2d941ffaf1, 0x00007ee4a21a1cbe, 0x1365d4e6d95c0000, 0xb8d64fbcd4a1c10f];
@@ -4264,7 +4264,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk267, &z267, &r267, &s267));
+    assert!(ecdsa_verify_secp256r1(&pk267, &z267, &r267, &s267));
 
     // 264] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #246: special case hash
     let z268 = [0x4088b20fe0e9d84a, 0x0000003a227420db, 0xa3fef3183ed09200, 0x01603d3982bf77d7];
@@ -4280,7 +4280,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk268, &z268, &r268, &s268));
+    assert!(ecdsa_verify_secp256r1(&pk268, &z268, &r268, &s268));
 
     // 265] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #247: special case hash
     let z269 = [0xb7e9eb0cfbff7363, 0x000000004d89ef50, 0x599aa02e6cf66d9c, 0x9ea6994f1e0384c8];
@@ -4296,7 +4296,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk269, &z269, &r269, &s269));
+    assert!(ecdsa_verify_secp256r1(&pk269, &z269, &r269, &s269));
 
     // 266] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #248: special case hash
     let z270 = [0xf692bc670905b18c, 0x4700000000e2fa5b, 0x693979371a01068a, 0xd03215a8401bcf16];
@@ -4312,7 +4312,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk270, &z270, &r270, &s270));
+    assert!(ecdsa_verify_secp256r1(&pk270, &z270, &r270, &s270));
 
     // 267] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #249: special case hash
     let z271 = [0xfd5f64b582e3bb14, 0xc87e000000008408, 0x9c84bf83f0300e5d, 0x307bfaaffb650c88];
@@ -4328,7 +4328,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk271, &z271, &r271, &s271));
+    assert!(ecdsa_verify_secp256r1(&pk271, &z271, &r271, &s271));
 
     // 268] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #250: special case hash
     let z272 = [0xaf574bb4d54ea6b8, 0x51527c00000000e4, 0x33324d36bb0c1575, 0xbab5c4f4df540d7b];
@@ -4344,7 +4344,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk272, &z272, &r272, &s272));
+    assert!(ecdsa_verify_secp256r1(&pk272, &z272, &r272, &s272));
 
     // 269] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #251: special case hash
     let z273 = [0xc3b869197ef5e15e, 0xc2456f5b00000000, 0xe4f58d8036f9c36e, 0xd4ba47f6ae28f274];
@@ -4360,7 +4360,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk273, &z273, &r273, &s273));
+    assert!(ecdsa_verify_secp256r1(&pk273, &z273, &r273, &s273));
 
     // 270] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #252: special case hash
     let z274 = [0x00801e47f8c184e1, 0xfe0f10aafd000000, 0xf29f1fa00984342a, 0x79fd19c7235ea212];
@@ -4376,7 +4376,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk274, &z274, &r274, &s274));
+    assert!(ecdsa_verify_secp256r1(&pk274, &z274, &r274, &s274));
 
     // 271] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #253: special case hash
     let z275 = [0x0000a37ea6700cda, 0x79cbeb7ac9730000, 0xaf9aba5c0583462d, 0x8c291e8eeaa45adb];
@@ -4392,7 +4392,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk275, &z275, &r275, &s275));
+    assert!(ecdsa_verify_secp256r1(&pk275, &z275, &r275, &s275));
 
     // 272] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #254: special case hash
     let z276 = [0x0000003c278a6b21, 0xf4cdcf66c3f78a00, 0x9803efbfb8140732, 0x0eaae8641084fa97];
@@ -4408,7 +4408,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk276, &z276, &r276, &s276));
+    assert!(ecdsa_verify_secp256r1(&pk276, &z276, &r276, &s276));
 
     // 273] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #255: special case hash
     let z277 = [0x00000000afc0f89d, 0xef17c6d96e13846c, 0x0068399bf01bab42, 0xe02716d01fb23a5a];
@@ -4424,7 +4424,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk277, &z277, &r277, &s277));
+    assert!(ecdsa_verify_secp256r1(&pk277, &z277, &r277, &s277));
 
     // 274] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #256: special case hash
     let z278 = [0x9a00000000fc7de1, 0x9061768af89d0065, 0x194e9a16bc7dab2a, 0x9eb0bf583a1a6b9a];
@@ -4440,7 +4440,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk278, &z278, &r278, &s278));
+    assert!(ecdsa_verify_secp256r1(&pk278, &z278, &r278, &s278));
 
     // 275] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #257: special case hash
     let z279 = [0x690e00000000cd15, 0x6e1030cb53d9a82b, 0x2c214f0d5e72ef28, 0x62aac98818b3b84a];
@@ -4456,7 +4456,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk279, &z279, &r279, &s279));
+    assert!(ecdsa_verify_secp256r1(&pk279, &z279, &r279, &s279));
 
     // 276] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #258: special case hash
     let z280 = [0x464b9300000000c8, 0xd2b6f552ea4b6895, 0xf29ae43732e513ef, 0x3760a7f37cf96218];
@@ -4472,7 +4472,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk280, &z280, &r280, &s280));
+    assert!(ecdsa_verify_secp256r1(&pk280, &z280, &r280, &s280));
 
     // 277] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #259: special case hash
     let z281 = [0xbb6ff6c800000000, 0x6b4320bea836cd9c, 0x3834f2098c088009, 0x0da0a1d2851d3302];
@@ -4488,7 +4488,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk281, &z281, &r281, &s281));
+    assert!(ecdsa_verify_secp256r1(&pk281, &z281, &r281, &s281));
 
     // 278] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #260: special case hash
     let z282 = [0xa764a231e82d289a, 0x0fe975f735887194, 0x086fd567aafd598f, 0xffffffff293886d3];
@@ -4504,7 +4504,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk282, &z282, &r282, &s282));
+    assert!(ecdsa_verify_secp256r1(&pk282, &z282, &r282, &s282));
 
     // 279] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #261: special case hash
     let z283 = [0x0e8d9ca99527e7b7, 0x26acdc4ce127ec2e, 0xe3c03445a072e243, 0x7bffffffff2376d1];
@@ -4520,7 +4520,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk283, &z283, &r283, &s283));
+    assert!(ecdsa_verify_secp256r1(&pk283, &z283, &r283, &s283));
 
     // 280] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #262: special case hash
     let z284 = [0xfd016807e97fa395, 0xbc80872602a6e467, 0x51b085377605a224, 0xa2b5ffffffffebb2];
@@ -4536,7 +4536,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk284, &z284, &r284, &s284));
+    assert!(ecdsa_verify_secp256r1(&pk284, &z284, &r284, &s284));
 
     // 281] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #263: special case hash
     let z285 = [0x7b83d0967d4b20c0, 0xc1a3c256870d45a6, 0x1b96fa5f097fcf3c, 0x641227ffffffff6f];
@@ -4552,7 +4552,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk285, &z285, &r285, &s285));
+    assert!(ecdsa_verify_secp256r1(&pk285, &z285, &r285, &s285));
 
     // 282] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #264: special case hash
     let z286 = [0x8df56f36600e0f8b, 0xba20352117750229, 0xabad03e2fc662dc3, 0x958415d8ffffffff];
@@ -4568,7 +4568,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk286, &z286, &r286, &s286));
+    assert!(ecdsa_verify_secp256r1(&pk286, &z286, &r286, &s286));
 
     // 283] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #265: special case hash
     let z287 = [0x954521b6975420f8, 0xe13deb04e1fbe8fb, 0xff1281093536f47f, 0xf1d8de4858ffffff];
@@ -4584,7 +4584,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk287, &z287, &r287, &s287));
+    assert!(ecdsa_verify_secp256r1(&pk287, &z287, &r287, &s287));
 
     // 284] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #266: special case hash
     let z288 = [0x876b95c81fc31def, 0x32dc5d47c05ef6f1, 0xffff10782dd14a3b, 0x0927895f2802ffff];
@@ -4600,7 +4600,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk288, &z288, &r288, &s288));
+    assert!(ecdsa_verify_secp256r1(&pk288, &z288, &r288, &s288));
 
     // 285] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #267: special case hash
     let z289 = [0x24cf6a0c3ac80589, 0x0a57c3063fb5a306, 0xffffff4f332862a1, 0x60907984aa7e8eff];
@@ -4616,7 +4616,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk289, &z289, &r289, &s289));
+    assert!(ecdsa_verify_secp256r1(&pk289, &z289, &r289, &s289));
 
     // 286] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #268: special case hash
     let z290 = [0x42d6b9b8cd6ae1e2, 0x50f9a5f50636ea69, 0xffffffff0af42cda, 0xc6ff198484939170];
@@ -4632,7 +4632,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk290, &z290, &r290, &s290));
+    assert!(ecdsa_verify_secp256r1(&pk290, &z290, &r290, &s290));
 
     // 287] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #269: special case hash
     let z291 = [0x16dfbe4d27d7e68d, 0x9b9e0956cc43135d, 0x75ffffffff807479, 0xde030419345ca15c];
@@ -4648,7 +4648,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk291, &z291, &r291, &s291));
+    assert!(ecdsa_verify_secp256r1(&pk291, &z291, &r291, &s291));
 
     // 288] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #270: special case hash
     let z292 = [0x7e1ab78caaaac6ff, 0x665604d34acb1903, 0x2b88fffffffff6c8, 0x6f0e3eeaf42b2813];
@@ -4664,7 +4664,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk292, &z292, &r292, &s292));
+    assert!(ecdsa_verify_secp256r1(&pk292, &z292, &r292, &s292));
 
     // 289] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #271: special case hash
     let z293 = [0x2cb222d1f8017ab9, 0x48f7c0591ddcae7d, 0x3708d1ffffffffbe, 0xcdb549f773b3e62b];
@@ -4680,7 +4680,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk293, &z293, &r293, &s293));
+    assert!(ecdsa_verify_secp256r1(&pk293, &z293, &r293, &s293));
 
     // 290] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #272: special case hash
     let z294 = [0x24d8fd6f0edb0484, 0x9fd64886c1dc4f99, 0x1df4989bffffffff, 0x2c3f26f96a3ac005];
@@ -4696,7 +4696,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk294, &z294, &r294, &s294));
+    assert!(ecdsa_verify_secp256r1(&pk294, &z294, &r294, &s294));
 
     // 291] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #273: special case hash
     let z295 = [0x8476397c04edf411, 0xff5c31d89fda6a6b, 0x2cb7d53f9affffff, 0xac18f8418c55a250];
@@ -4712,7 +4712,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk295, &z295, &r295, &s295));
+    assert!(ecdsa_verify_secp256r1(&pk295, &z295, &r295, &s295));
 
     // 292] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #274: special case hash
     let z296 = [0x3e5a6ab8cf0ee610, 0xffffa2fd3e289368, 0xb24094f72bb5ffff, 0x4f9618f98e2d3a15];
@@ -4728,7 +4728,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk296, &z296, &r296, &s296));
+    assert!(ecdsa_verify_secp256r1(&pk296, &z296, &r296, &s296));
 
     // 293] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #275: special case hash
     let z297 = [0x04caae73ab0bc75a, 0xffffff67edf7c402, 0x9cc21d31d37a25ff, 0x422e82a3d56ed10a];
@@ -4744,7 +4744,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk297, &z297, &r297, &s297));
+    assert!(ecdsa_verify_secp256r1(&pk297, &z297, &r297, &s297));
 
     // 294] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #276: special case hash
     let z298 = [0x2d9890b5cf95d018, 0x17a5ffffffffa084, 0x6e7b329ff738fbb4, 0x7075d245ccc3281b];
@@ -4760,7 +4760,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk298, &z298, &r298, &s298));
+    assert!(ecdsa_verify_secp256r1(&pk298, &z298, &r298, &s298));
 
     // 295] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #277: special case hash
     let z299 = [0xc1847eb76c217a95, 0x7e280ebeffffffff, 0x9443d593fa4fd659, 0x3c80de54cd922698];
@@ -4776,7 +4776,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk299, &z299, &r299, &s299));
+    assert!(ecdsa_verify_secp256r1(&pk299, &z299, &r299, &s299));
 
     // 296] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #278: special case hash
     let z300 = [0xffc7906aa794b39b, 0x0ce891a8cdffffff, 0x980bef3d697ea277, 0xde21754e29b85601];
@@ -4792,7 +4792,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk300, &z300, &r300, &s300));
+    assert!(ecdsa_verify_secp256r1(&pk300, &z300, &r300, &s300));
 
     // 297] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #279: special case hash
     let z301 = [0xffff2f1f2f57881c, 0x599e4d5f7289ffff, 0x84dd59623fb531bb, 0x8f65d92927cfb86a];
@@ -4808,7 +4808,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk301, &z301, &r301, &s301));
+    assert!(ecdsa_verify_secp256r1(&pk301, &z301, &r301, &s301));
 
     // 298] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #280: special case hash
     let z302 = [0xfffffffafc8c3ca8, 0x2cc7cd0e8426cbff, 0x160bea3877dace8a, 0x6b63e9a74e092120];
@@ -4824,7 +4824,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk302, &z302, &r302, &s302));
+    assert!(ecdsa_verify_secp256r1(&pk302, &z302, &r302, &s302));
 
     // 299] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #281: special case hash
     let z303 = [0xffffffffe852512e, 0xd094586e249c8699, 0xb6d75219444e8b43, 0xfc28259702a03845];
@@ -4840,7 +4840,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk303, &z303, &r303, &s303));
+    assert!(ecdsa_verify_secp256r1(&pk303, &z303, &r303, &s303));
 
     // 300] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #282: special case hash
     let z304 = [0x1757ffffffffe20a, 0x74ecbcd52e8ceb57, 0xcee044ee8e8db7f7, 0x1273b4502ea4e3bc];
@@ -4856,7 +4856,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk304, &z304, &r304, &s304));
+    assert!(ecdsa_verify_secp256r1(&pk304, &z304, &r304, &s304));
 
     // 301] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #283: special case hash
     let z305 = [0xfb49ffffffffff6e, 0x4f8c53a15b96e602, 0x0c566c66228d8181, 0x08fb565610a79baa];
@@ -4872,7 +4872,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk305, &z305, &r305, &s305));
+    assert!(ecdsa_verify_secp256r1(&pk305, &z305, &r305, &s305));
 
     // 302] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #284: special case hash
     let z306 = [0x28ecaefeffffffff, 0xa2403f748e97d7cd, 0x87715fcb1aa4e79a, 0xd59291cc2cf89f30];
@@ -4888,7 +4888,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk306, &z306, &r306, &s306));
+    assert!(ecdsa_verify_secp256r1(&pk306, &z306, &r306, &s306));
 
     // 303] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #286: r too large
     let z307 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4904,7 +4904,7 @@ pub fn ecdsa_tests() {
         0x50d5d3d29f99ae6e,
         0xc5011e6ef2c42dcd,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk307, &z307, &r307, &s307));
+    assert!(!ecdsa_verify_secp256r1(&pk307, &z307, &r307, &s307));
 
     // 304] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #287: r,s are large
     let z308 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4920,7 +4920,7 @@ pub fn ecdsa_tests() {
         0x59095d12b75af069,
         0x19235271228c7867,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk308, &z308, &r308, &s308));
+    assert!(ecdsa_verify_secp256r1(&pk308, &z308, &r308, &s308));
 
     // 305] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #288: r and s^-1 have a large Hamming weight
     let z309 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4936,7 +4936,7 @@ pub fn ecdsa_tests() {
         0x7a06dfb41871c940,
         0x11feb97390d9826e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk309, &z309, &r309, &s309));
+    assert!(ecdsa_verify_secp256r1(&pk309, &z309, &r309, &s309));
 
     // 306] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #289: r and s^-1 have a large Hamming weight
     let z310 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4952,7 +4952,7 @@ pub fn ecdsa_tests() {
         0x1bb5ac6feaf753bc,
         0x95c37eba9ee8171c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk310, &z310, &r310, &s310));
+    assert!(ecdsa_verify_secp256r1(&pk310, &z310, &r310, &s310));
 
     // 307] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #301: r and s^-1 are close to n
     let z311 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4968,7 +4968,7 @@ pub fn ecdsa_tests() {
         0x535196770a58047a,
         0x915c1ebe7bf00df8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk311, &z311, &r311, &s311));
+    assert!(ecdsa_verify_secp256r1(&pk311, &z311, &r311, &s311));
 
     // 308] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #304: point at infinity during verify
     let z312 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -4984,7 +4984,7 @@ pub fn ecdsa_tests() {
         0x8456863f33c3a85d,
         0x1b134ee58cc58327,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk312, &z312, &r312, &s312));
+    assert!(!ecdsa_verify_secp256r1(&pk312, &z312, &r312, &s312));
 
     // 309] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #305: edge case for signature malleability
     let z313 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5000,7 +5000,7 @@ pub fn ecdsa_tests() {
         0x247cd2e7d0c8b129,
         0xf94ad887ac94d527,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk313, &z313, &r313, &s313));
+    assert!(ecdsa_verify_secp256r1(&pk313, &z313, &r313, &s313));
 
     // 310] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #306: edge case for signature malleability
     let z314 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5016,7 +5016,7 @@ pub fn ecdsa_tests() {
         0xfdb39b2324f220a5,
         0x97bed1af17850117,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk314, &z314, &r314, &s314));
+    assert!(ecdsa_verify_secp256r1(&pk314, &z314, &r314, &s314));
 
     // 311] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #307: u1 == 1
     let z315 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5032,7 +5032,7 @@ pub fn ecdsa_tests() {
         0x3d726960f069ad71,
         0x66d2d3c7dcd518b2,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk315, &z315, &r315, &s315));
+    assert!(ecdsa_verify_secp256r1(&pk315, &z315, &r315, &s315));
 
     // 312] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #308: u1 == n - 1
     let z316 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5048,7 +5048,7 @@ pub fn ecdsa_tests() {
         0xcb36131fff95ed12,
         0x33e2b50ec09807ac,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk316, &z316, &r316, &s316));
+    assert!(ecdsa_verify_secp256r1(&pk316, &z316, &r316, &s316));
 
     // 313] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #309: u2 == 1
     let z317 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5064,7 +5064,7 @@ pub fn ecdsa_tests() {
         0x3da7257e737f3979,
         0x8db06908e64b2861,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk317, &z317, &r317, &s317));
+    assert!(ecdsa_verify_secp256r1(&pk317, &z317, &r317, &s317));
 
     // 314] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #310: u2 == n - 1
     let z318 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5080,7 +5080,7 @@ pub fn ecdsa_tests() {
         0x3c8b8400e57b4ed7,
         0xe8528fb7c006b398,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk318, &z318, &r318, &s318));
+    assert!(ecdsa_verify_secp256r1(&pk318, &z318, &r318, &s318));
 
     // 315] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #311: edge case for u1
     let z319 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5096,7 +5096,7 @@ pub fn ecdsa_tests() {
         0xc2e0aadd5a133117,
         0x4f417f3bc9a88075,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk319, &z319, &r319, &s319));
+    assert!(ecdsa_verify_secp256r1(&pk319, &z319, &r319, &s319));
 
     // 316] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #312: edge case for u1
     let z320 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5112,7 +5112,7 @@ pub fn ecdsa_tests() {
         0xcf89cff53c40e265,
         0x1de3f0640e8ac6ed,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk320, &z320, &r320, &s320));
+    assert!(ecdsa_verify_secp256r1(&pk320, &z320, &r320, &s320));
 
     // 317] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #313: edge case for u1
     let z321 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5128,7 +5128,7 @@ pub fn ecdsa_tests() {
         0x389b946f64ad56c8,
         0x986c723ea4843d48,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk321, &z321, &r321, &s321));
+    assert!(ecdsa_verify_secp256r1(&pk321, &z321, &r321, &s321));
 
     // 318] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #314: edge case for u1
     let z322 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5144,7 +5144,7 @@ pub fn ecdsa_tests() {
         0x1f1c409dc2d872d4,
         0x6337fe5cf8c4604b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk322, &z322, &r322, &s322));
+    assert!(ecdsa_verify_secp256r1(&pk322, &z322, &r322, &s322));
 
     // 319] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #315: edge case for u1
     let z323 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5160,7 +5160,7 @@ pub fn ecdsa_tests() {
         0xd987ca730f0405c2,
         0x3877d25a8080dc02,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk323, &z323, &r323, &s323));
+    assert!(ecdsa_verify_secp256r1(&pk323, &z323, &r323, &s323));
 
     // 320] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #316: edge case for u1
     let z324 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5176,7 +5176,7 @@ pub fn ecdsa_tests() {
         0x45abdce8a8e4da75,
         0x5e79c4cb2c245b8c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk324, &z324, &r324, &s324));
+    assert!(ecdsa_verify_secp256r1(&pk324, &z324, &r324, &s324));
 
     // 321] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #317: edge case for u1
     let z325 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5192,7 +5192,7 @@ pub fn ecdsa_tests() {
         0x2a20d371e9702254,
         0xdeb6adc462f7058f,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk325, &z325, &r325, &s325));
+    assert!(ecdsa_verify_secp256r1(&pk325, &z325, &r325, &s325));
 
     // 322] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #318: edge case for u1
     let z326 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5208,7 +5208,7 @@ pub fn ecdsa_tests() {
         0x5bd7b8d76a25fc95,
         0x6237050779f52b61,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk326, &z326, &r326, &s326));
+    assert!(ecdsa_verify_secp256r1(&pk326, &z326, &r326, &s326));
 
     // 323] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #319: edge case for u1
     let z327 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5224,7 +5224,7 @@ pub fn ecdsa_tests() {
         0xaab8745eac1cd690,
         0x03ce5516406bf8cf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk327, &z327, &r327, &s327));
+    assert!(ecdsa_verify_secp256r1(&pk327, &z327, &r327, &s327));
 
     // 324] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #320: edge case for u1
     let z328 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5240,7 +5240,7 @@ pub fn ecdsa_tests() {
         0x36d6556e8ad5f523,
         0xb4c104ab3c677e4b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk328, &z328, &r328, &s328));
+    assert!(ecdsa_verify_secp256r1(&pk328, &z328, &r328, &s328));
 
     // 325] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #321: edge case for u1
     let z329 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5256,7 +5256,7 @@ pub fn ecdsa_tests() {
         0x4ad3cc86e57321de,
         0x4a2039f31c109702,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk329, &z329, &r329, &s329));
+    assert!(ecdsa_verify_secp256r1(&pk329, &z329, &r329, &s329));
 
     // 326] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #322: edge case for u1
     let z330 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5272,7 +5272,7 @@ pub fn ecdsa_tests() {
         0xdcf273f5dc357e58,
         0xcf701ec962fb4a11,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk330, &z330, &r330, &s330));
+    assert!(ecdsa_verify_secp256r1(&pk330, &z330, &r330, &s330));
 
     // 327] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #323: edge case for u1
     let z331 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5288,7 +5288,7 @@ pub fn ecdsa_tests() {
         0x3287de9ffe90355f,
         0xc05d49337b964981,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk331, &z331, &r331, &s331));
+    assert!(ecdsa_verify_secp256r1(&pk331, &z331, &r331, &s331));
 
     // 328] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #324: edge case for u1
     let z332 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5304,7 +5304,7 @@ pub fn ecdsa_tests() {
         0xeb59ca974d039fc0,
         0xbfad4c2e6f263fe5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk332, &z332, &r332, &s332));
+    assert!(ecdsa_verify_secp256r1(&pk332, &z332, &r332, &s332));
 
     // 329] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #325: edge case for u2
     let z333 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5320,7 +5320,7 @@ pub fn ecdsa_tests() {
         0xb51dfe592f5cfd56,
         0xa37e0a51f258b7ae,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk333, &z333, &r333, &s333));
+    assert!(ecdsa_verify_secp256r1(&pk333, &z333, &r333, &s333));
 
     // 330] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #326: edge case for u2
     let z334 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5336,7 +5336,7 @@ pub fn ecdsa_tests() {
         0x3f9b1ae0124890f0,
         0x805f51efcc480340,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk334, &z334, &r334, &s334));
+    assert!(ecdsa_verify_secp256r1(&pk334, &z334, &r334, &s334));
 
     // 331] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #327: edge case for u2
     let z335 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5352,7 +5352,7 @@ pub fn ecdsa_tests() {
         0x11ef3e075eddda9a,
         0x6d2589ac655edc9a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk335, &z335, &r335, &s335));
+    assert!(ecdsa_verify_secp256r1(&pk335, &z335, &r335, &s335));
 
     // 332] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #328: edge case for u2
     let z336 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5368,7 +5368,7 @@ pub fn ecdsa_tests() {
         0x18d6d11dc062165f,
         0x49aa8ff283d0f77c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk336, &z336, &r336, &s336));
+    assert!(ecdsa_verify_secp256r1(&pk336, &z336, &r336, &s336));
 
     // 333] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #329: edge case for u2
     let z337 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5384,7 +5384,7 @@ pub fn ecdsa_tests() {
         0x67d6ecfe81e2b0f9,
         0xf97e3e468b7d0db8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk337, &z337, &r337, &s337));
+    assert!(ecdsa_verify_secp256r1(&pk337, &z337, &r337, &s337));
 
     // 334] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #330: edge case for u2
     let z338 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5400,7 +5400,7 @@ pub fn ecdsa_tests() {
         0x75336256768f7c19,
         0x5ef2f3aebf5b3174,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk338, &z338, &r338, &s338));
+    assert!(ecdsa_verify_secp256r1(&pk338, &z338, &r338, &s338));
 
     // 335] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #331: edge case for u2
     let z339 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5416,7 +5416,7 @@ pub fn ecdsa_tests() {
         0x54035597375d9086,
         0xe6bdf56033f84a50,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk339, &z339, &r339, &s339));
+    assert!(ecdsa_verify_secp256r1(&pk339, &z339, &r339, &s339));
 
     // 336] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #332: edge case for u2
     let z340 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5432,7 +5432,7 @@ pub fn ecdsa_tests() {
         0xf554355564646de9,
         0x68612569d39e2bb9,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk340, &z340, &r340, &s340));
+    assert!(ecdsa_verify_secp256r1(&pk340, &z340, &r340, &s340));
 
     // 337] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #333: edge case for u2
     let z341 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5448,7 +5448,7 @@ pub fn ecdsa_tests() {
         0xc773867582997c2b,
         0x9ab443ff6f901e30,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk341, &z341, &r341, &s341));
+    assert!(ecdsa_verify_secp256r1(&pk341, &z341, &r341, &s341));
 
     // 338] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #334: edge case for u2
     let z342 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5464,7 +5464,7 @@ pub fn ecdsa_tests() {
         0x174889f3ebcf1b7a,
         0x033dd0e91134c734,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk342, &z342, &r342, &s342));
+    assert!(ecdsa_verify_secp256r1(&pk342, &z342, &r342, &s342));
 
     // 339] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #335: edge case for u2
     let z343 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5480,7 +5480,7 @@ pub fn ecdsa_tests() {
         0xa432b7585a49b3a6,
         0xff83986e6875e41e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk343, &z343, &r343, &s343));
+    assert!(ecdsa_verify_secp256r1(&pk343, &z343, &r343, &s343));
 
     // 340] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #336: edge case for u2
     let z344 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5496,7 +5496,7 @@ pub fn ecdsa_tests() {
         0xbc9ae82911f0b527,
         0xe11c65bd8ca92dc8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk344, &z344, &r344, &s344));
+    assert!(ecdsa_verify_secp256r1(&pk344, &z344, &r344, &s344));
 
     // 341] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #337: edge case for u2
     let z345 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5512,7 +5512,7 @@ pub fn ecdsa_tests() {
         0x70394a4bc9f892d5,
         0xef6d63e2bc5c0895,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk345, &z345, &r345, &s345));
+    assert!(ecdsa_verify_secp256r1(&pk345, &z345, &r345, &s345));
 
     // 342] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #338: edge case for u2
     let z346 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5528,7 +5528,7 @@ pub fn ecdsa_tests() {
         0x88eb81421a361ccc,
         0x8911e7f8cc365a8a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk346, &z346, &r346, &s346));
+    assert!(ecdsa_verify_secp256r1(&pk346, &z346, &r346, &s346));
 
     // 343] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #339: point duplication during verification
     let z347 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5544,7 +5544,7 @@ pub fn ecdsa_tests() {
         0x004e92d8d940cf56,
         0x838a40f2a36092e9,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk347, &z347, &r347, &s347));
+    assert!(ecdsa_verify_secp256r1(&pk347, &z347, &r347, &s347));
 
     // 344] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #340: duplication bug
     let z348 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5560,7 +5560,7 @@ pub fn ecdsa_tests() {
         0xffb16d2726bf30a9,
         0x7c75bf0c5c9f6d17,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk348, &z348, &r348, &s348));
+    assert!(!ecdsa_verify_secp256r1(&pk348, &z348, &r348, &s348));
 
     // 345] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #343: comparison with point at infinity
     let z349 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5576,7 +5576,7 @@ pub fn ecdsa_tests() {
         0x10d849349226d21d,
         0x45d5c8200c89f2fa,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk349, &z349, &r349, &s349));
+    assert!(!ecdsa_verify_secp256r1(&pk349, &z349, &r349, &s349));
 
     // 346] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #344: extreme value for k and edgecase s
     let z350 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5592,7 +5592,7 @@ pub fn ecdsa_tests() {
         0x547b212f6bb14c88,
         0xd7d3fd10b2be668c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk350, &z350, &r350, &s350));
+    assert!(ecdsa_verify_secp256r1(&pk350, &z350, &r350, &s350));
 
     // 347] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #345: extreme value for k and s^-1
     let z351 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5608,7 +5608,7 @@ pub fn ecdsa_tests() {
         0xbd343572b3e56192,
         0xbc3b4b5e65ab887b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk351, &z351, &r351, &s351));
+    assert!(ecdsa_verify_secp256r1(&pk351, &z351, &r351, &s351));
 
     // 348] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #346: extreme value for k and s^-1
     let z352 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5624,7 +5624,7 @@ pub fn ecdsa_tests() {
         0x684b410be8d0f749,
         0xcee9960283045075,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk352, &z352, &r352, &s352));
+    assert!(ecdsa_verify_secp256r1(&pk352, &z352, &r352, &s352));
 
     // 349] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #347: extreme value for k and s^-1
     let z353 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5640,7 +5640,7 @@ pub fn ecdsa_tests() {
         0x2674acb750592978,
         0x8f2b743df34ad0f7,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk353, &z353, &r353, &s353));
+    assert!(ecdsa_verify_secp256r1(&pk353, &z353, &r353, &s353));
 
     // 350] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #348: extreme value for k and s^-1
     let z354 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5656,7 +5656,7 @@ pub fn ecdsa_tests() {
         0xcdc7dfe7384c8e5c,
         0x8673d6cb6076e1cf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk354, &z354, &r354, &s354));
+    assert!(ecdsa_verify_secp256r1(&pk354, &z354, &r354, &s354));
 
     // 351] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #349: extreme value for k
     let z355 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5672,7 +5672,7 @@ pub fn ecdsa_tests() {
         0x38912bd9ea6c4fde,
         0x3195a3762fea29ed,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk355, &z355, &r355, &s355));
+    assert!(ecdsa_verify_secp256r1(&pk355, &z355, &r355, &s355));
 
     // 352] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #350: extreme value for k and edgecase s
     let z356 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5688,7 +5688,7 @@ pub fn ecdsa_tests() {
         0x7144d5b459982f52,
         0x5de37fee5c97bcaf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk356, &z356, &r356, &s356));
+    assert!(ecdsa_verify_secp256r1(&pk356, &z356, &r356, &s356));
 
     // 353] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #351: extreme value for k and s^-1
     let z357 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5704,7 +5704,7 @@ pub fn ecdsa_tests() {
         0xcf9b22f7a2e582bd,
         0x7bbb8de662c7b9b1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk357, &z357, &r357, &s357));
+    assert!(ecdsa_verify_secp256r1(&pk357, &z357, &r357, &s357));
 
     // 354] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #352: extreme value for k and s^-1
     let z358 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5720,7 +5720,7 @@ pub fn ecdsa_tests() {
         0x35b55fa385b0f764,
         0x0a1c6e954e321084,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk358, &z358, &r358, &s358));
+    assert!(ecdsa_verify_secp256r1(&pk358, &z358, &r358, &s358));
 
     // 355] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #353: extreme value for k and s^-1
     let z359 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5736,7 +5736,7 @@ pub fn ecdsa_tests() {
         0x4f378d96adb0a408,
         0xe22dc3b3c103824a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk359, &z359, &r359, &s359));
+    assert!(ecdsa_verify_secp256r1(&pk359, &z359, &r359, &s359));
 
     // 356] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #354: extreme value for k and s^-1
     let z360 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5752,7 +5752,7 @@ pub fn ecdsa_tests() {
         0x193a6096fc77a2b0,
         0x2e424b690957168d,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk360, &z360, &r360, &s360));
+    assert!(ecdsa_verify_secp256r1(&pk360, &z360, &r360, &s360));
 
     // 357] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #355: extreme value for k
     let z361 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5768,7 +5768,7 @@ pub fn ecdsa_tests() {
         0x238578d43aec54f7,
         0x4c6845442d66935b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk361, &z361, &r361, &s361));
+    assert!(ecdsa_verify_secp256r1(&pk361, &z361, &r361, &s361));
 
     // 358] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #356: testing point duplication
     let z362 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5784,7 +5784,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk362, &z362, &r362, &s362));
+    assert!(!ecdsa_verify_secp256r1(&pk362, &z362, &r362, &s362));
 
     // 359] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #357: testing point duplication
     let z363 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5800,7 +5800,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk363, &z363, &r363, &s363));
+    assert!(!ecdsa_verify_secp256r1(&pk363, &z363, &r363, &s363));
 
     // 360] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #358: testing point duplication
     let z364 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5816,7 +5816,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk364, &z364, &r364, &s364));
+    assert!(!ecdsa_verify_secp256r1(&pk364, &z364, &r364, &s364));
 
     // 361] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #359: testing point duplication
     let z365 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5832,7 +5832,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk365, &z365, &r365, &s365));
+    assert!(!ecdsa_verify_secp256r1(&pk365, &z365, &r365, &s365));
 
     // 362] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #360: pseudorandom signature
     let z366 = [0xa495991b7852b855, 0x27ae41e4649b934c, 0x9afbf4c8996fb924, 0xe3b0c44298fc1c14];
@@ -5848,7 +5848,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk366, &z366, &r366, &s366));
+    assert!(ecdsa_verify_secp256r1(&pk366, &z366, &r366, &s366));
 
     // 363] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #361: pseudorandom signature
     let z367 = [0xf59ec9dd1bb8c7b3, 0xe807bdf4c5332f19, 0x2856e7be399007c9, 0xdc1921946f4af96a];
@@ -5864,7 +5864,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk367, &z367, &r367, &s367));
+    assert!(ecdsa_verify_secp256r1(&pk367, &z367, &r367, &s367));
 
     // 364] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #362: pseudorandom signature
     let z368 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -5880,7 +5880,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk368, &z368, &r368, &s368));
+    assert!(ecdsa_verify_secp256r1(&pk368, &z368, &r368, &s368));
 
     // 365] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #363: pseudorandom signature
     let z369 = [0x7f1b40c4cbd36f90, 0x93262cf06340c4fa, 0xdbb5f2c353e632c3, 0xde47c9b27eb8d300];
@@ -5896,7 +5896,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk369, &z369, &r369, &s369));
+    assert!(ecdsa_verify_secp256r1(&pk369, &z369, &r369, &s369));
 
     // 366] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #364: x-coordinate of the public key has many trailing 0's
     let z370 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -5912,7 +5912,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk370, &z370, &r370, &s370));
+    assert!(ecdsa_verify_secp256r1(&pk370, &z370, &r370, &s370));
 
     // 367] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #365: x-coordinate of the public key has many trailing 0's
     let z371 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -5928,7 +5928,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk371, &z371, &r371, &s371));
+    assert!(ecdsa_verify_secp256r1(&pk371, &z371, &r371, &s371));
 
     // 368] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #366: x-coordinate of the public key has many trailing 0's
     let z372 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -5944,7 +5944,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk372, &z372, &r372, &s372));
+    assert!(ecdsa_verify_secp256r1(&pk372, &z372, &r372, &s372));
 
     // 369] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #367: y-coordinate of the public key has many trailing 0's
     let z373 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -5960,7 +5960,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk373, &z373, &r373, &s373));
+    assert!(ecdsa_verify_secp256r1(&pk373, &z373, &r373, &s373));
 
     // 370] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #368: y-coordinate of the public key has many trailing 0's
     let z374 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -5976,7 +5976,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk374, &z374, &r374, &s374));
+    assert!(ecdsa_verify_secp256r1(&pk374, &z374, &r374, &s374));
 
     // 371] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #369: y-coordinate of the public key has many trailing 0's
     let z375 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -5992,7 +5992,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk375, &z375, &r375, &s375));
+    assert!(ecdsa_verify_secp256r1(&pk375, &z375, &r375, &s375));
 
     // 372] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #370: y-coordinate of the public key has many trailing 1's
     let z376 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6008,7 +6008,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk376, &z376, &r376, &s376));
+    assert!(ecdsa_verify_secp256r1(&pk376, &z376, &r376, &s376));
 
     // 373] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #371: y-coordinate of the public key has many trailing 1's
     let z377 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6024,7 +6024,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk377, &z377, &r377, &s377));
+    assert!(ecdsa_verify_secp256r1(&pk377, &z377, &r377, &s377));
 
     // 374] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #372: y-coordinate of the public key has many trailing 1's
     let z378 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6040,7 +6040,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk378, &z378, &r378, &s378));
+    assert!(ecdsa_verify_secp256r1(&pk378, &z378, &r378, &s378));
 
     // 375] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #373: x-coordinate of the public key has many trailing 1's
     let z379 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6056,7 +6056,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk379, &z379, &r379, &s379));
+    assert!(ecdsa_verify_secp256r1(&pk379, &z379, &r379, &s379));
 
     // 376] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #374: x-coordinate of the public key has many trailing 1's
     let z380 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6072,7 +6072,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk380, &z380, &r380, &s380));
+    assert!(ecdsa_verify_secp256r1(&pk380, &z380, &r380, &s380));
 
     // 377] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #375: x-coordinate of the public key has many trailing 1's
     let z381 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6088,7 +6088,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk381, &z381, &r381, &s381));
+    assert!(ecdsa_verify_secp256r1(&pk381, &z381, &r381, &s381));
 
     // 378] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #376: x-coordinate of the public key is large
     let z382 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6104,7 +6104,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk382, &z382, &r382, &s382));
+    assert!(ecdsa_verify_secp256r1(&pk382, &z382, &r382, &s382));
 
     // 379] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #377: x-coordinate of the public key is large
     let z383 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6120,7 +6120,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk383, &z383, &r383, &s383));
+    assert!(ecdsa_verify_secp256r1(&pk383, &z383, &r383, &s383));
 
     // 380] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #378: x-coordinate of the public key is large
     let z384 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6136,7 +6136,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk384, &z384, &r384, &s384));
+    assert!(ecdsa_verify_secp256r1(&pk384, &z384, &r384, &s384));
 
     // 381] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #379: x-coordinate of the public key is small
     let z385 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6152,7 +6152,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk385, &z385, &r385, &s385));
+    assert!(ecdsa_verify_secp256r1(&pk385, &z385, &r385, &s385));
 
     // 382] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #380: x-coordinate of the public key is small
     let z386 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6168,7 +6168,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk386, &z386, &r386, &s386));
+    assert!(ecdsa_verify_secp256r1(&pk386, &z386, &r386, &s386));
 
     // 383] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #381: x-coordinate of the public key is small
     let z387 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6184,7 +6184,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk387, &z387, &r387, &s387));
+    assert!(ecdsa_verify_secp256r1(&pk387, &z387, &r387, &s387));
 
     // 384] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #382: y-coordinate of the public key is small
     let z388 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6200,7 +6200,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk388, &z388, &r388, &s388));
+    assert!(ecdsa_verify_secp256r1(&pk388, &z388, &r388, &s388));
 
     // 385] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #383: y-coordinate of the public key is small
     let z389 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6216,7 +6216,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk389, &z389, &r389, &s389));
+    assert!(ecdsa_verify_secp256r1(&pk389, &z389, &r389, &s389));
 
     // 386] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #384: y-coordinate of the public key is small
     let z390 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6232,7 +6232,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk390, &z390, &r390, &s390));
+    assert!(ecdsa_verify_secp256r1(&pk390, &z390, &r390, &s390));
 
     // 387] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #385: y-coordinate of the public key is large
     let z391 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6248,7 +6248,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk391, &z391, &r391, &s391));
+    assert!(ecdsa_verify_secp256r1(&pk391, &z391, &r391, &s391));
 
     // 388] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #386: y-coordinate of the public key is large
     let z392 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6264,7 +6264,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk392, &z392, &r392, &s392));
+    assert!(ecdsa_verify_secp256r1(&pk392, &z392, &r392, &s392));
 
     // 389] wycheproof/ecdsa_secp256r1_sha256_test.json EcdsaVerify SHA-256 #387: y-coordinate of the public key is large
     let z393 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -6280,7 +6280,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk393, &z393, &r393, &s393));
+    assert!(ecdsa_verify_secp256r1(&pk393, &z393, &r393, &s393));
 
     // 390] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1: signature malleability
     let z394 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6296,7 +6296,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk394, &z394, &r394, &s394));
+    assert!(ecdsa_verify_secp256r1(&pk394, &z394, &r394, &s394));
 
     // 391] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #2: Legacy:ASN encoding of s misses leading 0
     let z395 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6312,7 +6312,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk395, &z395, &r395, &s395));
+    assert!(ecdsa_verify_secp256r1(&pk395, &z395, &r395, &s395));
 
     // 392] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #3: valid
     let z396 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6328,7 +6328,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk396, &z396, &r396, &s396));
+    assert!(ecdsa_verify_secp256r1(&pk396, &z396, &r396, &s396));
 
     // 393] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #118: modify first byte of integer
     let z397 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6344,7 +6344,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk397, &z397, &r397, &s397));
+    assert!(!ecdsa_verify_secp256r1(&pk397, &z397, &r397, &s397));
 
     // 394] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #120: modify last byte of integer
     let z398 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6360,7 +6360,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk398, &z398, &r398, &s398));
+    assert!(!ecdsa_verify_secp256r1(&pk398, &z398, &r398, &s398));
 
     // 395] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #121: modify last byte of integer
     let z399 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6376,7 +6376,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk399, &z399, &r399, &s399));
+    assert!(!ecdsa_verify_secp256r1(&pk399, &z399, &r399, &s399));
 
     // 396] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #124: truncated integer
     let z400 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6392,7 +6392,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk400, &z400, &r400, &s400));
+    assert!(!ecdsa_verify_secp256r1(&pk400, &z400, &r400, &s400));
 
     // 397] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #133: Modified r or s, e.g. by adding or subtracting the order of the group
     let z401 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6408,7 +6408,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk401, &z401, &r401, &s401));
+    assert!(!ecdsa_verify_secp256r1(&pk401, &z401, &r401, &s401));
 
     // 398] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #134: Modified r or s, e.g. by adding or subtracting the order of the group
     let z402 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6424,7 +6424,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk402, &z402, &r402, &s402));
+    assert!(!ecdsa_verify_secp256r1(&pk402, &z402, &r402, &s402));
 
     // 399] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #137: Modified r or s, e.g. by adding or subtracting the order of the group
     let z403 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6440,7 +6440,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk403, &z403, &r403, &s403));
+    assert!(!ecdsa_verify_secp256r1(&pk403, &z403, &r403, &s403));
 
     // 400] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #139: Modified r or s, e.g. by adding or subtracting the order of the group
     let z404 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6456,7 +6456,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk404, &z404, &r404, &s404));
+    assert!(!ecdsa_verify_secp256r1(&pk404, &z404, &r404, &s404));
 
     // 401] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #143: Modified r or s, e.g. by adding or subtracting the order of the group
     let z405 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6472,7 +6472,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk405, &z405, &r405, &s405));
+    assert!(!ecdsa_verify_secp256r1(&pk405, &z405, &r405, &s405));
 
     // 402] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #177: Signature with special case values for r and s
     let z406 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6488,7 +6488,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk406, &z406, &r406, &s406));
+    assert!(!ecdsa_verify_secp256r1(&pk406, &z406, &r406, &s406));
 
     // 403] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #178: Signature with special case values for r and s
     let z407 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6504,7 +6504,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk407, &z407, &r407, &s407));
+    assert!(!ecdsa_verify_secp256r1(&pk407, &z407, &r407, &s407));
 
     // 404] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #179: Signature with special case values for r and s
     let z408 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6520,7 +6520,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk408, &z408, &r408, &s408));
+    assert!(!ecdsa_verify_secp256r1(&pk408, &z408, &r408, &s408));
 
     // 405] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #180: Signature with special case values for r and s
     let z409 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6536,7 +6536,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk409, &z409, &r409, &s409));
+    assert!(!ecdsa_verify_secp256r1(&pk409, &z409, &r409, &s409));
 
     // 406] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #181: Signature with special case values for r and s
     let z410 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6552,7 +6552,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk410, &z410, &r410, &s410));
+    assert!(!ecdsa_verify_secp256r1(&pk410, &z410, &r410, &s410));
 
     // 407] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #187: Signature with special case values for r and s
     let z411 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6568,7 +6568,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk411, &z411, &r411, &s411));
+    assert!(!ecdsa_verify_secp256r1(&pk411, &z411, &r411, &s411));
 
     // 408] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #188: Signature with special case values for r and s
     let z412 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6584,7 +6584,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk412, &z412, &r412, &s412));
+    assert!(!ecdsa_verify_secp256r1(&pk412, &z412, &r412, &s412));
 
     // 409] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #189: Signature with special case values for r and s
     let z413 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6600,7 +6600,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk413, &z413, &r413, &s413));
+    assert!(!ecdsa_verify_secp256r1(&pk413, &z413, &r413, &s413));
 
     // 410] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #190: Signature with special case values for r and s
     let z414 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6616,7 +6616,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk414, &z414, &r414, &s414));
+    assert!(!ecdsa_verify_secp256r1(&pk414, &z414, &r414, &s414));
 
     // 411] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #191: Signature with special case values for r and s
     let z415 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6632,7 +6632,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk415, &z415, &r415, &s415));
+    assert!(!ecdsa_verify_secp256r1(&pk415, &z415, &r415, &s415));
 
     // 412] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #197: Signature with special case values for r and s
     let z416 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6648,7 +6648,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk416, &z416, &r416, &s416));
+    assert!(!ecdsa_verify_secp256r1(&pk416, &z416, &r416, &s416));
 
     // 413] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #198: Signature with special case values for r and s
     let z417 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6664,7 +6664,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk417, &z417, &r417, &s417));
+    assert!(!ecdsa_verify_secp256r1(&pk417, &z417, &r417, &s417));
 
     // 414] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #199: Signature with special case values for r and s
     let z418 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6680,7 +6680,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk418, &z418, &r418, &s418));
+    assert!(!ecdsa_verify_secp256r1(&pk418, &z418, &r418, &s418));
 
     // 415] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #200: Signature with special case values for r and s
     let z419 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6696,7 +6696,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk419, &z419, &r419, &s419));
+    assert!(!ecdsa_verify_secp256r1(&pk419, &z419, &r419, &s419));
 
     // 416] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #201: Signature with special case values for r and s
     let z420 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6712,7 +6712,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk420, &z420, &r420, &s420));
+    assert!(!ecdsa_verify_secp256r1(&pk420, &z420, &r420, &s420));
 
     // 417] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #207: Signature with special case values for r and s
     let z421 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6728,7 +6728,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk421, &z421, &r421, &s421));
+    assert!(!ecdsa_verify_secp256r1(&pk421, &z421, &r421, &s421));
 
     // 418] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #208: Signature with special case values for r and s
     let z422 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6744,7 +6744,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk422, &z422, &r422, &s422));
+    assert!(!ecdsa_verify_secp256r1(&pk422, &z422, &r422, &s422));
 
     // 419] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #209: Signature with special case values for r and s
     let z423 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6760,7 +6760,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk423, &z423, &r423, &s423));
+    assert!(!ecdsa_verify_secp256r1(&pk423, &z423, &r423, &s423));
 
     // 420] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #210: Signature with special case values for r and s
     let z424 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6776,7 +6776,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk424, &z424, &r424, &s424));
+    assert!(!ecdsa_verify_secp256r1(&pk424, &z424, &r424, &s424));
 
     // 421] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #211: Signature with special case values for r and s
     let z425 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6792,7 +6792,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk425, &z425, &r425, &s425));
+    assert!(!ecdsa_verify_secp256r1(&pk425, &z425, &r425, &s425));
 
     // 422] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #217: Signature with special case values for r and s
     let z426 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6808,7 +6808,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk426, &z426, &r426, &s426));
+    assert!(!ecdsa_verify_secp256r1(&pk426, &z426, &r426, &s426));
 
     // 423] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #218: Signature with special case values for r and s
     let z427 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6824,7 +6824,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk427, &z427, &r427, &s427));
+    assert!(!ecdsa_verify_secp256r1(&pk427, &z427, &r427, &s427));
 
     // 424] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #219: Signature with special case values for r and s
     let z428 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6840,7 +6840,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk428, &z428, &r428, &s428));
+    assert!(!ecdsa_verify_secp256r1(&pk428, &z428, &r428, &s428));
 
     // 425] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #220: Signature with special case values for r and s
     let z429 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6856,7 +6856,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk429, &z429, &r429, &s429));
+    assert!(!ecdsa_verify_secp256r1(&pk429, &z429, &r429, &s429));
 
     // 426] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #221: Signature with special case values for r and s
     let z430 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -6872,7 +6872,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk430, &z430, &r430, &s430));
+    assert!(!ecdsa_verify_secp256r1(&pk430, &z430, &r430, &s430));
 
     // 427] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #230: Edge case for Shamir multiplication
     let z431 = [0x2fa50c772ed6f807, 0x2f2627416faf2f07, 0xc422f44dea4ed1a5, 0x70239dd877f7c944];
@@ -6888,7 +6888,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk431, &z431, &r431, &s431));
+    assert!(ecdsa_verify_secp256r1(&pk431, &z431, &r431, &s431));
 
     // 428] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #231: special case hash
     let z432 = [0x7ead3645f356e7a9, 0x84bcd58a1bb5e747, 0xccf17803ebe2bd08, 0x00000000690ed426];
@@ -6904,7 +6904,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk432, &z432, &r432, &s432));
+    assert!(ecdsa_verify_secp256r1(&pk432, &z432, &r432, &s432));
 
     // 429] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #232: special case hash
     let z433 = [0x140697ad25770d91, 0xf696ad3ebb5ee47f, 0x525c6035725235c2, 0x7300000000213f2a];
@@ -6920,7 +6920,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk433, &z433, &r433, &s433));
+    assert!(ecdsa_verify_secp256r1(&pk433, &z433, &r433, &s433));
 
     // 430] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #233: special case hash
     let z434 = [0x4a0161c27fe06045, 0x8afd25daadeb3edb, 0xe0635b245f0b9797, 0xddf2000000005e0b];
@@ -6936,7 +6936,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk434, &z434, &r434, &s434));
+    assert!(ecdsa_verify_secp256r1(&pk434, &z434, &r434, &s434));
 
     // 431] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #234: special case hash
     let z435 = [0x5be1ec355d0841a0, 0x642b8499588b8985, 0x4769c4ecb9e164d6, 0x67ab190000000078];
@@ -6952,7 +6952,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk435, &z435, &r435, &s435));
+    assert!(ecdsa_verify_secp256r1(&pk435, &z435, &r435, &s435));
 
     // 432] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #235: special case hash
     let z436 = [0xe296b6350fc311cf, 0x02095dff252ee905, 0x76d7dbeffe125eaf, 0xa2bf094600000000];
@@ -6968,7 +6968,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk436, &z436, &r436, &s436));
+    assert!(ecdsa_verify_secp256r1(&pk436, &z436, &r436, &s436));
 
     // 433] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #236: special case hash
     let z437 = [0x29e15c544e4f0e65, 0xa0a3531711608581, 0x00e1e75e624a06b3, 0x3554e827c7000000];
@@ -6984,7 +6984,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk437, &z437, &r437, &s437));
+    assert!(ecdsa_verify_secp256r1(&pk437, &z437, &r437, &s437));
 
     // 434] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #237: special case hash
     let z438 = [0x26e3a54b9fc6965c, 0x3255ea4c9fd0cb34, 0x000026941a0f0bb5, 0x9b6cd3b812610000];
@@ -7000,7 +7000,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk438, &z438, &r438, &s438));
+    assert!(ecdsa_verify_secp256r1(&pk438, &z438, &r438, &s438));
 
     // 435] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #238: special case hash
     let z439 = [0x77162f93c4ae0186, 0x82a52baa51c71ca8, 0x000000e7561c26fc, 0x883ae39f50bf0100];
@@ -7016,7 +7016,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk439, &z439, &r439, &s439));
+    assert!(ecdsa_verify_secp256r1(&pk439, &z439, &r439, &s439));
 
     // 436] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #239: special case hash
     let z440 = [0x01fe9fce011d0ba6, 0x10540f420fb4ff74, 0x0000000000fa7cd0, 0xa1ce5d6e5ecaf28b];
@@ -7032,7 +7032,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk440, &z440, &r440, &s440));
+    assert!(ecdsa_verify_secp256r1(&pk440, &z440, &r440, &s440));
 
     // 437] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #240: special case hash
     let z441 = [0x5494cdffd5ee8054, 0x97330012a8ee836c, 0x9300000000383453, 0x8ea5f645f373f580];
@@ -7048,7 +7048,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk441, &z441, &r441, &s441));
+    assert!(ecdsa_verify_secp256r1(&pk441, &z441, &r441, &s441));
 
     // 438] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #241: special case hash
     let z442 = [0x8d9c1bbdcb5ef305, 0xd65ce93eabb7d60d, 0xa734000000008792, 0x660570d323e9f75f];
@@ -7064,7 +7064,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk442, &z442, &r442, &s442));
+    assert!(ecdsa_verify_secp256r1(&pk442, &z442, &r442, &s442));
 
     // 439] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #242: special case hash
     let z443 = [0x46ada2de4c568c34, 0x8d35f1f45cf9c3bf, 0x7dde8800000000e9, 0xd0462673154cce58];
@@ -7080,7 +7080,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk443, &z443, &r443, &s443));
+    assert!(ecdsa_verify_secp256r1(&pk443, &z443, &r443, &s443));
 
     // 440] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #243: special case hash
     let z444 = [0xb83e7b4418d7278f, 0x0caef15a6171059a, 0x80cedfef00000000, 0xbd90640269a78226];
@@ -7096,7 +7096,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk444, &z444, &r444, &s444));
+    assert!(ecdsa_verify_secp256r1(&pk444, &z444, &r444, &s444));
 
     // 441] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #244: special case hash
     let z445 = [0x4beae8e284788a73, 0x00d2dcceb301c54b, 0x512e41222a000000, 0x33239a52d72f1311];
@@ -7112,7 +7112,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk445, &z445, &r445, &s445));
+    assert!(ecdsa_verify_secp256r1(&pk445, &z445, &r445, &s445));
 
     // 442] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #245: special case hash
     let z446 = [0x1dc84c2d941ffaf1, 0x00007ee4a21a1cbe, 0x1365d4e6d95c0000, 0xb8d64fbcd4a1c10f];
@@ -7128,7 +7128,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk446, &z446, &r446, &s446));
+    assert!(ecdsa_verify_secp256r1(&pk446, &z446, &r446, &s446));
 
     // 443] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #246: special case hash
     let z447 = [0x4088b20fe0e9d84a, 0x0000003a227420db, 0xa3fef3183ed09200, 0x01603d3982bf77d7];
@@ -7144,7 +7144,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk447, &z447, &r447, &s447));
+    assert!(ecdsa_verify_secp256r1(&pk447, &z447, &r447, &s447));
 
     // 444] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #247: special case hash
     let z448 = [0xb7e9eb0cfbff7363, 0x000000004d89ef50, 0x599aa02e6cf66d9c, 0x9ea6994f1e0384c8];
@@ -7160,7 +7160,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk448, &z448, &r448, &s448));
+    assert!(ecdsa_verify_secp256r1(&pk448, &z448, &r448, &s448));
 
     // 445] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #248: special case hash
     let z449 = [0xf692bc670905b18c, 0x4700000000e2fa5b, 0x693979371a01068a, 0xd03215a8401bcf16];
@@ -7176,7 +7176,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk449, &z449, &r449, &s449));
+    assert!(ecdsa_verify_secp256r1(&pk449, &z449, &r449, &s449));
 
     // 446] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #249: special case hash
     let z450 = [0xfd5f64b582e3bb14, 0xc87e000000008408, 0x9c84bf83f0300e5d, 0x307bfaaffb650c88];
@@ -7192,7 +7192,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk450, &z450, &r450, &s450));
+    assert!(ecdsa_verify_secp256r1(&pk450, &z450, &r450, &s450));
 
     // 447] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #250: special case hash
     let z451 = [0xaf574bb4d54ea6b8, 0x51527c00000000e4, 0x33324d36bb0c1575, 0xbab5c4f4df540d7b];
@@ -7208,7 +7208,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk451, &z451, &r451, &s451));
+    assert!(ecdsa_verify_secp256r1(&pk451, &z451, &r451, &s451));
 
     // 448] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #251: special case hash
     let z452 = [0xc3b869197ef5e15e, 0xc2456f5b00000000, 0xe4f58d8036f9c36e, 0xd4ba47f6ae28f274];
@@ -7224,7 +7224,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk452, &z452, &r452, &s452));
+    assert!(ecdsa_verify_secp256r1(&pk452, &z452, &r452, &s452));
 
     // 449] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #252: special case hash
     let z453 = [0x00801e47f8c184e1, 0xfe0f10aafd000000, 0xf29f1fa00984342a, 0x79fd19c7235ea212];
@@ -7240,7 +7240,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk453, &z453, &r453, &s453));
+    assert!(ecdsa_verify_secp256r1(&pk453, &z453, &r453, &s453));
 
     // 450] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #253: special case hash
     let z454 = [0x0000a37ea6700cda, 0x79cbeb7ac9730000, 0xaf9aba5c0583462d, 0x8c291e8eeaa45adb];
@@ -7256,7 +7256,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk454, &z454, &r454, &s454));
+    assert!(ecdsa_verify_secp256r1(&pk454, &z454, &r454, &s454));
 
     // 451] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #254: special case hash
     let z455 = [0x0000003c278a6b21, 0xf4cdcf66c3f78a00, 0x9803efbfb8140732, 0x0eaae8641084fa97];
@@ -7272,7 +7272,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk455, &z455, &r455, &s455));
+    assert!(ecdsa_verify_secp256r1(&pk455, &z455, &r455, &s455));
 
     // 452] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #255: special case hash
     let z456 = [0x00000000afc0f89d, 0xef17c6d96e13846c, 0x0068399bf01bab42, 0xe02716d01fb23a5a];
@@ -7288,7 +7288,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk456, &z456, &r456, &s456));
+    assert!(ecdsa_verify_secp256r1(&pk456, &z456, &r456, &s456));
 
     // 453] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #256: special case hash
     let z457 = [0x9a00000000fc7de1, 0x9061768af89d0065, 0x194e9a16bc7dab2a, 0x9eb0bf583a1a6b9a];
@@ -7304,7 +7304,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk457, &z457, &r457, &s457));
+    assert!(ecdsa_verify_secp256r1(&pk457, &z457, &r457, &s457));
 
     // 454] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #257: special case hash
     let z458 = [0x690e00000000cd15, 0x6e1030cb53d9a82b, 0x2c214f0d5e72ef28, 0x62aac98818b3b84a];
@@ -7320,7 +7320,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk458, &z458, &r458, &s458));
+    assert!(ecdsa_verify_secp256r1(&pk458, &z458, &r458, &s458));
 
     // 455] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #258: special case hash
     let z459 = [0x464b9300000000c8, 0xd2b6f552ea4b6895, 0xf29ae43732e513ef, 0x3760a7f37cf96218];
@@ -7336,7 +7336,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk459, &z459, &r459, &s459));
+    assert!(ecdsa_verify_secp256r1(&pk459, &z459, &r459, &s459));
 
     // 456] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #259: special case hash
     let z460 = [0xbb6ff6c800000000, 0x6b4320bea836cd9c, 0x3834f2098c088009, 0x0da0a1d2851d3302];
@@ -7352,7 +7352,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk460, &z460, &r460, &s460));
+    assert!(ecdsa_verify_secp256r1(&pk460, &z460, &r460, &s460));
 
     // 457] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #260: special case hash
     let z461 = [0xa764a231e82d289a, 0x0fe975f735887194, 0x086fd567aafd598f, 0xffffffff293886d3];
@@ -7368,7 +7368,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk461, &z461, &r461, &s461));
+    assert!(ecdsa_verify_secp256r1(&pk461, &z461, &r461, &s461));
 
     // 458] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #261: special case hash
     let z462 = [0x0e8d9ca99527e7b7, 0x26acdc4ce127ec2e, 0xe3c03445a072e243, 0x7bffffffff2376d1];
@@ -7384,7 +7384,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk462, &z462, &r462, &s462));
+    assert!(ecdsa_verify_secp256r1(&pk462, &z462, &r462, &s462));
 
     // 459] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #262: special case hash
     let z463 = [0xfd016807e97fa395, 0xbc80872602a6e467, 0x51b085377605a224, 0xa2b5ffffffffebb2];
@@ -7400,7 +7400,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk463, &z463, &r463, &s463));
+    assert!(ecdsa_verify_secp256r1(&pk463, &z463, &r463, &s463));
 
     // 460] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #263: special case hash
     let z464 = [0x7b83d0967d4b20c0, 0xc1a3c256870d45a6, 0x1b96fa5f097fcf3c, 0x641227ffffffff6f];
@@ -7416,7 +7416,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk464, &z464, &r464, &s464));
+    assert!(ecdsa_verify_secp256r1(&pk464, &z464, &r464, &s464));
 
     // 461] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #264: special case hash
     let z465 = [0x8df56f36600e0f8b, 0xba20352117750229, 0xabad03e2fc662dc3, 0x958415d8ffffffff];
@@ -7432,7 +7432,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk465, &z465, &r465, &s465));
+    assert!(ecdsa_verify_secp256r1(&pk465, &z465, &r465, &s465));
 
     // 462] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #265: special case hash
     let z466 = [0x954521b6975420f8, 0xe13deb04e1fbe8fb, 0xff1281093536f47f, 0xf1d8de4858ffffff];
@@ -7448,7 +7448,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk466, &z466, &r466, &s466));
+    assert!(ecdsa_verify_secp256r1(&pk466, &z466, &r466, &s466));
 
     // 463] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #266: special case hash
     let z467 = [0x876b95c81fc31def, 0x32dc5d47c05ef6f1, 0xffff10782dd14a3b, 0x0927895f2802ffff];
@@ -7464,7 +7464,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk467, &z467, &r467, &s467));
+    assert!(ecdsa_verify_secp256r1(&pk467, &z467, &r467, &s467));
 
     // 464] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #267: special case hash
     let z468 = [0x24cf6a0c3ac80589, 0x0a57c3063fb5a306, 0xffffff4f332862a1, 0x60907984aa7e8eff];
@@ -7480,7 +7480,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk468, &z468, &r468, &s468));
+    assert!(ecdsa_verify_secp256r1(&pk468, &z468, &r468, &s468));
 
     // 465] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #268: special case hash
     let z469 = [0x42d6b9b8cd6ae1e2, 0x50f9a5f50636ea69, 0xffffffff0af42cda, 0xc6ff198484939170];
@@ -7496,7 +7496,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk469, &z469, &r469, &s469));
+    assert!(ecdsa_verify_secp256r1(&pk469, &z469, &r469, &s469));
 
     // 466] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #269: special case hash
     let z470 = [0x16dfbe4d27d7e68d, 0x9b9e0956cc43135d, 0x75ffffffff807479, 0xde030419345ca15c];
@@ -7512,7 +7512,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk470, &z470, &r470, &s470));
+    assert!(ecdsa_verify_secp256r1(&pk470, &z470, &r470, &s470));
 
     // 467] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #270: special case hash
     let z471 = [0x7e1ab78caaaac6ff, 0x665604d34acb1903, 0x2b88fffffffff6c8, 0x6f0e3eeaf42b2813];
@@ -7528,7 +7528,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk471, &z471, &r471, &s471));
+    assert!(ecdsa_verify_secp256r1(&pk471, &z471, &r471, &s471));
 
     // 468] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #271: special case hash
     let z472 = [0x2cb222d1f8017ab9, 0x48f7c0591ddcae7d, 0x3708d1ffffffffbe, 0xcdb549f773b3e62b];
@@ -7544,7 +7544,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk472, &z472, &r472, &s472));
+    assert!(ecdsa_verify_secp256r1(&pk472, &z472, &r472, &s472));
 
     // 469] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #272: special case hash
     let z473 = [0x24d8fd6f0edb0484, 0x9fd64886c1dc4f99, 0x1df4989bffffffff, 0x2c3f26f96a3ac005];
@@ -7560,7 +7560,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk473, &z473, &r473, &s473));
+    assert!(ecdsa_verify_secp256r1(&pk473, &z473, &r473, &s473));
 
     // 470] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #273: special case hash
     let z474 = [0x8476397c04edf411, 0xff5c31d89fda6a6b, 0x2cb7d53f9affffff, 0xac18f8418c55a250];
@@ -7576,7 +7576,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk474, &z474, &r474, &s474));
+    assert!(ecdsa_verify_secp256r1(&pk474, &z474, &r474, &s474));
 
     // 471] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #274: special case hash
     let z475 = [0x3e5a6ab8cf0ee610, 0xffffa2fd3e289368, 0xb24094f72bb5ffff, 0x4f9618f98e2d3a15];
@@ -7592,7 +7592,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk475, &z475, &r475, &s475));
+    assert!(ecdsa_verify_secp256r1(&pk475, &z475, &r475, &s475));
 
     // 472] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #275: special case hash
     let z476 = [0x04caae73ab0bc75a, 0xffffff67edf7c402, 0x9cc21d31d37a25ff, 0x422e82a3d56ed10a];
@@ -7608,7 +7608,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk476, &z476, &r476, &s476));
+    assert!(ecdsa_verify_secp256r1(&pk476, &z476, &r476, &s476));
 
     // 473] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #276: special case hash
     let z477 = [0x2d9890b5cf95d018, 0x17a5ffffffffa084, 0x6e7b329ff738fbb4, 0x7075d245ccc3281b];
@@ -7624,7 +7624,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk477, &z477, &r477, &s477));
+    assert!(ecdsa_verify_secp256r1(&pk477, &z477, &r477, &s477));
 
     // 474] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #277: special case hash
     let z478 = [0xc1847eb76c217a95, 0x7e280ebeffffffff, 0x9443d593fa4fd659, 0x3c80de54cd922698];
@@ -7640,7 +7640,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk478, &z478, &r478, &s478));
+    assert!(ecdsa_verify_secp256r1(&pk478, &z478, &r478, &s478));
 
     // 475] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #278: special case hash
     let z479 = [0xffc7906aa794b39b, 0x0ce891a8cdffffff, 0x980bef3d697ea277, 0xde21754e29b85601];
@@ -7656,7 +7656,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk479, &z479, &r479, &s479));
+    assert!(ecdsa_verify_secp256r1(&pk479, &z479, &r479, &s479));
 
     // 476] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #279: special case hash
     let z480 = [0xffff2f1f2f57881c, 0x599e4d5f7289ffff, 0x84dd59623fb531bb, 0x8f65d92927cfb86a];
@@ -7672,7 +7672,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk480, &z480, &r480, &s480));
+    assert!(ecdsa_verify_secp256r1(&pk480, &z480, &r480, &s480));
 
     // 477] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #280: special case hash
     let z481 = [0xfffffffafc8c3ca8, 0x2cc7cd0e8426cbff, 0x160bea3877dace8a, 0x6b63e9a74e092120];
@@ -7688,7 +7688,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk481, &z481, &r481, &s481));
+    assert!(ecdsa_verify_secp256r1(&pk481, &z481, &r481, &s481));
 
     // 478] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #281: special case hash
     let z482 = [0xffffffffe852512e, 0xd094586e249c8699, 0xb6d75219444e8b43, 0xfc28259702a03845];
@@ -7704,7 +7704,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk482, &z482, &r482, &s482));
+    assert!(ecdsa_verify_secp256r1(&pk482, &z482, &r482, &s482));
 
     // 479] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #282: special case hash
     let z483 = [0x1757ffffffffe20a, 0x74ecbcd52e8ceb57, 0xcee044ee8e8db7f7, 0x1273b4502ea4e3bc];
@@ -7720,7 +7720,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk483, &z483, &r483, &s483));
+    assert!(ecdsa_verify_secp256r1(&pk483, &z483, &r483, &s483));
 
     // 480] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #283: special case hash
     let z484 = [0xfb49ffffffffff6e, 0x4f8c53a15b96e602, 0x0c566c66228d8181, 0x08fb565610a79baa];
@@ -7736,7 +7736,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk484, &z484, &r484, &s484));
+    assert!(ecdsa_verify_secp256r1(&pk484, &z484, &r484, &s484));
 
     // 481] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #284: special case hash
     let z485 = [0x28ecaefeffffffff, 0xa2403f748e97d7cd, 0x87715fcb1aa4e79a, 0xd59291cc2cf89f30];
@@ -7752,7 +7752,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk485, &z485, &r485, &s485));
+    assert!(ecdsa_verify_secp256r1(&pk485, &z485, &r485, &s485));
 
     // 482] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #636: r too large
     let z486 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7768,7 +7768,7 @@ pub fn ecdsa_tests() {
         0x14ec1238beae2037,
         0xb1fc105ee5ce80d5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk486, &z486, &r486, &s486));
+    assert!(!ecdsa_verify_secp256r1(&pk486, &z486, &r486, &s486));
 
     // 483] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #637: r,s are large
     let z487 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7784,7 +7784,7 @@ pub fn ecdsa_tests() {
         0x7a0c5e3b747adfa3,
         0xee41fdb4d10402ce,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk487, &z487, &r487, &s487));
+    assert!(ecdsa_verify_secp256r1(&pk487, &z487, &r487, &s487));
 
     // 484] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #638: r and s^-1 have a large Hamming weight
     let z488 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7800,7 +7800,7 @@ pub fn ecdsa_tests() {
         0x80ea5db514aa2f93,
         0xe05b06e72d4a1bff,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk488, &z488, &r488, &s488));
+    assert!(ecdsa_verify_secp256r1(&pk488, &z488, &r488, &s488));
 
     // 485] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #639: r and s^-1 have a large Hamming weight
     let z489 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7816,7 +7816,7 @@ pub fn ecdsa_tests() {
         0x409cfc5992a99fff,
         0x0b38c17f3d0672e7,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk489, &z489, &r489, &s489));
+    assert!(ecdsa_verify_secp256r1(&pk489, &z489, &r489, &s489));
 
     // 486] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #651: r and s^-1 are close to n
     let z490 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7832,7 +7832,7 @@ pub fn ecdsa_tests() {
         0xe818443a686e869e,
         0xb3e45879d8622b93,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk490, &z490, &r490, &s490));
+    assert!(ecdsa_verify_secp256r1(&pk490, &z490, &r490, &s490));
 
     // 487] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #654: point at infinity during verify
     let z491 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7848,7 +7848,7 @@ pub fn ecdsa_tests() {
         0xa387ee8e4d4e84b4,
         0x34383438d5041ea9,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk491, &z491, &r491, &s491));
+    assert!(!ecdsa_verify_secp256r1(&pk491, &z491, &r491, &s491));
 
     // 488] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #655: edge case for signature malleability
     let z492 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7864,7 +7864,7 @@ pub fn ecdsa_tests() {
         0x13d02c666c45ef22,
         0xed6572e01eb7a8d1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk492, &z492, &r492, &s492));
+    assert!(ecdsa_verify_secp256r1(&pk492, &z492, &r492, &s492));
 
     // 489] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #656: edge case for signature malleability
     let z493 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7880,7 +7880,7 @@ pub fn ecdsa_tests() {
         0x970b83f652442106,
         0x66fae1614174be63,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk493, &z493, &r493, &s493));
+    assert!(ecdsa_verify_secp256r1(&pk493, &z493, &r493, &s493));
 
     // 490] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #657: u1 == 1
     let z494 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7896,7 +7896,7 @@ pub fn ecdsa_tests() {
         0x40730b4fa3ee64fa,
         0x83a7a618625c2289,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk494, &z494, &r494, &s494));
+    assert!(ecdsa_verify_secp256r1(&pk494, &z494, &r494, &s494));
 
     // 491] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #658: u1 == n - 1
     let z495 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7912,7 +7912,7 @@ pub fn ecdsa_tests() {
         0x625ad57b12a32d40,
         0x1f3a0a0e6823a49b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk495, &z495, &r495, &s495));
+    assert!(ecdsa_verify_secp256r1(&pk495, &z495, &r495, &s495));
 
     // 492] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #659: u2 == 1
     let z496 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7928,7 +7928,7 @@ pub fn ecdsa_tests() {
         0x8fde38b98c7c271f,
         0xa1f6f6abcb38ea3b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk496, &z496, &r496, &s496));
+    assert!(ecdsa_verify_secp256r1(&pk496, &z496, &r496, &s496));
 
     // 493] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #660: u2 == n - 1
     let z497 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7944,7 +7944,7 @@ pub fn ecdsa_tests() {
         0xf721be2fb5f549e4,
         0x543ecbeaf7e8044e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk497, &z497, &r497, &s497));
+    assert!(ecdsa_verify_secp256r1(&pk497, &z497, &r497, &s497));
 
     // 494] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #661: edge case for u1
     let z498 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7960,7 +7960,7 @@ pub fn ecdsa_tests() {
         0x2dc313612020311f,
         0x2243018e6866df92,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk498, &z498, &r498, &s498));
+    assert!(ecdsa_verify_secp256r1(&pk498, &z498, &r498, &s498));
 
     // 495] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #662: edge case for u1
     let z499 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7976,7 +7976,7 @@ pub fn ecdsa_tests() {
         0x9e8b4c5da6bb9228,
         0x65d06dd6a88abfa4,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk499, &z499, &r499, &s499));
+    assert!(ecdsa_verify_secp256r1(&pk499, &z499, &r499, &s499));
 
     // 496] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #663: edge case for u1
     let z500 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -7992,7 +7992,7 @@ pub fn ecdsa_tests() {
         0x3c7cfd9b83c63e3a,
         0x98a20d1bdcf57351,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk500, &z500, &r500, &s500));
+    assert!(ecdsa_verify_secp256r1(&pk500, &z500, &r500, &s500));
 
     // 497] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #664: edge case for u1
     let z501 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8008,7 +8008,7 @@ pub fn ecdsa_tests() {
         0x489ca703a399864b,
         0xc0adbea0882482a7,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk501, &z501, &r501, &s501));
+    assert!(ecdsa_verify_secp256r1(&pk501, &z501, &r501, &s501));
 
     // 498] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #665: edge case for u1
     let z502 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8024,7 +8024,7 @@ pub fn ecdsa_tests() {
         0x221e39e1205d5510,
         0x777458d6f55a364c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk502, &z502, &r502, &s502));
+    assert!(ecdsa_verify_secp256r1(&pk502, &z502, &r502, &s502));
 
     // 499] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #666: edge case for u1
     let z503 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8040,7 +8040,7 @@ pub fn ecdsa_tests() {
         0x6495c42102d08e81,
         0x930d71ee1992d246,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk503, &z503, &r503, &s503));
+    assert!(ecdsa_verify_secp256r1(&pk503, &z503, &r503, &s503));
 
     // 500] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #667: edge case for u1
     let z504 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8056,7 +8056,7 @@ pub fn ecdsa_tests() {
         0x61b90c9f4285eefc,
         0x9ef1568530291a80,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk504, &z504, &r504, &s504));
+    assert!(ecdsa_verify_secp256r1(&pk504, &z504, &r504, &s504));
 
     // 501] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #668: edge case for u1
     let z505 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8072,7 +8072,7 @@ pub fn ecdsa_tests() {
         0x3262ff7335541519,
         0x7f90ba23664153e9,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk505, &z505, &r505, &s505));
+    assert!(ecdsa_verify_secp256r1(&pk505, &z505, &r505, &s505));
 
     // 502] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #669: edge case for u1
     let z506 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8088,7 +8088,7 @@ pub fn ecdsa_tests() {
         0x7b0c55e5240a3a98,
         0x2d3b90d25baa6bdb,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk506, &z506, &r506, &s506));
+    assert!(ecdsa_verify_secp256r1(&pk506, &z506, &r506, &s506));
 
     // 503] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #670: edge case for u1
     let z507 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8104,7 +8104,7 @@ pub fn ecdsa_tests() {
         0x900a914c2934ec2f,
         0xa54b5bc4025cf335,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk507, &z507, &r507, &s507));
+    assert!(ecdsa_verify_secp256r1(&pk507, &z507, &r507, &s507));
 
     // 504] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #671: edge case for u1
     let z508 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8120,7 +8120,7 @@ pub fn ecdsa_tests() {
         0xc6e9a472b96d88f4,
         0xaace0046491eeaa1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk508, &z508, &r508, &s508));
+    assert!(ecdsa_verify_secp256r1(&pk508, &z508, &r508, &s508));
 
     // 505] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #672: edge case for u1
     let z509 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8136,7 +8136,7 @@ pub fn ecdsa_tests() {
         0x204fb32a1f829290,
         0xbe7c2ab4d0b25303,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk509, &z509, &r509, &s509));
+    assert!(ecdsa_verify_secp256r1(&pk509, &z509, &r509, &s509));
 
     // 506] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #673: edge case for u1
     let z510 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8152,7 +8152,7 @@ pub fn ecdsa_tests() {
         0xebcc4c97847eed21,
         0x44b4b57cdf960d32,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk510, &z510, &r510, &s510));
+    assert!(ecdsa_verify_secp256r1(&pk510, &z510, &r510, &s510));
 
     // 507] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #674: edge case for u1
     let z511 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8168,7 +8168,7 @@ pub fn ecdsa_tests() {
         0x00ad21ee3fd4d980,
         0x9d655e9a755bc9d8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk511, &z511, &r511, &s511));
+    assert!(ecdsa_verify_secp256r1(&pk511, &z511, &r511, &s511));
 
     // 508] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #675: edge case for u2
     let z512 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8184,7 +8184,7 @@ pub fn ecdsa_tests() {
         0xb460d636c965a5f8,
         0x112f7d837f8f9c36,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk512, &z512, &r512, &s512));
+    assert!(ecdsa_verify_secp256r1(&pk512, &z512, &r512, &s512));
 
     // 509] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #676: edge case for u2
     let z513 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8200,7 +8200,7 @@ pub fn ecdsa_tests() {
         0x96924c265f0ddb75,
         0x43178d1f88b6a57a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk513, &z513, &r513, &s513));
+    assert!(ecdsa_verify_secp256r1(&pk513, &z513, &r513, &s513));
 
     // 510] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #677: edge case for u2
     let z514 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8216,7 +8216,7 @@ pub fn ecdsa_tests() {
         0x2c6e612f0fd3189d,
         0xc34318139c50b080,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk514, &z514, &r514, &s514));
+    assert!(ecdsa_verify_secp256r1(&pk514, &z514, &r514, &s514));
 
     // 511] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #678: edge case for u2
     let z515 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8232,7 +8232,7 @@ pub fn ecdsa_tests() {
         0xb826b2db7a86d19d,
         0x5556b42e330289f3,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk515, &z515, &r515, &s515));
+    assert!(ecdsa_verify_secp256r1(&pk515, &z515, &r515, &s515));
 
     // 512] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #679: edge case for u2
     let z516 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8248,7 +8248,7 @@ pub fn ecdsa_tests() {
         0x970bff01e1343f69,
         0xd9dbd77a918297fd,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk516, &z516, &r516, &s516));
+    assert!(ecdsa_verify_secp256r1(&pk516, &z516, &r516, &s516));
 
     // 513] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #680: edge case for u2
     let z517 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8264,7 +8264,7 @@ pub fn ecdsa_tests() {
         0x9535c22eaaf0b581,
         0x9960bebaf919514f,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk517, &z517, &r517, &s517));
+    assert!(ecdsa_verify_secp256r1(&pk517, &z517, &r517, &s517));
 
     // 514] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #681: edge case for u2
     let z518 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8280,7 +8280,7 @@ pub fn ecdsa_tests() {
         0x20119152f0122476,
         0xf498fae2487807e2,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk518, &z518, &r518, &s518));
+    assert!(ecdsa_verify_secp256r1(&pk518, &z518, &r518, &s518));
 
     // 515] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #682: edge case for u2
     let z519 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8296,7 +8296,7 @@ pub fn ecdsa_tests() {
         0xee822ddd2fc74424,
         0xe986a086060d086e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk519, &z519, &r519, &s519));
+    assert!(ecdsa_verify_secp256r1(&pk519, &z519, &r519, &s519));
 
     // 516] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #683: edge case for u2
     let z520 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8312,7 +8312,7 @@ pub fn ecdsa_tests() {
         0x9a9ac080d516025a,
         0x900b8adfea649101,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk520, &z520, &r520, &s520));
+    assert!(ecdsa_verify_secp256r1(&pk520, &z520, &r520, &s520));
 
     // 517] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #684: edge case for u2
     let z521 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8328,7 +8328,7 @@ pub fn ecdsa_tests() {
         0xd3c1be0fdeaf11fc,
         0xef0d6d800e4047d6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk521, &z521, &r521, &s521));
+    assert!(ecdsa_verify_secp256r1(&pk521, &z521, &r521, &s521));
 
     // 518] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #685: edge case for u2
     let z522 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8344,7 +8344,7 @@ pub fn ecdsa_tests() {
         0x5e6a5ccaa2826a40,
         0x7bfb9b2853199663,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk522, &z522, &r522, &s522));
+    assert!(ecdsa_verify_secp256r1(&pk522, &z522, &r522, &s522));
 
     // 519] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #686: edge case for u2
     let z523 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8360,7 +8360,7 @@ pub fn ecdsa_tests() {
         0xbdb67ef77f6fd296,
         0x6e55f73bb7cdda46,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk523, &z523, &r523, &s523));
+    assert!(ecdsa_verify_secp256r1(&pk523, &z523, &r523, &s523));
 
     // 520] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #687: edge case for u2
     let z524 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8376,7 +8376,7 @@ pub fn ecdsa_tests() {
         0xa7389aaed61738b1,
         0x40e0daa78cfdd207,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk524, &z524, &r524, &s524));
+    assert!(ecdsa_verify_secp256r1(&pk524, &z524, &r524, &s524));
 
     // 521] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #688: edge case for u2
     let z525 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8392,7 +8392,7 @@ pub fn ecdsa_tests() {
         0x09afa3640f4a034e,
         0x167fcc5ca734552e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk525, &z525, &r525, &s525));
+    assert!(ecdsa_verify_secp256r1(&pk525, &z525, &r525, &s525));
 
     // 522] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #689: point duplication during verification
     let z526 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8408,7 +8408,7 @@ pub fn ecdsa_tests() {
         0x92b8b61aafa7a4aa,
         0x2a964fc00d377a85,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk526, &z526, &r526, &s526));
+    assert!(ecdsa_verify_secp256r1(&pk526, &z526, &r526, &s526));
 
     // 523] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #690: duplication bug
     let z527 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8424,7 +8424,7 @@ pub fn ecdsa_tests() {
         0x6d4749e550585b55,
         0xd569b03ef2c8857b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk527, &z527, &r527, &s527));
+    assert!(!ecdsa_verify_secp256r1(&pk527, &z527, &r527, &s527));
 
     // 524] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #693: comparison with point at infinity
     let z528 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8440,7 +8440,7 @@ pub fn ecdsa_tests() {
         0x73ac3d76bfbc8c5e,
         0x49e68831f18bda29,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk528, &z528, &r528, &s528));
+    assert!(!ecdsa_verify_secp256r1(&pk528, &z528, &r528, &s528));
 
     // 525] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #694: extreme value for k and edgecase s
     let z529 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8456,7 +8456,7 @@ pub fn ecdsa_tests() {
         0xdf990d2c5377790e,
         0x7254622cc371866c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk529, &z529, &r529, &s529));
+    assert!(ecdsa_verify_secp256r1(&pk529, &z529, &r529, &s529));
 
     // 526] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #695: extreme value for k and s^-1
     let z530 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8472,7 +8472,7 @@ pub fn ecdsa_tests() {
         0x4d9e506d418ed9a1,
         0x214dc74fa25371fb,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk530, &z530, &r530, &s530));
+    assert!(ecdsa_verify_secp256r1(&pk530, &z530, &r530, &s530));
 
     // 527] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #696: extreme value for k and s^-1
     let z531 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8488,7 +8488,7 @@ pub fn ecdsa_tests() {
         0xda35360ca7aa925e,
         0x41c74eed786f2d33,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk531, &z531, &r531, &s531));
+    assert!(ecdsa_verify_secp256r1(&pk531, &z531, &r531, &s531));
 
     // 528] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #697: extreme value for k and s^-1
     let z532 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8504,7 +8504,7 @@ pub fn ecdsa_tests() {
         0x4d7df8ab3f3b4181,
         0x662be9bb512663aa,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk532, &z532, &r532, &s532));
+    assert!(ecdsa_verify_secp256r1(&pk532, &z532, &r532, &s532));
 
     // 529] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #698: extreme value for k and s^-1
     let z533 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8520,7 +8520,7 @@ pub fn ecdsa_tests() {
         0x21e29014b2898349,
         0xd0a9135a89d21ce8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk533, &z533, &r533, &s533));
+    assert!(ecdsa_verify_secp256r1(&pk533, &z533, &r533, &s533));
 
     // 530] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #699: extreme value for k
     let z534 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8536,7 +8536,7 @@ pub fn ecdsa_tests() {
         0xd52bc48673b457c2,
         0x7b4a0d734940f613,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk534, &z534, &r534, &s534));
+    assert!(ecdsa_verify_secp256r1(&pk534, &z534, &r534, &s534));
 
     // 531] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #700: extreme value for k and edgecase s
     let z535 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8552,7 +8552,7 @@ pub fn ecdsa_tests() {
         0xd7ffe480827f90a0,
         0xe0ed26967b9ada9e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk535, &z535, &r535, &s535));
+    assert!(ecdsa_verify_secp256r1(&pk535, &z535, &r535, &s535));
 
     // 532] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #701: extreme value for k and s^-1
     let z536 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8568,7 +8568,7 @@ pub fn ecdsa_tests() {
         0x70362aaa520ee24c,
         0xaaae079cb44a1af0,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk536, &z536, &r536, &s536));
+    assert!(ecdsa_verify_secp256r1(&pk536, &z536, &r536, &s536));
 
     // 533] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #702: extreme value for k and s^-1
     let z537 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8584,7 +8584,7 @@ pub fn ecdsa_tests() {
         0x729a2219478a7e62,
         0xdb76b797f7f41d9c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk537, &z537, &r537, &s537));
+    assert!(ecdsa_verify_secp256r1(&pk537, &z537, &r537, &s537));
 
     // 534] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #703: extreme value for k and s^-1
     let z538 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8600,7 +8600,7 @@ pub fn ecdsa_tests() {
         0xf56e34eb048f0a9d,
         0xb7dd057e75b78ac6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk538, &z538, &r538, &s538));
+    assert!(ecdsa_verify_secp256r1(&pk538, &z538, &r538, &s538));
 
     // 535] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #704: extreme value for k and s^-1
     let z539 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8616,7 +8616,7 @@ pub fn ecdsa_tests() {
         0x7a759de024eff90b,
         0x5431a7268ff6931c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk539, &z539, &r539, &s539));
+    assert!(ecdsa_verify_secp256r1(&pk539, &z539, &r539, &s539));
 
     // 536] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #705: extreme value for k
     let z540 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8632,7 +8632,7 @@ pub fn ecdsa_tests() {
         0x5997c776f14ad645,
         0xdf510f2ecef6d9a0,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk540, &z540, &r540, &s540));
+    assert!(ecdsa_verify_secp256r1(&pk540, &z540, &r540, &s540));
 
     // 537] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #706: testing point duplication
     let z541 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8648,7 +8648,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk541, &z541, &r541, &s541));
+    assert!(!ecdsa_verify_secp256r1(&pk541, &z541, &r541, &s541));
 
     // 538] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #707: testing point duplication
     let z542 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8664,7 +8664,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk542, &z542, &r542, &s542));
+    assert!(!ecdsa_verify_secp256r1(&pk542, &z542, &r542, &s542));
 
     // 539] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #708: testing point duplication
     let z543 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8680,7 +8680,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk543, &z543, &r543, &s543));
+    assert!(!ecdsa_verify_secp256r1(&pk543, &z543, &r543, &s543));
 
     // 540] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #709: testing point duplication
     let z544 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8696,7 +8696,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk544, &z544, &r544, &s544));
+    assert!(!ecdsa_verify_secp256r1(&pk544, &z544, &r544, &s544));
 
     // 541] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1210: pseudorandom signature
     let z545 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -8712,7 +8712,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk545, &z545, &r545, &s545));
+    assert!(ecdsa_verify_secp256r1(&pk545, &z545, &r545, &s545));
 
     // 542] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1211: pseudorandom signature
     let z546 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -8728,7 +8728,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk546, &z546, &r546, &s546));
+    assert!(ecdsa_verify_secp256r1(&pk546, &z546, &r546, &s546));
 
     // 543] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1212: pseudorandom signature
     let z547 = [0xa495991b7852b855, 0x27ae41e4649b934c, 0x9afbf4c8996fb924, 0xe3b0c44298fc1c14];
@@ -8744,7 +8744,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk547, &z547, &r547, &s547));
+    assert!(ecdsa_verify_secp256r1(&pk547, &z547, &r547, &s547));
 
     // 544] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1213: pseudorandom signature
     let z548 = [0x7f1b40c4cbd36f90, 0x93262cf06340c4fa, 0xdbb5f2c353e632c3, 0xde47c9b27eb8d300];
@@ -8760,7 +8760,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk548, &z548, &r548, &s548));
+    assert!(ecdsa_verify_secp256r1(&pk548, &z548, &r548, &s548));
 
     // 545] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1303: x-coordinate of the public key has many trailing 0's
     let z549 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8776,7 +8776,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk549, &z549, &r549, &s549));
+    assert!(ecdsa_verify_secp256r1(&pk549, &z549, &r549, &s549));
 
     // 546] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1304: x-coordinate of the public key has many trailing 0's
     let z550 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8792,7 +8792,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk550, &z550, &r550, &s550));
+    assert!(ecdsa_verify_secp256r1(&pk550, &z550, &r550, &s550));
 
     // 547] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1305: x-coordinate of the public key has many trailing 0's
     let z551 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8808,7 +8808,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk551, &z551, &r551, &s551));
+    assert!(ecdsa_verify_secp256r1(&pk551, &z551, &r551, &s551));
 
     // 548] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1306: y-coordinate of the public key has many trailing 0's
     let z552 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8824,7 +8824,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk552, &z552, &r552, &s552));
+    assert!(ecdsa_verify_secp256r1(&pk552, &z552, &r552, &s552));
 
     // 549] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1307: y-coordinate of the public key has many trailing 0's
     let z553 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8840,7 +8840,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk553, &z553, &r553, &s553));
+    assert!(ecdsa_verify_secp256r1(&pk553, &z553, &r553, &s553));
 
     // 550] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1308: y-coordinate of the public key has many trailing 0's
     let z554 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8856,7 +8856,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk554, &z554, &r554, &s554));
+    assert!(ecdsa_verify_secp256r1(&pk554, &z554, &r554, &s554));
 
     // 551] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1309: y-coordinate of the public key has many trailing 1's
     let z555 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8872,7 +8872,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk555, &z555, &r555, &s555));
+    assert!(ecdsa_verify_secp256r1(&pk555, &z555, &r555, &s555));
 
     // 552] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1310: y-coordinate of the public key has many trailing 1's
     let z556 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8888,7 +8888,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk556, &z556, &r556, &s556));
+    assert!(ecdsa_verify_secp256r1(&pk556, &z556, &r556, &s556));
 
     // 553] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1311: y-coordinate of the public key has many trailing 1's
     let z557 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8904,7 +8904,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk557, &z557, &r557, &s557));
+    assert!(ecdsa_verify_secp256r1(&pk557, &z557, &r557, &s557));
 
     // 554] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1312: x-coordinate of the public key has many trailing 1's
     let z558 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8920,7 +8920,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk558, &z558, &r558, &s558));
+    assert!(ecdsa_verify_secp256r1(&pk558, &z558, &r558, &s558));
 
     // 555] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1313: x-coordinate of the public key has many trailing 1's
     let z559 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8936,7 +8936,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk559, &z559, &r559, &s559));
+    assert!(ecdsa_verify_secp256r1(&pk559, &z559, &r559, &s559));
 
     // 556] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1314: x-coordinate of the public key has many trailing 1's
     let z560 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8952,7 +8952,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk560, &z560, &r560, &s560));
+    assert!(ecdsa_verify_secp256r1(&pk560, &z560, &r560, &s560));
 
     // 557] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1315: x-coordinate of the public key is large
     let z561 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8968,7 +8968,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk561, &z561, &r561, &s561));
+    assert!(ecdsa_verify_secp256r1(&pk561, &z561, &r561, &s561));
 
     // 558] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1316: x-coordinate of the public key is large
     let z562 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -8984,7 +8984,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk562, &z562, &r562, &s562));
+    assert!(ecdsa_verify_secp256r1(&pk562, &z562, &r562, &s562));
 
     // 559] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1317: x-coordinate of the public key is large
     let z563 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9000,7 +9000,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk563, &z563, &r563, &s563));
+    assert!(ecdsa_verify_secp256r1(&pk563, &z563, &r563, &s563));
 
     // 560] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1318: x-coordinate of the public key is small
     let z564 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9016,7 +9016,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk564, &z564, &r564, &s564));
+    assert!(ecdsa_verify_secp256r1(&pk564, &z564, &r564, &s564));
 
     // 561] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1319: x-coordinate of the public key is small
     let z565 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9032,7 +9032,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk565, &z565, &r565, &s565));
+    assert!(ecdsa_verify_secp256r1(&pk565, &z565, &r565, &s565));
 
     // 562] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1320: x-coordinate of the public key is small
     let z566 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9048,7 +9048,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk566, &z566, &r566, &s566));
+    assert!(ecdsa_verify_secp256r1(&pk566, &z566, &r566, &s566));
 
     // 563] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1321: y-coordinate of the public key is small
     let z567 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9064,7 +9064,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk567, &z567, &r567, &s567));
+    assert!(ecdsa_verify_secp256r1(&pk567, &z567, &r567, &s567));
 
     // 564] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1322: y-coordinate of the public key is small
     let z568 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9080,7 +9080,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk568, &z568, &r568, &s568));
+    assert!(ecdsa_verify_secp256r1(&pk568, &z568, &r568, &s568));
 
     // 565] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1323: y-coordinate of the public key is small
     let z569 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9096,7 +9096,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk569, &z569, &r569, &s569));
+    assert!(ecdsa_verify_secp256r1(&pk569, &z569, &r569, &s569));
 
     // 566] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1324: y-coordinate of the public key is large
     let z570 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9112,7 +9112,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk570, &z570, &r570, &s570));
+    assert!(ecdsa_verify_secp256r1(&pk570, &z570, &r570, &s570));
 
     // 567] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1325: y-coordinate of the public key is large
     let z571 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9128,7 +9128,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk571, &z571, &r571, &s571));
+    assert!(ecdsa_verify_secp256r1(&pk571, &z571, &r571, &s571));
 
     // 568] wycheproof/ecdsa_test.json EcdsaVerify SHA-256 #1326: y-coordinate of the public key is large
     let z572 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -9144,7 +9144,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk572, &z572, &r572, &s572));
+    assert!(ecdsa_verify_secp256r1(&pk572, &z572, &r572, &s572));
 
     // 569] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #1: signature malleability
     let z573 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9160,7 +9160,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk573, &z573, &r573, &s573));
+    assert!(ecdsa_verify_secp256r1(&pk573, &z573, &r573, &s573));
 
     // 570] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #3: Modified r or s, e.g. by adding or subtracting the order of the group
     let z574 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9176,7 +9176,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk574, &z574, &r574, &s574));
+    assert!(!ecdsa_verify_secp256r1(&pk574, &z574, &r574, &s574));
 
     // 571] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #5: Modified r or s, e.g. by adding or subtracting the order of the group
     let z575 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9192,7 +9192,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk575, &z575, &r575, &s575));
+    assert!(!ecdsa_verify_secp256r1(&pk575, &z575, &r575, &s575));
 
     // 572] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #8: Modified r or s, e.g. by adding or subtracting the order of the group
     let z576 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9208,7 +9208,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk576, &z576, &r576, &s576));
+    assert!(!ecdsa_verify_secp256r1(&pk576, &z576, &r576, &s576));
 
     // 573] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #9: Signature with special case values for r and s
     let z577 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9224,7 +9224,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk577, &z577, &r577, &s577));
+    assert!(!ecdsa_verify_secp256r1(&pk577, &z577, &r577, &s577));
 
     // 574] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #10: Signature with special case values for r and s
     let z578 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9240,7 +9240,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk578, &z578, &r578, &s578));
+    assert!(!ecdsa_verify_secp256r1(&pk578, &z578, &r578, &s578));
 
     // 575] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #11: Signature with special case values for r and s
     let z579 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9256,7 +9256,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk579, &z579, &r579, &s579));
+    assert!(!ecdsa_verify_secp256r1(&pk579, &z579, &r579, &s579));
 
     // 576] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #12: Signature with special case values for r and s
     let z580 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9272,7 +9272,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk580, &z580, &r580, &s580));
+    assert!(!ecdsa_verify_secp256r1(&pk580, &z580, &r580, &s580));
 
     // 577] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #13: Signature with special case values for r and s
     let z581 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9288,7 +9288,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk581, &z581, &r581, &s581));
+    assert!(!ecdsa_verify_secp256r1(&pk581, &z581, &r581, &s581));
 
     // 578] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #14: Signature with special case values for r and s
     let z582 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9304,7 +9304,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk582, &z582, &r582, &s582));
+    assert!(!ecdsa_verify_secp256r1(&pk582, &z582, &r582, &s582));
 
     // 579] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #15: Signature with special case values for r and s
     let z583 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9320,7 +9320,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk583, &z583, &r583, &s583));
+    assert!(!ecdsa_verify_secp256r1(&pk583, &z583, &r583, &s583));
 
     // 580] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #16: Signature with special case values for r and s
     let z584 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9336,7 +9336,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk584, &z584, &r584, &s584));
+    assert!(!ecdsa_verify_secp256r1(&pk584, &z584, &r584, &s584));
 
     // 581] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #17: Signature with special case values for r and s
     let z585 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9352,7 +9352,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk585, &z585, &r585, &s585));
+    assert!(!ecdsa_verify_secp256r1(&pk585, &z585, &r585, &s585));
 
     // 582] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #18: Signature with special case values for r and s
     let z586 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9368,7 +9368,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk586, &z586, &r586, &s586));
+    assert!(!ecdsa_verify_secp256r1(&pk586, &z586, &r586, &s586));
 
     // 583] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #19: Signature with special case values for r and s
     let z587 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9384,7 +9384,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk587, &z587, &r587, &s587));
+    assert!(!ecdsa_verify_secp256r1(&pk587, &z587, &r587, &s587));
 
     // 584] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #20: Signature with special case values for r and s
     let z588 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9400,7 +9400,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk588, &z588, &r588, &s588));
+    assert!(!ecdsa_verify_secp256r1(&pk588, &z588, &r588, &s588));
 
     // 585] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #21: Signature with special case values for r and s
     let z589 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9416,7 +9416,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk589, &z589, &r589, &s589));
+    assert!(!ecdsa_verify_secp256r1(&pk589, &z589, &r589, &s589));
 
     // 586] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #22: Signature with special case values for r and s
     let z590 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9432,7 +9432,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk590, &z590, &r590, &s590));
+    assert!(!ecdsa_verify_secp256r1(&pk590, &z590, &r590, &s590));
 
     // 587] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #23: Signature with special case values for r and s
     let z591 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9448,7 +9448,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk591, &z591, &r591, &s591));
+    assert!(!ecdsa_verify_secp256r1(&pk591, &z591, &r591, &s591));
 
     // 588] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #24: Signature with special case values for r and s
     let z592 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9464,7 +9464,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk592, &z592, &r592, &s592));
+    assert!(!ecdsa_verify_secp256r1(&pk592, &z592, &r592, &s592));
 
     // 589] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #25: Signature with special case values for r and s
     let z593 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9480,7 +9480,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk593, &z593, &r593, &s593));
+    assert!(!ecdsa_verify_secp256r1(&pk593, &z593, &r593, &s593));
 
     // 590] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #26: Signature with special case values for r and s
     let z594 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9496,7 +9496,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk594, &z594, &r594, &s594));
+    assert!(!ecdsa_verify_secp256r1(&pk594, &z594, &r594, &s594));
 
     // 591] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #27: Signature with special case values for r and s
     let z595 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9512,7 +9512,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk595, &z595, &r595, &s595));
+    assert!(!ecdsa_verify_secp256r1(&pk595, &z595, &r595, &s595));
 
     // 592] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #28: Signature with special case values for r and s
     let z596 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9528,7 +9528,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk596, &z596, &r596, &s596));
+    assert!(!ecdsa_verify_secp256r1(&pk596, &z596, &r596, &s596));
 
     // 593] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #29: Signature with special case values for r and s
     let z597 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9544,7 +9544,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk597, &z597, &r597, &s597));
+    assert!(!ecdsa_verify_secp256r1(&pk597, &z597, &r597, &s597));
 
     // 594] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #30: Signature with special case values for r and s
     let z598 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9560,7 +9560,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk598, &z598, &r598, &s598));
+    assert!(!ecdsa_verify_secp256r1(&pk598, &z598, &r598, &s598));
 
     // 595] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #31: Signature with special case values for r and s
     let z599 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9576,7 +9576,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk599, &z599, &r599, &s599));
+    assert!(!ecdsa_verify_secp256r1(&pk599, &z599, &r599, &s599));
 
     // 596] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #32: Signature with special case values for r and s
     let z600 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9592,7 +9592,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk600, &z600, &r600, &s600));
+    assert!(!ecdsa_verify_secp256r1(&pk600, &z600, &r600, &s600));
 
     // 597] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #33: Signature with special case values for r and s
     let z601 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9608,7 +9608,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk601, &z601, &r601, &s601));
+    assert!(!ecdsa_verify_secp256r1(&pk601, &z601, &r601, &s601));
 
     // 598] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #34: Signature with special case values for r and s
     let z602 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9624,7 +9624,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk602, &z602, &r602, &s602));
+    assert!(!ecdsa_verify_secp256r1(&pk602, &z602, &r602, &s602));
 
     // 599] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #35: Signature with special case values for r and s
     let z603 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9640,7 +9640,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk603, &z603, &r603, &s603));
+    assert!(!ecdsa_verify_secp256r1(&pk603, &z603, &r603, &s603));
 
     // 600] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #36: Signature with special case values for r and s
     let z604 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9656,7 +9656,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk604, &z604, &r604, &s604));
+    assert!(!ecdsa_verify_secp256r1(&pk604, &z604, &r604, &s604));
 
     // 601] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #37: Signature with special case values for r and s
     let z605 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9672,7 +9672,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk605, &z605, &r605, &s605));
+    assert!(!ecdsa_verify_secp256r1(&pk605, &z605, &r605, &s605));
 
     // 602] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #38: Signature with special case values for r and s
     let z606 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9688,7 +9688,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk606, &z606, &r606, &s606));
+    assert!(!ecdsa_verify_secp256r1(&pk606, &z606, &r606, &s606));
 
     // 603] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #39: Signature with special case values for r and s
     let z607 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9704,7 +9704,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk607, &z607, &r607, &s607));
+    assert!(!ecdsa_verify_secp256r1(&pk607, &z607, &r607, &s607));
 
     // 604] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #40: Signature with special case values for r and s
     let z608 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9720,7 +9720,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk608, &z608, &r608, &s608));
+    assert!(!ecdsa_verify_secp256r1(&pk608, &z608, &r608, &s608));
 
     // 605] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #41: Signature with special case values for r and s
     let z609 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9736,7 +9736,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk609, &z609, &r609, &s609));
+    assert!(!ecdsa_verify_secp256r1(&pk609, &z609, &r609, &s609));
 
     // 606] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #42: Signature with special case values for r and s
     let z610 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9752,7 +9752,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk610, &z610, &r610, &s610));
+    assert!(!ecdsa_verify_secp256r1(&pk610, &z610, &r610, &s610));
 
     // 607] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #43: Signature with special case values for r and s
     let z611 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9768,7 +9768,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk611, &z611, &r611, &s611));
+    assert!(!ecdsa_verify_secp256r1(&pk611, &z611, &r611, &s611));
 
     // 608] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #44: Signature with special case values for r and s
     let z612 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9784,7 +9784,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk612, &z612, &r612, &s612));
+    assert!(!ecdsa_verify_secp256r1(&pk612, &z612, &r612, &s612));
 
     // 609] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #45: Signature with special case values for r and s
     let z613 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9800,7 +9800,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk613, &z613, &r613, &s613));
+    assert!(!ecdsa_verify_secp256r1(&pk613, &z613, &r613, &s613));
 
     // 610] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #46: Signature with special case values for r and s
     let z614 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9816,7 +9816,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk614, &z614, &r614, &s614));
+    assert!(!ecdsa_verify_secp256r1(&pk614, &z614, &r614, &s614));
 
     // 611] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #47: Signature with special case values for r and s
     let z615 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9832,7 +9832,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk615, &z615, &r615, &s615));
+    assert!(!ecdsa_verify_secp256r1(&pk615, &z615, &r615, &s615));
 
     // 612] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #48: Signature with special case values for r and s
     let z616 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9848,7 +9848,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk616, &z616, &r616, &s616));
+    assert!(!ecdsa_verify_secp256r1(&pk616, &z616, &r616, &s616));
 
     // 613] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #49: Signature with special case values for r and s
     let z617 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9864,7 +9864,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk617, &z617, &r617, &s617));
+    assert!(!ecdsa_verify_secp256r1(&pk617, &z617, &r617, &s617));
 
     // 614] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #50: Signature with special case values for r and s
     let z618 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9880,7 +9880,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk618, &z618, &r618, &s618));
+    assert!(!ecdsa_verify_secp256r1(&pk618, &z618, &r618, &s618));
 
     // 615] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #51: Signature with special case values for r and s
     let z619 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9896,7 +9896,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk619, &z619, &r619, &s619));
+    assert!(!ecdsa_verify_secp256r1(&pk619, &z619, &r619, &s619));
 
     // 616] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #52: Signature with special case values for r and s
     let z620 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9912,7 +9912,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk620, &z620, &r620, &s620));
+    assert!(!ecdsa_verify_secp256r1(&pk620, &z620, &r620, &s620));
 
     // 617] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #53: Signature with special case values for r and s
     let z621 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9928,7 +9928,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk621, &z621, &r621, &s621));
+    assert!(!ecdsa_verify_secp256r1(&pk621, &z621, &r621, &s621));
 
     // 618] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #54: Signature with special case values for r and s
     let z622 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9944,7 +9944,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk622, &z622, &r622, &s622));
+    assert!(!ecdsa_verify_secp256r1(&pk622, &z622, &r622, &s622));
 
     // 619] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #55: Signature with special case values for r and s
     let z623 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9960,7 +9960,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk623, &z623, &r623, &s623));
+    assert!(!ecdsa_verify_secp256r1(&pk623, &z623, &r623, &s623));
 
     // 620] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #56: Signature with special case values for r and s
     let z624 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9976,7 +9976,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk624, &z624, &r624, &s624));
+    assert!(!ecdsa_verify_secp256r1(&pk624, &z624, &r624, &s624));
 
     // 621] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #57: Signature with special case values for r and s
     let z625 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -9992,7 +9992,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk625, &z625, &r625, &s625));
+    assert!(!ecdsa_verify_secp256r1(&pk625, &z625, &r625, &s625));
 
     // 622] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #58: Edge case for Shamir multiplication
     let z626 = [0x2fa50c772ed6f807, 0x2f2627416faf2f07, 0xc422f44dea4ed1a5, 0x70239dd877f7c944];
@@ -10008,7 +10008,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk626, &z626, &r626, &s626));
+    assert!(ecdsa_verify_secp256r1(&pk626, &z626, &r626, &s626));
 
     // 623] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #59: special case hash
     let z627 = [0x7ead3645f356e7a9, 0x84bcd58a1bb5e747, 0xccf17803ebe2bd08, 0x00000000690ed426];
@@ -10024,7 +10024,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk627, &z627, &r627, &s627));
+    assert!(ecdsa_verify_secp256r1(&pk627, &z627, &r627, &s627));
 
     // 624] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #60: special case hash
     let z628 = [0x140697ad25770d91, 0xf696ad3ebb5ee47f, 0x525c6035725235c2, 0x7300000000213f2a];
@@ -10040,7 +10040,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk628, &z628, &r628, &s628));
+    assert!(ecdsa_verify_secp256r1(&pk628, &z628, &r628, &s628));
 
     // 625] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #61: special case hash
     let z629 = [0x4a0161c27fe06045, 0x8afd25daadeb3edb, 0xe0635b245f0b9797, 0xddf2000000005e0b];
@@ -10056,7 +10056,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk629, &z629, &r629, &s629));
+    assert!(ecdsa_verify_secp256r1(&pk629, &z629, &r629, &s629));
 
     // 626] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #62: special case hash
     let z630 = [0x5be1ec355d0841a0, 0x642b8499588b8985, 0x4769c4ecb9e164d6, 0x67ab190000000078];
@@ -10072,7 +10072,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk630, &z630, &r630, &s630));
+    assert!(ecdsa_verify_secp256r1(&pk630, &z630, &r630, &s630));
 
     // 627] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #63: special case hash
     let z631 = [0xe296b6350fc311cf, 0x02095dff252ee905, 0x76d7dbeffe125eaf, 0xa2bf094600000000];
@@ -10088,7 +10088,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk631, &z631, &r631, &s631));
+    assert!(ecdsa_verify_secp256r1(&pk631, &z631, &r631, &s631));
 
     // 628] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #64: special case hash
     let z632 = [0x29e15c544e4f0e65, 0xa0a3531711608581, 0x00e1e75e624a06b3, 0x3554e827c7000000];
@@ -10104,7 +10104,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk632, &z632, &r632, &s632));
+    assert!(ecdsa_verify_secp256r1(&pk632, &z632, &r632, &s632));
 
     // 629] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #65: special case hash
     let z633 = [0x26e3a54b9fc6965c, 0x3255ea4c9fd0cb34, 0x000026941a0f0bb5, 0x9b6cd3b812610000];
@@ -10120,7 +10120,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk633, &z633, &r633, &s633));
+    assert!(ecdsa_verify_secp256r1(&pk633, &z633, &r633, &s633));
 
     // 630] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #66: special case hash
     let z634 = [0x77162f93c4ae0186, 0x82a52baa51c71ca8, 0x000000e7561c26fc, 0x883ae39f50bf0100];
@@ -10136,7 +10136,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk634, &z634, &r634, &s634));
+    assert!(ecdsa_verify_secp256r1(&pk634, &z634, &r634, &s634));
 
     // 631] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #67: special case hash
     let z635 = [0x01fe9fce011d0ba6, 0x10540f420fb4ff74, 0x0000000000fa7cd0, 0xa1ce5d6e5ecaf28b];
@@ -10152,7 +10152,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk635, &z635, &r635, &s635));
+    assert!(ecdsa_verify_secp256r1(&pk635, &z635, &r635, &s635));
 
     // 632] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #68: special case hash
     let z636 = [0x5494cdffd5ee8054, 0x97330012a8ee836c, 0x9300000000383453, 0x8ea5f645f373f580];
@@ -10168,7 +10168,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk636, &z636, &r636, &s636));
+    assert!(ecdsa_verify_secp256r1(&pk636, &z636, &r636, &s636));
 
     // 633] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #69: special case hash
     let z637 = [0x8d9c1bbdcb5ef305, 0xd65ce93eabb7d60d, 0xa734000000008792, 0x660570d323e9f75f];
@@ -10184,7 +10184,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk637, &z637, &r637, &s637));
+    assert!(ecdsa_verify_secp256r1(&pk637, &z637, &r637, &s637));
 
     // 634] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #70: special case hash
     let z638 = [0x46ada2de4c568c34, 0x8d35f1f45cf9c3bf, 0x7dde8800000000e9, 0xd0462673154cce58];
@@ -10200,7 +10200,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk638, &z638, &r638, &s638));
+    assert!(ecdsa_verify_secp256r1(&pk638, &z638, &r638, &s638));
 
     // 635] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #71: special case hash
     let z639 = [0xb83e7b4418d7278f, 0x0caef15a6171059a, 0x80cedfef00000000, 0xbd90640269a78226];
@@ -10216,7 +10216,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk639, &z639, &r639, &s639));
+    assert!(ecdsa_verify_secp256r1(&pk639, &z639, &r639, &s639));
 
     // 636] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #72: special case hash
     let z640 = [0x4beae8e284788a73, 0x00d2dcceb301c54b, 0x512e41222a000000, 0x33239a52d72f1311];
@@ -10232,7 +10232,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk640, &z640, &r640, &s640));
+    assert!(ecdsa_verify_secp256r1(&pk640, &z640, &r640, &s640));
 
     // 637] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #73: special case hash
     let z641 = [0x1dc84c2d941ffaf1, 0x00007ee4a21a1cbe, 0x1365d4e6d95c0000, 0xb8d64fbcd4a1c10f];
@@ -10248,7 +10248,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk641, &z641, &r641, &s641));
+    assert!(ecdsa_verify_secp256r1(&pk641, &z641, &r641, &s641));
 
     // 638] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #74: special case hash
     let z642 = [0x4088b20fe0e9d84a, 0x0000003a227420db, 0xa3fef3183ed09200, 0x01603d3982bf77d7];
@@ -10264,7 +10264,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk642, &z642, &r642, &s642));
+    assert!(ecdsa_verify_secp256r1(&pk642, &z642, &r642, &s642));
 
     // 639] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #75: special case hash
     let z643 = [0xb7e9eb0cfbff7363, 0x000000004d89ef50, 0x599aa02e6cf66d9c, 0x9ea6994f1e0384c8];
@@ -10280,7 +10280,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk643, &z643, &r643, &s643));
+    assert!(ecdsa_verify_secp256r1(&pk643, &z643, &r643, &s643));
 
     // 640] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #76: special case hash
     let z644 = [0xf692bc670905b18c, 0x4700000000e2fa5b, 0x693979371a01068a, 0xd03215a8401bcf16];
@@ -10296,7 +10296,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk644, &z644, &r644, &s644));
+    assert!(ecdsa_verify_secp256r1(&pk644, &z644, &r644, &s644));
 
     // 641] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #77: special case hash
     let z645 = [0xfd5f64b582e3bb14, 0xc87e000000008408, 0x9c84bf83f0300e5d, 0x307bfaaffb650c88];
@@ -10312,7 +10312,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk645, &z645, &r645, &s645));
+    assert!(ecdsa_verify_secp256r1(&pk645, &z645, &r645, &s645));
 
     // 642] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #78: special case hash
     let z646 = [0xaf574bb4d54ea6b8, 0x51527c00000000e4, 0x33324d36bb0c1575, 0xbab5c4f4df540d7b];
@@ -10328,7 +10328,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk646, &z646, &r646, &s646));
+    assert!(ecdsa_verify_secp256r1(&pk646, &z646, &r646, &s646));
 
     // 643] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #79: special case hash
     let z647 = [0xc3b869197ef5e15e, 0xc2456f5b00000000, 0xe4f58d8036f9c36e, 0xd4ba47f6ae28f274];
@@ -10344,7 +10344,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk647, &z647, &r647, &s647));
+    assert!(ecdsa_verify_secp256r1(&pk647, &z647, &r647, &s647));
 
     // 644] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #80: special case hash
     let z648 = [0x00801e47f8c184e1, 0xfe0f10aafd000000, 0xf29f1fa00984342a, 0x79fd19c7235ea212];
@@ -10360,7 +10360,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk648, &z648, &r648, &s648));
+    assert!(ecdsa_verify_secp256r1(&pk648, &z648, &r648, &s648));
 
     // 645] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #81: special case hash
     let z649 = [0x0000a37ea6700cda, 0x79cbeb7ac9730000, 0xaf9aba5c0583462d, 0x8c291e8eeaa45adb];
@@ -10376,7 +10376,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk649, &z649, &r649, &s649));
+    assert!(ecdsa_verify_secp256r1(&pk649, &z649, &r649, &s649));
 
     // 646] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #82: special case hash
     let z650 = [0x0000003c278a6b21, 0xf4cdcf66c3f78a00, 0x9803efbfb8140732, 0x0eaae8641084fa97];
@@ -10392,7 +10392,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk650, &z650, &r650, &s650));
+    assert!(ecdsa_verify_secp256r1(&pk650, &z650, &r650, &s650));
 
     // 647] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #83: special case hash
     let z651 = [0x00000000afc0f89d, 0xef17c6d96e13846c, 0x0068399bf01bab42, 0xe02716d01fb23a5a];
@@ -10408,7 +10408,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk651, &z651, &r651, &s651));
+    assert!(ecdsa_verify_secp256r1(&pk651, &z651, &r651, &s651));
 
     // 648] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #84: special case hash
     let z652 = [0x9a00000000fc7de1, 0x9061768af89d0065, 0x194e9a16bc7dab2a, 0x9eb0bf583a1a6b9a];
@@ -10424,7 +10424,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk652, &z652, &r652, &s652));
+    assert!(ecdsa_verify_secp256r1(&pk652, &z652, &r652, &s652));
 
     // 649] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #85: special case hash
     let z653 = [0x690e00000000cd15, 0x6e1030cb53d9a82b, 0x2c214f0d5e72ef28, 0x62aac98818b3b84a];
@@ -10440,7 +10440,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk653, &z653, &r653, &s653));
+    assert!(ecdsa_verify_secp256r1(&pk653, &z653, &r653, &s653));
 
     // 650] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #86: special case hash
     let z654 = [0x464b9300000000c8, 0xd2b6f552ea4b6895, 0xf29ae43732e513ef, 0x3760a7f37cf96218];
@@ -10456,7 +10456,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk654, &z654, &r654, &s654));
+    assert!(ecdsa_verify_secp256r1(&pk654, &z654, &r654, &s654));
 
     // 651] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #87: special case hash
     let z655 = [0xbb6ff6c800000000, 0x6b4320bea836cd9c, 0x3834f2098c088009, 0x0da0a1d2851d3302];
@@ -10472,7 +10472,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk655, &z655, &r655, &s655));
+    assert!(ecdsa_verify_secp256r1(&pk655, &z655, &r655, &s655));
 
     // 652] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #88: special case hash
     let z656 = [0xa764a231e82d289a, 0x0fe975f735887194, 0x086fd567aafd598f, 0xffffffff293886d3];
@@ -10488,7 +10488,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk656, &z656, &r656, &s656));
+    assert!(ecdsa_verify_secp256r1(&pk656, &z656, &r656, &s656));
 
     // 653] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #89: special case hash
     let z657 = [0x0e8d9ca99527e7b7, 0x26acdc4ce127ec2e, 0xe3c03445a072e243, 0x7bffffffff2376d1];
@@ -10504,7 +10504,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk657, &z657, &r657, &s657));
+    assert!(ecdsa_verify_secp256r1(&pk657, &z657, &r657, &s657));
 
     // 654] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #90: special case hash
     let z658 = [0xfd016807e97fa395, 0xbc80872602a6e467, 0x51b085377605a224, 0xa2b5ffffffffebb2];
@@ -10520,7 +10520,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk658, &z658, &r658, &s658));
+    assert!(ecdsa_verify_secp256r1(&pk658, &z658, &r658, &s658));
 
     // 655] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #91: special case hash
     let z659 = [0x7b83d0967d4b20c0, 0xc1a3c256870d45a6, 0x1b96fa5f097fcf3c, 0x641227ffffffff6f];
@@ -10536,7 +10536,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk659, &z659, &r659, &s659));
+    assert!(ecdsa_verify_secp256r1(&pk659, &z659, &r659, &s659));
 
     // 656] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #92: special case hash
     let z660 = [0x8df56f36600e0f8b, 0xba20352117750229, 0xabad03e2fc662dc3, 0x958415d8ffffffff];
@@ -10552,7 +10552,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk660, &z660, &r660, &s660));
+    assert!(ecdsa_verify_secp256r1(&pk660, &z660, &r660, &s660));
 
     // 657] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #93: special case hash
     let z661 = [0x954521b6975420f8, 0xe13deb04e1fbe8fb, 0xff1281093536f47f, 0xf1d8de4858ffffff];
@@ -10568,7 +10568,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk661, &z661, &r661, &s661));
+    assert!(ecdsa_verify_secp256r1(&pk661, &z661, &r661, &s661));
 
     // 658] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #94: special case hash
     let z662 = [0x876b95c81fc31def, 0x32dc5d47c05ef6f1, 0xffff10782dd14a3b, 0x0927895f2802ffff];
@@ -10584,7 +10584,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk662, &z662, &r662, &s662));
+    assert!(ecdsa_verify_secp256r1(&pk662, &z662, &r662, &s662));
 
     // 659] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #95: special case hash
     let z663 = [0x24cf6a0c3ac80589, 0x0a57c3063fb5a306, 0xffffff4f332862a1, 0x60907984aa7e8eff];
@@ -10600,7 +10600,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk663, &z663, &r663, &s663));
+    assert!(ecdsa_verify_secp256r1(&pk663, &z663, &r663, &s663));
 
     // 660] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #96: special case hash
     let z664 = [0x42d6b9b8cd6ae1e2, 0x50f9a5f50636ea69, 0xffffffff0af42cda, 0xc6ff198484939170];
@@ -10616,7 +10616,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk664, &z664, &r664, &s664));
+    assert!(ecdsa_verify_secp256r1(&pk664, &z664, &r664, &s664));
 
     // 661] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #97: special case hash
     let z665 = [0x16dfbe4d27d7e68d, 0x9b9e0956cc43135d, 0x75ffffffff807479, 0xde030419345ca15c];
@@ -10632,7 +10632,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk665, &z665, &r665, &s665));
+    assert!(ecdsa_verify_secp256r1(&pk665, &z665, &r665, &s665));
 
     // 662] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #98: special case hash
     let z666 = [0x7e1ab78caaaac6ff, 0x665604d34acb1903, 0x2b88fffffffff6c8, 0x6f0e3eeaf42b2813];
@@ -10648,7 +10648,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk666, &z666, &r666, &s666));
+    assert!(ecdsa_verify_secp256r1(&pk666, &z666, &r666, &s666));
 
     // 663] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #99: special case hash
     let z667 = [0x2cb222d1f8017ab9, 0x48f7c0591ddcae7d, 0x3708d1ffffffffbe, 0xcdb549f773b3e62b];
@@ -10664,7 +10664,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk667, &z667, &r667, &s667));
+    assert!(ecdsa_verify_secp256r1(&pk667, &z667, &r667, &s667));
 
     // 664] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #100: special case hash
     let z668 = [0x24d8fd6f0edb0484, 0x9fd64886c1dc4f99, 0x1df4989bffffffff, 0x2c3f26f96a3ac005];
@@ -10680,7 +10680,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk668, &z668, &r668, &s668));
+    assert!(ecdsa_verify_secp256r1(&pk668, &z668, &r668, &s668));
 
     // 665] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #101: special case hash
     let z669 = [0x8476397c04edf411, 0xff5c31d89fda6a6b, 0x2cb7d53f9affffff, 0xac18f8418c55a250];
@@ -10696,7 +10696,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk669, &z669, &r669, &s669));
+    assert!(ecdsa_verify_secp256r1(&pk669, &z669, &r669, &s669));
 
     // 666] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #102: special case hash
     let z670 = [0x3e5a6ab8cf0ee610, 0xffffa2fd3e289368, 0xb24094f72bb5ffff, 0x4f9618f98e2d3a15];
@@ -10712,7 +10712,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk670, &z670, &r670, &s670));
+    assert!(ecdsa_verify_secp256r1(&pk670, &z670, &r670, &s670));
 
     // 667] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #103: special case hash
     let z671 = [0x04caae73ab0bc75a, 0xffffff67edf7c402, 0x9cc21d31d37a25ff, 0x422e82a3d56ed10a];
@@ -10728,7 +10728,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk671, &z671, &r671, &s671));
+    assert!(ecdsa_verify_secp256r1(&pk671, &z671, &r671, &s671));
 
     // 668] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #104: special case hash
     let z672 = [0x2d9890b5cf95d018, 0x17a5ffffffffa084, 0x6e7b329ff738fbb4, 0x7075d245ccc3281b];
@@ -10744,7 +10744,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk672, &z672, &r672, &s672));
+    assert!(ecdsa_verify_secp256r1(&pk672, &z672, &r672, &s672));
 
     // 669] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #105: special case hash
     let z673 = [0xc1847eb76c217a95, 0x7e280ebeffffffff, 0x9443d593fa4fd659, 0x3c80de54cd922698];
@@ -10760,7 +10760,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk673, &z673, &r673, &s673));
+    assert!(ecdsa_verify_secp256r1(&pk673, &z673, &r673, &s673));
 
     // 670] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #106: special case hash
     let z674 = [0xffc7906aa794b39b, 0x0ce891a8cdffffff, 0x980bef3d697ea277, 0xde21754e29b85601];
@@ -10776,7 +10776,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk674, &z674, &r674, &s674));
+    assert!(ecdsa_verify_secp256r1(&pk674, &z674, &r674, &s674));
 
     // 671] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #107: special case hash
     let z675 = [0xffff2f1f2f57881c, 0x599e4d5f7289ffff, 0x84dd59623fb531bb, 0x8f65d92927cfb86a];
@@ -10792,7 +10792,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk675, &z675, &r675, &s675));
+    assert!(ecdsa_verify_secp256r1(&pk675, &z675, &r675, &s675));
 
     // 672] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #108: special case hash
     let z676 = [0xfffffffafc8c3ca8, 0x2cc7cd0e8426cbff, 0x160bea3877dace8a, 0x6b63e9a74e092120];
@@ -10808,7 +10808,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk676, &z676, &r676, &s676));
+    assert!(ecdsa_verify_secp256r1(&pk676, &z676, &r676, &s676));
 
     // 673] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #109: special case hash
     let z677 = [0xffffffffe852512e, 0xd094586e249c8699, 0xb6d75219444e8b43, 0xfc28259702a03845];
@@ -10824,7 +10824,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk677, &z677, &r677, &s677));
+    assert!(ecdsa_verify_secp256r1(&pk677, &z677, &r677, &s677));
 
     // 674] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #110: special case hash
     let z678 = [0x1757ffffffffe20a, 0x74ecbcd52e8ceb57, 0xcee044ee8e8db7f7, 0x1273b4502ea4e3bc];
@@ -10840,7 +10840,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk678, &z678, &r678, &s678));
+    assert!(ecdsa_verify_secp256r1(&pk678, &z678, &r678, &s678));
 
     // 675] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #111: special case hash
     let z679 = [0xfb49ffffffffff6e, 0x4f8c53a15b96e602, 0x0c566c66228d8181, 0x08fb565610a79baa];
@@ -10856,7 +10856,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk679, &z679, &r679, &s679));
+    assert!(ecdsa_verify_secp256r1(&pk679, &z679, &r679, &s679));
 
     // 676] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #112: special case hash
     let z680 = [0x28ecaefeffffffff, 0xa2403f748e97d7cd, 0x87715fcb1aa4e79a, 0xd59291cc2cf89f30];
@@ -10872,7 +10872,7 @@ pub fn ecdsa_tests() {
         0x921fb1498a60f460,
         0xc7787964eaac00e5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk680, &z680, &r680, &s680));
+    assert!(ecdsa_verify_secp256r1(&pk680, &z680, &r680, &s680));
 
     // 677] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #113: k*G has a large x-coordinate
     let z681 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10888,7 +10888,7 @@ pub fn ecdsa_tests() {
         0x14ec1238beae2037,
         0xb1fc105ee5ce80d5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk681, &z681, &r681, &s681));
+    assert!(ecdsa_verify_secp256r1(&pk681, &z681, &r681, &s681));
 
     // 678] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #114: r too large
     let z682 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10904,7 +10904,7 @@ pub fn ecdsa_tests() {
         0x14ec1238beae2037,
         0xb1fc105ee5ce80d5,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk682, &z682, &r682, &s682));
+    assert!(!ecdsa_verify_secp256r1(&pk682, &z682, &r682, &s682));
 
     // 679] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #115: r,s are large
     let z683 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10920,7 +10920,7 @@ pub fn ecdsa_tests() {
         0x7a0c5e3b747adfa3,
         0xee41fdb4d10402ce,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk683, &z683, &r683, &s683));
+    assert!(ecdsa_verify_secp256r1(&pk683, &z683, &r683, &s683));
 
     // 680] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #116: r and s^-1 have a large Hamming weight
     let z684 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10936,7 +10936,7 @@ pub fn ecdsa_tests() {
         0x80ea5db514aa2f93,
         0xe05b06e72d4a1bff,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk684, &z684, &r684, &s684));
+    assert!(ecdsa_verify_secp256r1(&pk684, &z684, &r684, &s684));
 
     // 681] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #117: r and s^-1 have a large Hamming weight
     let z685 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10952,7 +10952,7 @@ pub fn ecdsa_tests() {
         0x409cfc5992a99fff,
         0x0b38c17f3d0672e7,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk685, &z685, &r685, &s685));
+    assert!(ecdsa_verify_secp256r1(&pk685, &z685, &r685, &s685));
 
     // 682] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #118: small r and s
     let z686 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10968,7 +10968,7 @@ pub fn ecdsa_tests() {
         0x2f4a17fd830c6654,
         0x3e213e28a608ce9a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk686, &z686, &r686, &s686));
+    assert!(ecdsa_verify_secp256r1(&pk686, &z686, &r686, &s686));
 
     // 683] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #120: small r and s
     let z687 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -10984,7 +10984,7 @@ pub fn ecdsa_tests() {
         0x58403ce2fe501983,
         0x27242fcec7088287,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk687, &z687, &r687, &s687));
+    assert!(ecdsa_verify_secp256r1(&pk687, &z687, &r687, &s687));
 
     // 684] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #122: small r and s
     let z688 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11000,7 +11000,7 @@ pub fn ecdsa_tests() {
         0x50b883d770ec51eb,
         0x2303a193dc591be1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk688, &z688, &r688, &s688));
+    assert!(ecdsa_verify_secp256r1(&pk688, &z688, &r688, &s688));
 
     // 685] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #124: small r and s
     let z689 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11016,7 +11016,7 @@ pub fn ecdsa_tests() {
         0xb274ba2cad36b58f,
         0xbc8e59c009361758,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk689, &z689, &r689, &s689));
+    assert!(ecdsa_verify_secp256r1(&pk689, &z689, &r689, &s689));
 
     // 686] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #126: r is larger than n
     let z690 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11032,7 +11032,7 @@ pub fn ecdsa_tests() {
         0xb274ba2cad36b58f,
         0xbc8e59c009361758,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk690, &z690, &r690, &s690));
+    assert!(!ecdsa_verify_secp256r1(&pk690, &z690, &r690, &s690));
 
     // 687] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #127: s is larger than n
     let z691 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11048,7 +11048,7 @@ pub fn ecdsa_tests() {
         0x335f3f937d4c79af,
         0x84fa9547afda5c66,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk691, &z691, &r691, &s691));
+    assert!(!ecdsa_verify_secp256r1(&pk691, &z691, &r691, &s691));
 
     // 688] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #128: small r and s^-1
     let z692 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11064,7 +11064,7 @@ pub fn ecdsa_tests() {
         0x113c78b4cb8dc7d3,
         0xa02ce5c1e53cb196,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk692, &z692, &r692, &s692));
+    assert!(ecdsa_verify_secp256r1(&pk692, &z692, &r692, &s692));
 
     // 689] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #129: smallish r and s^-1
     let z693 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11080,7 +11080,7 @@ pub fn ecdsa_tests() {
         0xf647df28e2d9acd0,
         0x25af80b09a167d9e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk693, &z693, &r693, &s693));
+    assert!(ecdsa_verify_secp256r1(&pk693, &z693, &r693, &s693));
 
     // 690] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #130: 100-bit r and small s^-1
     let z694 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11096,7 +11096,7 @@ pub fn ecdsa_tests() {
         0x4b4a91c9b7d65bc6,
         0x0387ea85bc4f2880,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk694, &z694, &r694, &s694));
+    assert!(ecdsa_verify_secp256r1(&pk694, &z694, &r694, &s694));
 
     // 691] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #131: small r and 100 bit s^-1
     let z695 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11112,7 +11112,7 @@ pub fn ecdsa_tests() {
         0x56fbd7bb9e4e3ae3,
         0xc496e73a44563f8d,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk695, &z695, &r695, &s695));
+    assert!(ecdsa_verify_secp256r1(&pk695, &z695, &r695, &s695));
 
     // 692] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #132: 100-bit r and s^-1
     let z696 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11128,7 +11128,7 @@ pub fn ecdsa_tests() {
         0x85a813bc35f3a207,
         0x709b3d50976ef8b3,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk696, &z696, &r696, &s696));
+    assert!(ecdsa_verify_secp256r1(&pk696, &z696, &r696, &s696));
 
     // 693] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #133: r and s^-1 are close to n
     let z697 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11144,7 +11144,7 @@ pub fn ecdsa_tests() {
         0xe818443a686e869e,
         0xb3e45879d8622b93,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk697, &z697, &r697, &s697));
+    assert!(ecdsa_verify_secp256r1(&pk697, &z697, &r697, &s697));
 
     // 694] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #134: s == 1
     let z698 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11160,7 +11160,7 @@ pub fn ecdsa_tests() {
         0x3bd041ff75fac98e,
         0x618b15b427ad8336,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk698, &z698, &r698, &s698));
+    assert!(ecdsa_verify_secp256r1(&pk698, &z698, &r698, &s698));
 
     // 695] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #135: s == 0
     let z699 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11176,7 +11176,7 @@ pub fn ecdsa_tests() {
         0x3bd041ff75fac98e,
         0x618b15b427ad8336,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk699, &z699, &r699, &s699));
+    assert!(!ecdsa_verify_secp256r1(&pk699, &z699, &r699, &s699));
 
     // 696] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #136: point at infinity during verify
     let z700 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11192,7 +11192,7 @@ pub fn ecdsa_tests() {
         0xa387ee8e4d4e84b4,
         0x34383438d5041ea9,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk700, &z700, &r700, &s700));
+    assert!(!ecdsa_verify_secp256r1(&pk700, &z700, &r700, &s700));
 
     // 697] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #137: edge case for signature malleability
     let z701 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11208,7 +11208,7 @@ pub fn ecdsa_tests() {
         0x13d02c666c45ef22,
         0xed6572e01eb7a8d1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk701, &z701, &r701, &s701));
+    assert!(ecdsa_verify_secp256r1(&pk701, &z701, &r701, &s701));
 
     // 698] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #138: edge case for signature malleability
     let z702 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11224,7 +11224,7 @@ pub fn ecdsa_tests() {
         0x970b83f652442106,
         0x66fae1614174be63,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk702, &z702, &r702, &s702));
+    assert!(ecdsa_verify_secp256r1(&pk702, &z702, &r702, &s702));
 
     // 699] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #139: u1 == 1
     let z703 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11240,7 +11240,7 @@ pub fn ecdsa_tests() {
         0x40730b4fa3ee64fa,
         0x83a7a618625c2289,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk703, &z703, &r703, &s703));
+    assert!(ecdsa_verify_secp256r1(&pk703, &z703, &r703, &s703));
 
     // 700] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #140: u1 == n - 1
     let z704 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11256,7 +11256,7 @@ pub fn ecdsa_tests() {
         0x625ad57b12a32d40,
         0x1f3a0a0e6823a49b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk704, &z704, &r704, &s704));
+    assert!(ecdsa_verify_secp256r1(&pk704, &z704, &r704, &s704));
 
     // 701] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #141: u2 == 1
     let z705 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11272,7 +11272,7 @@ pub fn ecdsa_tests() {
         0x8fde38b98c7c271f,
         0xa1f6f6abcb38ea3b,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk705, &z705, &r705, &s705));
+    assert!(ecdsa_verify_secp256r1(&pk705, &z705, &r705, &s705));
 
     // 702] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #142: u2 == n - 1
     let z706 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11288,7 +11288,7 @@ pub fn ecdsa_tests() {
         0xf721be2fb5f549e4,
         0x543ecbeaf7e8044e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk706, &z706, &r706, &s706));
+    assert!(ecdsa_verify_secp256r1(&pk706, &z706, &r706, &s706));
 
     // 703] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #143: edge case for u1
     let z707 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11304,7 +11304,7 @@ pub fn ecdsa_tests() {
         0x2dc313612020311f,
         0x2243018e6866df92,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk707, &z707, &r707, &s707));
+    assert!(ecdsa_verify_secp256r1(&pk707, &z707, &r707, &s707));
 
     // 704] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #144: edge case for u1
     let z708 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11320,7 +11320,7 @@ pub fn ecdsa_tests() {
         0x9e8b4c5da6bb9228,
         0x65d06dd6a88abfa4,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk708, &z708, &r708, &s708));
+    assert!(ecdsa_verify_secp256r1(&pk708, &z708, &r708, &s708));
 
     // 705] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #145: edge case for u1
     let z709 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11336,7 +11336,7 @@ pub fn ecdsa_tests() {
         0x3c7cfd9b83c63e3a,
         0x98a20d1bdcf57351,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk709, &z709, &r709, &s709));
+    assert!(ecdsa_verify_secp256r1(&pk709, &z709, &r709, &s709));
 
     // 706] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #146: edge case for u1
     let z710 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11352,7 +11352,7 @@ pub fn ecdsa_tests() {
         0x489ca703a399864b,
         0xc0adbea0882482a7,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk710, &z710, &r710, &s710));
+    assert!(ecdsa_verify_secp256r1(&pk710, &z710, &r710, &s710));
 
     // 707] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #147: edge case for u1
     let z711 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11368,7 +11368,7 @@ pub fn ecdsa_tests() {
         0x221e39e1205d5510,
         0x777458d6f55a364c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk711, &z711, &r711, &s711));
+    assert!(ecdsa_verify_secp256r1(&pk711, &z711, &r711, &s711));
 
     // 708] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #148: edge case for u1
     let z712 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11384,7 +11384,7 @@ pub fn ecdsa_tests() {
         0x6495c42102d08e81,
         0x930d71ee1992d246,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk712, &z712, &r712, &s712));
+    assert!(ecdsa_verify_secp256r1(&pk712, &z712, &r712, &s712));
 
     // 709] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #149: edge case for u1
     let z713 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11400,7 +11400,7 @@ pub fn ecdsa_tests() {
         0x61b90c9f4285eefc,
         0x9ef1568530291a80,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk713, &z713, &r713, &s713));
+    assert!(ecdsa_verify_secp256r1(&pk713, &z713, &r713, &s713));
 
     // 710] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #150: edge case for u1
     let z714 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11416,7 +11416,7 @@ pub fn ecdsa_tests() {
         0x3262ff7335541519,
         0x7f90ba23664153e9,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk714, &z714, &r714, &s714));
+    assert!(ecdsa_verify_secp256r1(&pk714, &z714, &r714, &s714));
 
     // 711] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #151: edge case for u1
     let z715 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11432,7 +11432,7 @@ pub fn ecdsa_tests() {
         0x7b0c55e5240a3a98,
         0x2d3b90d25baa6bdb,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk715, &z715, &r715, &s715));
+    assert!(ecdsa_verify_secp256r1(&pk715, &z715, &r715, &s715));
 
     // 712] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #152: edge case for u1
     let z716 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11448,7 +11448,7 @@ pub fn ecdsa_tests() {
         0x900a914c2934ec2f,
         0xa54b5bc4025cf335,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk716, &z716, &r716, &s716));
+    assert!(ecdsa_verify_secp256r1(&pk716, &z716, &r716, &s716));
 
     // 713] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #153: edge case for u1
     let z717 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11464,7 +11464,7 @@ pub fn ecdsa_tests() {
         0xc6e9a472b96d88f4,
         0xaace0046491eeaa1,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk717, &z717, &r717, &s717));
+    assert!(ecdsa_verify_secp256r1(&pk717, &z717, &r717, &s717));
 
     // 714] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #154: edge case for u1
     let z718 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11480,7 +11480,7 @@ pub fn ecdsa_tests() {
         0x204fb32a1f829290,
         0xbe7c2ab4d0b25303,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk718, &z718, &r718, &s718));
+    assert!(ecdsa_verify_secp256r1(&pk718, &z718, &r718, &s718));
 
     // 715] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #155: edge case for u1
     let z719 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11496,7 +11496,7 @@ pub fn ecdsa_tests() {
         0xebcc4c97847eed21,
         0x44b4b57cdf960d32,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk719, &z719, &r719, &s719));
+    assert!(ecdsa_verify_secp256r1(&pk719, &z719, &r719, &s719));
 
     // 716] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #156: edge case for u1
     let z720 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11512,7 +11512,7 @@ pub fn ecdsa_tests() {
         0x00ad21ee3fd4d980,
         0x9d655e9a755bc9d8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk720, &z720, &r720, &s720));
+    assert!(ecdsa_verify_secp256r1(&pk720, &z720, &r720, &s720));
 
     // 717] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #157: edge case for u2
     let z721 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11528,7 +11528,7 @@ pub fn ecdsa_tests() {
         0xb460d636c965a5f8,
         0x112f7d837f8f9c36,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk721, &z721, &r721, &s721));
+    assert!(ecdsa_verify_secp256r1(&pk721, &z721, &r721, &s721));
 
     // 718] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #158: edge case for u2
     let z722 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11544,7 +11544,7 @@ pub fn ecdsa_tests() {
         0x96924c265f0ddb75,
         0x43178d1f88b6a57a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk722, &z722, &r722, &s722));
+    assert!(ecdsa_verify_secp256r1(&pk722, &z722, &r722, &s722));
 
     // 719] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #159: edge case for u2
     let z723 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11560,7 +11560,7 @@ pub fn ecdsa_tests() {
         0x2c6e612f0fd3189d,
         0xc34318139c50b080,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk723, &z723, &r723, &s723));
+    assert!(ecdsa_verify_secp256r1(&pk723, &z723, &r723, &s723));
 
     // 720] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #160: edge case for u2
     let z724 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11576,7 +11576,7 @@ pub fn ecdsa_tests() {
         0xb826b2db7a86d19d,
         0x5556b42e330289f3,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk724, &z724, &r724, &s724));
+    assert!(ecdsa_verify_secp256r1(&pk724, &z724, &r724, &s724));
 
     // 721] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #161: edge case for u2
     let z725 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11592,7 +11592,7 @@ pub fn ecdsa_tests() {
         0x970bff01e1343f69,
         0xd9dbd77a918297fd,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk725, &z725, &r725, &s725));
+    assert!(ecdsa_verify_secp256r1(&pk725, &z725, &r725, &s725));
 
     // 722] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #162: edge case for u2
     let z726 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11608,7 +11608,7 @@ pub fn ecdsa_tests() {
         0x9535c22eaaf0b581,
         0x9960bebaf919514f,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk726, &z726, &r726, &s726));
+    assert!(ecdsa_verify_secp256r1(&pk726, &z726, &r726, &s726));
 
     // 723] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #163: edge case for u2
     let z727 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11624,7 +11624,7 @@ pub fn ecdsa_tests() {
         0x20119152f0122476,
         0xf498fae2487807e2,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk727, &z727, &r727, &s727));
+    assert!(ecdsa_verify_secp256r1(&pk727, &z727, &r727, &s727));
 
     // 724] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #164: edge case for u2
     let z728 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11640,7 +11640,7 @@ pub fn ecdsa_tests() {
         0xee822ddd2fc74424,
         0xe986a086060d086e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk728, &z728, &r728, &s728));
+    assert!(ecdsa_verify_secp256r1(&pk728, &z728, &r728, &s728));
 
     // 725] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #165: edge case for u2
     let z729 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11656,7 +11656,7 @@ pub fn ecdsa_tests() {
         0x9a9ac080d516025a,
         0x900b8adfea649101,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk729, &z729, &r729, &s729));
+    assert!(ecdsa_verify_secp256r1(&pk729, &z729, &r729, &s729));
 
     // 726] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #166: edge case for u2
     let z730 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11672,7 +11672,7 @@ pub fn ecdsa_tests() {
         0xd3c1be0fdeaf11fc,
         0xef0d6d800e4047d6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk730, &z730, &r730, &s730));
+    assert!(ecdsa_verify_secp256r1(&pk730, &z730, &r730, &s730));
 
     // 727] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #167: edge case for u2
     let z731 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11688,7 +11688,7 @@ pub fn ecdsa_tests() {
         0x5e6a5ccaa2826a40,
         0x7bfb9b2853199663,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk731, &z731, &r731, &s731));
+    assert!(ecdsa_verify_secp256r1(&pk731, &z731, &r731, &s731));
 
     // 728] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #168: edge case for u2
     let z732 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11704,7 +11704,7 @@ pub fn ecdsa_tests() {
         0xbdb67ef77f6fd296,
         0x6e55f73bb7cdda46,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk732, &z732, &r732, &s732));
+    assert!(ecdsa_verify_secp256r1(&pk732, &z732, &r732, &s732));
 
     // 729] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #169: edge case for u2
     let z733 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11720,7 +11720,7 @@ pub fn ecdsa_tests() {
         0xa7389aaed61738b1,
         0x40e0daa78cfdd207,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk733, &z733, &r733, &s733));
+    assert!(ecdsa_verify_secp256r1(&pk733, &z733, &r733, &s733));
 
     // 730] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #170: edge case for u2
     let z734 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11736,7 +11736,7 @@ pub fn ecdsa_tests() {
         0x09afa3640f4a034e,
         0x167fcc5ca734552e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk734, &z734, &r734, &s734));
+    assert!(ecdsa_verify_secp256r1(&pk734, &z734, &r734, &s734));
 
     // 731] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #171: point duplication during verification
     let z735 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11752,7 +11752,7 @@ pub fn ecdsa_tests() {
         0x92b8b61aafa7a4aa,
         0x2a964fc00d377a85,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk735, &z735, &r735, &s735));
+    assert!(ecdsa_verify_secp256r1(&pk735, &z735, &r735, &s735));
 
     // 732] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #172: duplication bug
     let z736 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11768,7 +11768,7 @@ pub fn ecdsa_tests() {
         0x6d4749e550585b55,
         0xd569b03ef2c8857b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk736, &z736, &r736, &s736));
+    assert!(!ecdsa_verify_secp256r1(&pk736, &z736, &r736, &s736));
 
     // 733] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #173: point with x-coordinate 0
     let z737 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11784,7 +11784,7 @@ pub fn ecdsa_tests() {
         0xad271e88b899c129,
         0xa699799b77b1cc6d,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk737, &z737, &r737, &s737));
+    assert!(!ecdsa_verify_secp256r1(&pk737, &z737, &r737, &s737));
 
     // 734] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #175: comparison with point at infinity
     let z738 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11800,7 +11800,7 @@ pub fn ecdsa_tests() {
         0x73ac3d76bfbc8c5e,
         0x49e68831f18bda29,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk738, &z738, &r738, &s738));
+    assert!(!ecdsa_verify_secp256r1(&pk738, &z738, &r738, &s738));
 
     // 735] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #176: extreme value for k and edgecase s
     let z739 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11816,7 +11816,7 @@ pub fn ecdsa_tests() {
         0xdf990d2c5377790e,
         0x7254622cc371866c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk739, &z739, &r739, &s739));
+    assert!(ecdsa_verify_secp256r1(&pk739, &z739, &r739, &s739));
 
     // 736] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #177: extreme value for k and s^-1
     let z740 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11832,7 +11832,7 @@ pub fn ecdsa_tests() {
         0x4d9e506d418ed9a1,
         0x214dc74fa25371fb,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk740, &z740, &r740, &s740));
+    assert!(ecdsa_verify_secp256r1(&pk740, &z740, &r740, &s740));
 
     // 737] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #178: extreme value for k and s^-1
     let z741 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11848,7 +11848,7 @@ pub fn ecdsa_tests() {
         0xda35360ca7aa925e,
         0x41c74eed786f2d33,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk741, &z741, &r741, &s741));
+    assert!(ecdsa_verify_secp256r1(&pk741, &z741, &r741, &s741));
 
     // 738] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #179: extreme value for k and s^-1
     let z742 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11864,7 +11864,7 @@ pub fn ecdsa_tests() {
         0x4d7df8ab3f3b4181,
         0x662be9bb512663aa,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk742, &z742, &r742, &s742));
+    assert!(ecdsa_verify_secp256r1(&pk742, &z742, &r742, &s742));
 
     // 739] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #180: extreme value for k and s^-1
     let z743 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11880,7 +11880,7 @@ pub fn ecdsa_tests() {
         0x21e29014b2898349,
         0xd0a9135a89d21ce8,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk743, &z743, &r743, &s743));
+    assert!(ecdsa_verify_secp256r1(&pk743, &z743, &r743, &s743));
 
     // 740] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #181: extreme value for k
     let z744 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11896,7 +11896,7 @@ pub fn ecdsa_tests() {
         0xd52bc48673b457c2,
         0x7b4a0d734940f613,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk744, &z744, &r744, &s744));
+    assert!(ecdsa_verify_secp256r1(&pk744, &z744, &r744, &s744));
 
     // 741] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #182: extreme value for k and edgecase s
     let z745 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11912,7 +11912,7 @@ pub fn ecdsa_tests() {
         0xd7ffe480827f90a0,
         0xe0ed26967b9ada9e,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk745, &z745, &r745, &s745));
+    assert!(ecdsa_verify_secp256r1(&pk745, &z745, &r745, &s745));
 
     // 742] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #183: extreme value for k and s^-1
     let z746 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11928,7 +11928,7 @@ pub fn ecdsa_tests() {
         0x70362aaa520ee24c,
         0xaaae079cb44a1af0,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk746, &z746, &r746, &s746));
+    assert!(ecdsa_verify_secp256r1(&pk746, &z746, &r746, &s746));
 
     // 743] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #184: extreme value for k and s^-1
     let z747 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11944,7 +11944,7 @@ pub fn ecdsa_tests() {
         0x729a2219478a7e62,
         0xdb76b797f7f41d9c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk747, &z747, &r747, &s747));
+    assert!(ecdsa_verify_secp256r1(&pk747, &z747, &r747, &s747));
 
     // 744] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #185: extreme value for k and s^-1
     let z748 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11960,7 +11960,7 @@ pub fn ecdsa_tests() {
         0xf56e34eb048f0a9d,
         0xb7dd057e75b78ac6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk748, &z748, &r748, &s748));
+    assert!(ecdsa_verify_secp256r1(&pk748, &z748, &r748, &s748));
 
     // 745] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #186: extreme value for k and s^-1
     let z749 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11976,7 +11976,7 @@ pub fn ecdsa_tests() {
         0x7a759de024eff90b,
         0x5431a7268ff6931c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk749, &z749, &r749, &s749));
+    assert!(ecdsa_verify_secp256r1(&pk749, &z749, &r749, &s749));
 
     // 746] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #187: extreme value for k
     let z750 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -11992,7 +11992,7 @@ pub fn ecdsa_tests() {
         0x5997c776f14ad645,
         0xdf510f2ecef6d9a0,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk750, &z750, &r750, &s750));
+    assert!(ecdsa_verify_secp256r1(&pk750, &z750, &r750, &s750));
 
     // 747] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #188: testing point duplication
     let z751 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -12008,7 +12008,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk751, &z751, &r751, &s751));
+    assert!(!ecdsa_verify_secp256r1(&pk751, &z751, &r751, &s751));
 
     // 748] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #189: testing point duplication
     let z752 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -12024,7 +12024,7 @@ pub fn ecdsa_tests() {
         0x8ee7eb4a7c0f9e16,
         0x4fe342e2fe1a7f9b,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk752, &z752, &r752, &s752));
+    assert!(!ecdsa_verify_secp256r1(&pk752, &z752, &r752, &s752));
 
     // 749] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #190: testing point duplication
     let z753 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -12040,7 +12040,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk753, &z753, &r753, &s753));
+    assert!(!ecdsa_verify_secp256r1(&pk753, &z753, &r753, &s753));
 
     // 750] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #191: testing point duplication
     let z754 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -12056,7 +12056,7 @@ pub fn ecdsa_tests() {
         0x711814b583f061e9,
         0xb01cbd1c01e58065,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk754, &z754, &r754, &s754));
+    assert!(!ecdsa_verify_secp256r1(&pk754, &z754, &r754, &s754));
 
     // 751] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #269: pseudorandom signature
     let z755 = [0x07a419feca605023, 0x0036e7c32b270c88, 0xed4361f59422a1e3, 0xbb5a52f42f9c9261];
@@ -12072,7 +12072,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk755, &z755, &r755, &s755));
+    assert!(ecdsa_verify_secp256r1(&pk755, &z755, &r755, &s755));
 
     // 752] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #270: pseudorandom signature
     let z756 = [0x550d7a6e0f345e25, 0x20a6ec113d682299, 0xbf76b9b8cc00832c, 0x532eaabd9574880d];
@@ -12088,7 +12088,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk756, &z756, &r756, &s756));
+    assert!(ecdsa_verify_secp256r1(&pk756, &z756, &r756, &s756));
 
     // 753] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #271: pseudorandom signature
     let z757 = [0xa495991b7852b855, 0x27ae41e4649b934c, 0x9afbf4c8996fb924, 0xe3b0c44298fc1c14];
@@ -12104,7 +12104,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk757, &z757, &r757, &s757));
+    assert!(ecdsa_verify_secp256r1(&pk757, &z757, &r757, &s757));
 
     // 754] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #272: pseudorandom signature
     let z758 = [0x7f1b40c4cbd36f90, 0x93262cf06340c4fa, 0xdbb5f2c353e632c3, 0xde47c9b27eb8d300];
@@ -12120,7 +12120,7 @@ pub fn ecdsa_tests() {
         0xba01775787ced05e,
         0x87d9315798aaa3a5,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk758, &z758, &r758, &s758));
+    assert!(ecdsa_verify_secp256r1(&pk758, &z758, &r758, &s758));
 
     // 755] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #288: x-coordinate of the public key has many trailing 0's
     let z759 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12136,7 +12136,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk759, &z759, &r759, &s759));
+    assert!(ecdsa_verify_secp256r1(&pk759, &z759, &r759, &s759));
 
     // 756] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #289: x-coordinate of the public key has many trailing 0's
     let z760 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12152,7 +12152,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk760, &z760, &r760, &s760));
+    assert!(ecdsa_verify_secp256r1(&pk760, &z760, &r760, &s760));
 
     // 757] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #290: x-coordinate of the public key has many trailing 0's
     let z761 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12168,7 +12168,7 @@ pub fn ecdsa_tests() {
         0x416411e988c30f42,
         0xed9dea124cc8c396,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk761, &z761, &r761, &s761));
+    assert!(ecdsa_verify_secp256r1(&pk761, &z761, &r761, &s761));
 
     // 758] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #291: y-coordinate of the public key has many trailing 0's
     let z762 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12184,7 +12184,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk762, &z762, &r762, &s762));
+    assert!(ecdsa_verify_secp256r1(&pk762, &z762, &r762, &s762));
 
     // 759] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #292: y-coordinate of the public key has many trailing 0's
     let z763 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12200,7 +12200,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk763, &z763, &r763, &s763));
+    assert!(ecdsa_verify_secp256r1(&pk763, &z763, &r763, &s763));
 
     // 760] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #293: y-coordinate of the public key has many trailing 0's
     let z764 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12216,7 +12216,7 @@ pub fn ecdsa_tests() {
         0x2ce3880a8960dd2a,
         0x84fa174d791c72bf,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk764, &z764, &r764, &s764));
+    assert!(ecdsa_verify_secp256r1(&pk764, &z764, &r764, &s764));
 
     // 761] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #294: y-coordinate of the public key has many trailing 1's
     let z765 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12232,7 +12232,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk765, &z765, &r765, &s765));
+    assert!(ecdsa_verify_secp256r1(&pk765, &z765, &r765, &s765));
 
     // 762] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #295: y-coordinate of the public key has many trailing 1's
     let z766 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12248,7 +12248,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk766, &z766, &r766, &s766));
+    assert!(ecdsa_verify_secp256r1(&pk766, &z766, &r766, &s766));
 
     // 763] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #296: y-coordinate of the public key has many trailing 1's
     let z767 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12264,7 +12264,7 @@ pub fn ecdsa_tests() {
         0xd31c77f5769f22d5,
         0x7b05e8b186e38d41,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk767, &z767, &r767, &s767));
+    assert!(ecdsa_verify_secp256r1(&pk767, &z767, &r767, &s767));
 
     // 764] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #297: x-coordinate of the public key has many trailing 1's
     let z768 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12280,7 +12280,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk768, &z768, &r768, &s768));
+    assert!(ecdsa_verify_secp256r1(&pk768, &z768, &r768, &s768));
 
     // 765] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #298: x-coordinate of the public key has many trailing 1's
     let z769 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12296,7 +12296,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk769, &z769, &r769, &s769));
+    assert!(ecdsa_verify_secp256r1(&pk769, &z769, &r769, &s769));
 
     // 766] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #299: x-coordinate of the public key has many trailing 1's
     let z770 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12312,7 +12312,7 @@ pub fn ecdsa_tests() {
         0x5855afa7676ade28,
         0xa01aafaf000e5258,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk770, &z770, &r770, &s770));
+    assert!(ecdsa_verify_secp256r1(&pk770, &z770, &r770, &s770));
 
     // 767] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #300: x-coordinate of the public key is large
     let z771 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12328,7 +12328,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk771, &z771, &r771, &s771));
+    assert!(ecdsa_verify_secp256r1(&pk771, &z771, &r771, &s771));
 
     // 768] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #301: x-coordinate of the public key is large
     let z772 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12344,7 +12344,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk772, &z772, &r772, &s772));
+    assert!(ecdsa_verify_secp256r1(&pk772, &z772, &r772, &s772));
 
     // 769] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #302: x-coordinate of the public key is large
     let z773 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12360,7 +12360,7 @@ pub fn ecdsa_tests() {
         0x311ee54149b973ca,
         0x5a8abcba2dda8474,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk773, &z773, &r773, &s773));
+    assert!(ecdsa_verify_secp256r1(&pk773, &z773, &r773, &s773));
 
     // 770] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #303: x-coordinate of the public key is small
     let z774 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12376,7 +12376,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk774, &z774, &r774, &s774));
+    assert!(ecdsa_verify_secp256r1(&pk774, &z774, &r774, &s774));
 
     // 771] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #304: x-coordinate of the public key is small
     let z775 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12392,7 +12392,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk775, &z775, &r775, &s775));
+    assert!(ecdsa_verify_secp256r1(&pk775, &z775, &r775, &s775));
 
     // 772] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #305: x-coordinate of the public key is small
     let z776 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12408,7 +12408,7 @@ pub fn ecdsa_tests() {
         0x555fa13659cca5d7,
         0x1099872070e8e87c,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk776, &z776, &r776, &s776));
+    assert!(ecdsa_verify_secp256r1(&pk776, &z776, &r776, &s776));
 
     // 773] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #306: y-coordinate of the public key is small
     let z777 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12424,7 +12424,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk777, &z777, &r777, &s777));
+    assert!(ecdsa_verify_secp256r1(&pk777, &z777, &r777, &s777));
 
     // 774] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #307: y-coordinate of the public key is small
     let z778 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12440,7 +12440,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk778, &z778, &r778, &s778));
+    assert!(ecdsa_verify_secp256r1(&pk778, &z778, &r778, &s778));
 
     // 775] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #308: y-coordinate of the public key is small
     let z779 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12456,7 +12456,7 @@ pub fn ecdsa_tests() {
         0x0fa2ea4cceb9ab63,
         0x000000001352bb4a,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk779, &z779, &r779, &s779));
+    assert!(ecdsa_verify_secp256r1(&pk779, &z779, &r779, &s779));
 
     // 776] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #309: y-coordinate of the public key is large
     let z780 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12472,7 +12472,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk780, &z780, &r780, &s780));
+    assert!(ecdsa_verify_secp256r1(&pk780, &z780, &r780, &s780));
 
     // 777] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #310: y-coordinate of the public key is large
     let z781 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12488,7 +12488,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk781, &z781, &r781, &s781));
+    assert!(ecdsa_verify_secp256r1(&pk781, &z781, &r781, &s781));
 
     // 778] wycheproof/ecdsa_webcrypto_test.json EcdsaP1363Verify SHA-256 #311: y-coordinate of the public key is large
     let z782 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12504,7 +12504,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(secp256r1_ecdsa_verify(&pk782, &z782, &r782, &s782));
+    assert!(ecdsa_verify_secp256r1(&pk782, &z782, &r782, &s782));
 
     // 779] invalid public key x param errors
     let z783 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12520,7 +12520,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk783, &z783, &r783, &s783));
+    assert!(!ecdsa_verify_secp256r1(&pk783, &z783, &r783, &s783));
 
     let z784 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
     let r784 = [0x7628d313a3814f67, 0x9bd1781a59180994, 0x72a42f0d87387935, 0x70bebe684cdcb5ca];
@@ -12535,7 +12535,7 @@ pub fn ecdsa_tests() {
         0xf05d15b33146549c,
         0xfffffffeecad44b6,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk784, &z784, &r784, &s784));
+    assert!(!ecdsa_verify_secp256r1(&pk784, &z784, &r784, &s784));
 
     // 780] invalid public key y param errors
     let z785 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12551,7 +12551,7 @@ pub fn ecdsa_tests() {
         0x0000000000000000,
         0x0000000000000000,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk785, &z785, &r785, &s785));
+    assert!(!ecdsa_verify_secp256r1(&pk785, &z785, &r785, &s785));
 
     let z786 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
     let r786 = [0x7628d313a3814f67, 0x9bd1781a59180994, 0x72a42f0d87387935, 0x70bebe684cdcb5ca];
@@ -12566,7 +12566,7 @@ pub fn ecdsa_tests() {
         0x0000000000000000,
         0xffffffff00000001,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk786, &z786, &r786, &s786));
+    assert!(!ecdsa_verify_secp256r1(&pk786, &z786, &r786, &s786));
 
     // 781] reference point errors
     let z787 = [0xf6dcafa5132b2f91, 0x94c6ed9236e4a773, 0x848b9eeb4a7145ca, 0x2f77668a9dfbf8d5];
@@ -12582,5 +12582,5 @@ pub fn ecdsa_tests() {
         0x0000000000000000,
         0x0000000000000000,
     ];
-    assert!(!secp256r1_ecdsa_verify(&pk787, &z787, &r787, &s787));
+    assert!(!ecdsa_verify_secp256r1(&pk787, &z787, &r787, &s787));
 }

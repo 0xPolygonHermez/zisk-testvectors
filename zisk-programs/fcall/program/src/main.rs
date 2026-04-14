@@ -2,13 +2,7 @@
 ziskos::entrypoint!(main);
 
 #[cfg(all(target_os = "zkvm", target_vendor = "zisk"))]
-use ziskos::{
-    zisklib::{
-        fcall_secp256k1_fn_inv, fcall_secp256k1_fn_inv_in_place, fcall_secp256k1_fp_inv,
-        fcall_secp256k1_fp_inv_in_place, fcall_secp256k1_fp_sqrt,
-    },
-    ziskos_fcall_get,
-};
+use ziskos::zisklib::{fcall_secp256k1_fn_inv, fcall_secp256k1_fp_inv, fcall_secp256k1_fp_sqrt};
 
 #[cfg(not(all(target_os = "zkvm", target_vendor = "zisk")))]
 fn main() {}
@@ -83,30 +77,14 @@ fn main() {
     let result = fcall_secp256k1_fp_inv(&value);
     assert_eq!(result, inv_value);
 
-    fcall_secp256k1_fp_inv_in_place(&value);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, inv_value);
-
     let result = fcall_secp256k1_fp_inv(&inv_value);
     assert_eq!(result, value);
 
-    fcall_secp256k1_fp_inv_in_place(&inv_value);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, value);
+    let zero: [u64; 4] =
+        [0x0000000000000000, 0x0000000000000000, 0x0000000000000000, 0x0000000000000000];
 
-    // let zero: [u64;4] = [
-    //     0x0000000000000000,
-    //     0x0000000000000000,
-    //     0x0000000000000000,
-    //     0x0000000000000000,
-    // ];
-
-    // let result = fcall_secp256k1_fp_inv(&zero);
-    // assert_eq!(result, zero);
-
-    // fcall_secp256k1_fp_inv_in_place(&zero);
-    // let result = [ziskos_fcall_get(),ziskos_fcall_get(),ziskos_fcall_get(),ziskos_fcall_get()];
-    // assert_eq!(result, zero);
+    let result = fcall_secp256k1_fp_inv(&zero);
+    assert_eq!(result, zero);
 
     let value: [u64; 4] =
         [0x3623dfe3727a53ca, 0x9834d5ea5c40a9dd, 0x3b13b13b13b13b13, 0x13b13b13b13b13b1];
@@ -116,15 +94,7 @@ fn main() {
     let result = fcall_secp256k1_fn_inv(&value);
     assert_eq!(result, inv_value);
 
-    fcall_secp256k1_fn_inv_in_place(&value);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
-    assert_eq!(result, inv_value);
-
     let result = fcall_secp256k1_fn_inv(&inv_value);
-    assert_eq!(result, value);
-
-    fcall_secp256k1_fn_inv_in_place(&inv_value);
-    let result = [ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get(), ziskos_fcall_get()];
     assert_eq!(result, value);
 
     println!("Success");

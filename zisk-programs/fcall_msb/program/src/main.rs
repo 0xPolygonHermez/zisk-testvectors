@@ -1,7 +1,7 @@
 #![no_main]
 ziskos::entrypoint!(main);
 
-use ziskos::zisklib::fcall_msb_pos_256;
+use ziskos::zisklib::fcall_msb_pos_256_2;
 
 fn main() {
     /* SAGE:
@@ -29,57 +29,57 @@ fn main() {
     let y: [u64; 4] =
         [0xd324f4bcf5f4cc87, 0x516a1b1053f90907, 0x20035c7d81377920, 0x001e67a6ef5d2d70];
 
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     assert_eq!(result, (3, 52));
 
     let x: [u64; 4] = [0, 0, 0, 0];
     let y: [u64; 4] = [1, 0, 0, 0];
 
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     println!("result: {:?}", result);
     assert_eq!(result, (0, 0));
 
     let x: [u64; 4] = [0, 0, 0, 0];
     let y: [u64; 4] = [2, 0, 0, 0];
 
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     println!("result: {:?}", result);
     assert_eq!(result, (0, 1));
 
-    let result = fcall_msb_pos_256(&y, &x);
+    let result = fcall_msb_pos_256_2(&y, &x);
     println!("result: {:?}", result);
     assert_eq!(result, (0, 1));
 
     let x: [u64; 4] = [0x8000_0000_0000_0000, 0, 0, 0];
     let y: [u64; 4] = [2, 0, 0, 0];
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     assert_eq!(result, (0, 63));
 
-    let result = fcall_msb_pos_256(&y, &x);
+    let result = fcall_msb_pos_256_2(&y, &x);
     assert_eq!(result, (0, 63));
 
     let x: [u64; 4] = [0x8000_0000_0000_0000, 0, 0, 0];
     let y: [u64; 4] = [0, 2, 0, 0];
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     assert_eq!(result, (1, 1));
 
-    let result = fcall_msb_pos_256(&y, &x);
+    let result = fcall_msb_pos_256_2(&y, &x);
     assert_eq!(result, (1, 1));
 
     let x: [u64; 4] = [0x8000_0000_0000_0000, 0, 0, 0];
     let y: [u64; 4] = [0, 0, 1, 0];
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     assert_eq!(result, (2, 0));
 
-    let result = fcall_msb_pos_256(&y, &x);
+    let result = fcall_msb_pos_256_2(&y, &x);
     assert_eq!(result, (2, 0));
 
     let x: [u64; 4] = [0x8000_0000_0000_0000, 0, 0, 0];
     let y: [u64; 4] = [0, 0, 0, 1];
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     assert_eq!(result, (3, 0));
 
-    let result = fcall_msb_pos_256(&y, &x);
+    let result = fcall_msb_pos_256_2(&y, &x);
     assert_eq!(result, (3, 0));
 
     let x: [u64; 4] = [
@@ -94,7 +94,7 @@ fn main() {
         0xFFFF_FFFF_FFFF_FFFF,
         0xFFFF_FFFF_FFFF_FFFF,
     ];
-    let result = fcall_msb_pos_256(&x, &y);
+    let result = fcall_msb_pos_256_2(&x, &y);
     assert_eq!(result, (3, 63));
 
     println!("Success");
