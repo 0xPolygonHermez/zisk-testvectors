@@ -2391,20 +2391,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "fcall"
-version = "0.1.0"
-dependencies = [
- "ziskos",
-]
-
-[[package]]
-name = "fcall_msb"
-version = "0.1.0"
-dependencies = [
- "ziskos",
-]
-
-[[package]]
 name = "ff"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

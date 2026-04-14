@@ -11,8 +11,6 @@ members = [
     "bls12_381/program",
     "bn254/program",
     "diagnostic/program",
-    "fcall/program",
-    "fcall_msb/program",
     "keccak/program",
     "modexp/program",
     "poseidon2/program",
