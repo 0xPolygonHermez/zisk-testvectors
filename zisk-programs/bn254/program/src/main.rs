@@ -17,7 +17,7 @@ use fp::fp_tests;
 use fp12::fp12_tests;
 use fp2::fp2_tests;
 use fp6::fp6_tests;
-use pairing::{pairing_check_c_tests, pairing_check_tests, pairing_tests};
+use pairing::{pairing_check_tests, pairing_tests};
 use twist::twist_tests;
 
 fn main() {
@@ -44,6 +44,5 @@ fn main() {
 
     // Pairing
     pairing_tests();
-    pairing_check_c_tests();
     pairing_check_tests();
 }
