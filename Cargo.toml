@@ -5,7 +5,6 @@ edition = "2021"
 [workspace]
 members = [
     "tools/program_gen",
-    "tools/prover_killers"
 ]
 resolver = "2"
 
