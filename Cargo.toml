@@ -4,7 +4,7 @@ edition = "2021"
 
 [workspace]
 members = [
-    "tools/program_gen",
+    "tools/testgen",
 ]
 resolver = "2"
 

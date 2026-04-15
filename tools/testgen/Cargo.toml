@@ -1,10 +1,10 @@
 [package]
-name = "program_gen"
+name = "testgen"
 version = { workspace = true }
 edition = { workspace = true }
 
 [[bin]]
-name = "program_gen"
+name = "testgen"
 path = "src/main.rs"
 
 [dependencies]

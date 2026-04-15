@@ -1674,19 +1674,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "program_gen"
-version = "0.2.0"
-dependencies = [
- "clap",
- "env",
- "hex",
- "precomp-arith-eq",
- "precomp-arith-eq-384",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "proofman"
 version = "0.16.1"
 source = "git+https://github.com/0xPolygonHermez/pil2-proofman.git?branch=pre-develop-0.17.0#f59dd9d6cfb261ab0db357057c16f7145e541c29"
@@ -2453,6 +2440,19 @@ dependencies = [
  "once_cell",
  "rustix",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "testgen"
+version = "0.2.0"
+dependencies = [
+ "clap",
+ "env",
+ "hex",
+ "precomp-arith-eq",
+ "precomp-arith-eq-384",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
