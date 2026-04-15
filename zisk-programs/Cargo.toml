@@ -4,9 +4,6 @@ edition = "2021"
 
 [workspace]
 members = [
-    "add256/program",
-    "arith_eq_384_gen/program",
-    "arith_eq_gen/program",
     "blake2/program",
     "bls12_381/program",
     "bn254/program",
