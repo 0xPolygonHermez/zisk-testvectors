@@ -15,6 +15,7 @@ members = [
     "secp256k1/program",
     "secp256r1/program",
     "sha256/program",
+    "uint256",
 ]
 resolver = "2"
 
