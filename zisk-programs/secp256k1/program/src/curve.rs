@@ -1,6 +1,6 @@
 use ziskos::zisklib::{
-    secp256k1_double_scalar_mul_with_g, secp256k1_is_on_curve, secp256k1_scalar_mul,
-    secp256k1_triple_scalar_mul_with_g,
+    double_scalar_mul_with_g_secp256k1, is_on_curve_secp256k1, scalar_mul_secp256k1,
+    triple_scalar_mul_with_g_secp256k1,
 };
 
 use crate::constants::{G, G_NEG, IDENTITY};
@@ -8,17 +8,17 @@ use crate::constants::{G, G_NEG, IDENTITY};
 pub fn curve_tests() {
     // Is on curve
     let p = IDENTITY;
-    let res = secp256k1_is_on_curve(&p);
+    let res = is_on_curve_secp256k1(&p);
     assert_eq!(res, false);
 
     let p = G;
-    let res = secp256k1_is_on_curve(&p);
+    let res = is_on_curve_secp256k1(&p);
     assert_eq!(res, true);
 
     // Scalar multiplication
     let s = [0x53abb24c9f99136, 0x3c3ba88ce76f629e, 0xe9056abea1783a93, 0x6841f6b8ac6be1d];
     let p = G;
-    let res = match secp256k1_scalar_mul(&s, &p) {
+    let res = match scalar_mul_secp256k1(&s, &p) {
         Some(point) => point,
         None => panic!("Scalar multiplication failed"),
     };
@@ -47,7 +47,7 @@ pub fn curve_tests() {
         0x7925243213523fe3,
         0xfef27a458a531028,
     ];
-    let res = match secp256k1_double_scalar_mul_with_g(&k1, &k2, &p) {
+    let res = match double_scalar_mul_with_g_secp256k1(&k1, &k2, &p) {
         Some(point) => point,
         None => panic!("Double scalar multiplication with G failed"),
     };
@@ -66,7 +66,7 @@ pub fn curve_tests() {
     let k1 = [0xf447e442a44c829e, 0xe979220cfe9824d3, 0x673913d78b5bdbfe, 0xd961172287f69999];
     let k2 = k1;
     let p = G_NEG;
-    let res = secp256k1_double_scalar_mul_with_g(&k1, &k2, &p);
+    let res = double_scalar_mul_with_g_secp256k1(&k1, &k2, &p);
     assert_eq!(res, None);
 
     // Triple scalar multiplication with G
@@ -93,7 +93,7 @@ pub fn curve_tests() {
         0x9c7b341d8e786c0b,
         0x9f0cc337af475073,
     ];
-    let res = match secp256k1_triple_scalar_mul_with_g(&k1, &k2, &k3, &p1, &p2) {
+    let res = match triple_scalar_mul_with_g_secp256k1(&k1, &k2, &k3, &p1, &p2) {
         Some(point) => point,
         None => panic!("Triple scalar multiplication with G failed"),
     };
@@ -114,6 +114,6 @@ pub fn curve_tests() {
     let k3 = k2;
     let p1 = G;
     let p2 = G;
-    let res = secp256k1_triple_scalar_mul_with_g(&k1, &k2, &k3, &p1, &p2);
+    let res = triple_scalar_mul_with_g_secp256k1(&k1, &k2, &k3, &p1, &p2);
     assert_eq!(res, None);
 }

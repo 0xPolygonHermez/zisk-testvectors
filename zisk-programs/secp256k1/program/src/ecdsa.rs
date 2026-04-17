@@ -1,4 +1,4 @@
-use ziskos::zisklib::secp256k1_ecdsa_verify;
+use ziskos::zisklib::ecdsa_verify_secp256k1;
 
 pub fn ecdsa_tests() {
     // Verify (valids)
@@ -15,7 +15,7 @@ pub fn ecdsa_tests() {
     let z = [0x1bf86a1816a52f52, 0xd31e26c3da73dda8, 0xa3b71997594da038, 0x17560495f6944673];
     let r = [0x68df7d8d7e0fb36b, 0xc2189fe681cd6e78, 0xc85ba1fd6238ecb5, 0x3e125456c8338994];
     let s = [0xd4e89d1ae75aeea2, 0xb8e33178783bd1a3, 0x866acebc9e141ec, 0x3a816b1c33739e41];
-    let res = secp256k1_ecdsa_verify(&pk, &z, &r, &s);
+    let res = ecdsa_verify_secp256k1(&pk, &z, &r, &s);
     assert!(res);
 
     let pk = [
@@ -31,6 +31,6 @@ pub fn ecdsa_tests() {
     let z = [0xab313c87e8099e4d, 0x98e191bbf16e2538, 0x5fad2b6370bed1a0, 0xbda0ec6db2b2f290];
     let r = [0x320ca78102f69537, 0x548ce6ea0e9f500c, 0xac0d2ea7c5b22534, 0x560ef25130dd8a78];
     let s = [0xdfd826f31fb981d0, 0x48fed994c3e102e5, 0xc2ffab95e65eef0f, 0x18b94747713e154f];
-    let res = secp256k1_ecdsa_verify(&pk, &z, &r, &s);
+    let res = ecdsa_verify_secp256k1(&pk, &z, &r, &s);
     assert!(res);
 }

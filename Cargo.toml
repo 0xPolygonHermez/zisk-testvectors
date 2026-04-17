@@ -4,15 +4,15 @@ edition = "2021"
 
 [workspace]
 members = [
-    "tools/program_gen",
+    "tools/testgen",
 ]
 resolver = "2"
 
 [workspace.dependencies]
 precomp-arith-eq = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
 precomp-arith-eq-384 = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
-# precomp-arith-eq = { path = "../../../zisk/precompiles/arith_eq" }
-# precomp-arith-eq-384 = { path = "../../../zisk/precompiles/arith_eq_384" }
+# precomp-arith-eq = { path = "../zisk/precompiles/arith_eq" }
+# precomp-arith-eq-384 = { path = "../zisk/precompiles/arith_eq_384" }
 
 clap = "4.5.50"
 env = "1.0.1"
