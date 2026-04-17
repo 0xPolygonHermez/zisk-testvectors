@@ -9,8 +9,8 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-precomp-arith-eq = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "ziskos-enlarge" }
-precomp-arith-eq-384 = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "ziskos-enlarge" }
+precomp-arith-eq = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
+precomp-arith-eq-384 = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
 # precomp-arith-eq = { path = "../zisk/precompiles/arith_eq" }
 # precomp-arith-eq-384 = { path = "../zisk/precompiles/arith_eq_384" }
 

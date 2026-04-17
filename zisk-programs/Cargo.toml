@@ -29,9 +29,9 @@ opt-level = 3
 opt-level = 3
 
 [workspace.dependencies]
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "ziskos-enlarge" }
-zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "ziskos-enlarge" }
-precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "ziskos-enlarge" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
+precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
 # ziskos = { path = "../../zisk/ziskos/entrypoint" }
 # zisk-sdk = { path = "../../zisk/sdk" }
 # precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
