@@ -44,6 +44,8 @@ revm = { version = "34.0.0", default-features = false }
 alloy-primitives = { version = "1.5.6", default-features = false }
 alloy-consensus = { version = "1.7.3", default-features = false }
 
+ruint = { version = "1", default-features = false }
+
 hex = "0.4"
 num-bigint = "0.4"
 serde = { version = "1.0", features = ["derive"] }
@@ -56,4 +58,4 @@ stateless = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git
 tries = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git", branch = "zisk/ed189a5" }
 
 [workspace.lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))', 'cfg(zisk_hints)'] }
