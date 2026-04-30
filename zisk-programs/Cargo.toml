@@ -56,4 +56,4 @@ stateless = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git
 tries = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git", branch = "zisk/ed189a5" }
 
 [workspace.lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))', 'cfg(zisk_hints)'] }

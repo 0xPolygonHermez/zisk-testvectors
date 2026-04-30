@@ -29,6 +29,20 @@ use guest_reth::CustomEvmCrypto;
 // TODO: Add non-precompile testsdata
 
 fn main() {
+    #[cfg(zisk_hints)]
+    {
+        let hints_dir = std::path::PathBuf::from(concat!(env!("CARGO_MANIFEST_DIR"), "/../build"));
+        if !hints_dir.exists() {
+            std::fs::create_dir_all(&hints_dir).expect("Failed to create hints directory");
+        }
+
+        // Initialize hints file
+        let hints_file = hints_dir.join("hints.bin");
+        if let Err(e) = ziskos::hints::init_hints_file(hints_file, None) {
+            panic!("Failed to init hints, error: {}", e);
+        }
+    }
+
     let crypto = CustomEvmCrypto::default();
 
     // Hashes
@@ -62,4 +76,12 @@ fn main() {
     bls12_381_map_fp2_to_g2_tests(&crypto);
     bls12_381_pairing_tests(&crypto);
     bls12_381_point_evaluation_tests(&crypto);
+
+    #[cfg(zisk_hints)]
+    {
+        // Close hints generation
+        if let Err(e) = ziskos::hints::close_hints() {
+            panic!("Failed to close hints, error: {}", e);
+        }
+    }
 }
