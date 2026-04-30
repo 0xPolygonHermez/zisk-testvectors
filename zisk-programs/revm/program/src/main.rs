@@ -10,6 +10,7 @@ mod modexp;
 mod secp256k1;
 mod secp256r1;
 mod sha256;
+mod u256;
 
 use blake2f::blake2f_tests;
 use bls12_381::{
@@ -23,6 +24,7 @@ use modexp::modexp_tests;
 use secp256k1::{ecrecover_precompile_tests, ecrecover_tx_tests};
 use secp256r1::p256_verify_tests;
 use sha256::sha256_tests;
+use u256::{checked_tests, overflowing_tests, saturating_tests, wrapping_tests};
 
 use guest_reth::CustomEvmCrypto;
 
@@ -43,39 +45,46 @@ fn main() {
         }
     }
 
-    let crypto = CustomEvmCrypto::default();
+    let reth_crypto = CustomEvmCrypto::default();
+
+    // TODO: It does not work with hints [Not Implemented]
+    // U256
+    checked_tests();
+    overflowing_tests();
+    saturating_tests();
+    wrapping_tests();
 
     // Hashes
-    blake2f_tests(&crypto);
-    sha256_tests(&crypto);
+    blake2f_tests(&reth_crypto);
+    sha256_tests(&reth_crypto);
     keccak256_tests();
 
     // Modular exponentiation
-    modexp_tests(&crypto);
+    modexp_tests(&reth_crypto);
 
     // Secp256k1
-    ecrecover_tx_tests(&crypto);
-    ecrecover_precompile_tests(&crypto);
+    ecrecover_tx_tests(&reth_crypto);
+    ecrecover_precompile_tests(&reth_crypto);
 
     // Secp256r1
-    p256_verify_tests(&crypto);
+    p256_verify_tests(&reth_crypto);
 
     // BN254
-    ecadd_tests(&crypto);
-    ecmul_tests(&crypto);
-    ecpairing_tests(&crypto);
+    ecadd_tests(&reth_crypto);
+    ecmul_tests(&reth_crypto);
+    ecpairing_tests(&reth_crypto); // TODO: It does not work with hints [Hints too large]
 
     // BLS12-381
-    bls12_381_g1_add_tests(&crypto);
-    bls12_381_g1_mul_tests(&crypto);
-    bls12_381_g1_msm_tests(&crypto);
-    bls12_381_g2_add_tests(&crypto);
-    bls12_381_g2_mul_tests(&crypto);
-    bls12_381_g2_msm_tests(&crypto);
-    bls12_381_map_fp_to_g1_tests(&crypto);
-    bls12_381_map_fp2_to_g2_tests(&crypto);
-    bls12_381_pairing_tests(&crypto);
-    bls12_381_point_evaluation_tests(&crypto);
+    bls12_381_g1_add_tests(&reth_crypto);
+    bls12_381_g1_mul_tests(&reth_crypto);
+    bls12_381_g1_msm_tests(&reth_crypto); // TODO: It does not work with hints [Hints too large]
+    bls12_381_g2_add_tests(&reth_crypto);
+    bls12_381_g2_mul_tests(&reth_crypto);
+    bls12_381_g2_msm_tests(&reth_crypto); // TODO: It does not work with hints [Hints too large]
+    bls12_381_map_fp_to_g1_tests(&reth_crypto);
+    bls12_381_map_fp2_to_g2_tests(&reth_crypto);
+    bls12_381_pairing_tests(&reth_crypto); // TODO: It does not work with hints [Hints too large]
+    bls12_381_point_evaluation_tests(&reth_crypto);
 
     #[cfg(zisk_hints)]
     {

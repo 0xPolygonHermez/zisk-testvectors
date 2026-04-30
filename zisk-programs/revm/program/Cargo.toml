@@ -16,6 +16,8 @@ revm.workspace = true
 alloy-primitives = { workspace = true, features = ["native-keccak"] }
 alloy-consensus = { workspace = true, features = ["crypto-backend"] }
 
+ruint.workspace = true
+
 guest-reth.workspace = true
 
 [lints]
