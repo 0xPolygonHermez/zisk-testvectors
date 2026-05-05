@@ -3,9 +3,8 @@ version = "0.2.0"
 edition = "2021"
 
 [workspace]
-members = [
-    "tools/testgen",
-]
+members = ["tools/testgen"]
+exclude = ["zisk-programs"]
 resolver = "2"
 
 [workspace.dependencies]

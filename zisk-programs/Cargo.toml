@@ -5,15 +5,15 @@ edition = "2021"
 [workspace]
 members = [
     "blake2/program",
-    "bls12_381/program",
-    "bn254/program",
+    "bls12_381",
+    "bn254",
     "diagnostic/program",
     "keccak/program",
-    "modexp/program",
+    "modexp",
     "poseidon2/program",
-    "revm/program",
-    "secp256k1/program",
-    "secp256r1/program",
+    "revm",
+    "secp256k1",
+    "secp256r1",
     "sha256/program",
     "uint256",
 ]
