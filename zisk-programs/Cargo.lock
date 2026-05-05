@@ -9155,6 +9155,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "zisk-programs"
+version = "0.1.0"
+dependencies = [
+ "zisk-sdk",
+]
+
+[[package]]
 name = "zisk-prover-backend"
 version = "0.17.0"
 source = "git+https://github.com/0xPolygonHermez/zisk.git?branch=pre-develop-0.17.0#9b9815dc6263607f62878e5b0e375f2025f46dfc"

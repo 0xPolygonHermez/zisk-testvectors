@@ -1,3 +1,11 @@
+[package]
+name = "zisk-programs"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+zisk-sdk.workspace = true
+
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
