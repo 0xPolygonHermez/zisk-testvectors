@@ -3,20 +3,30 @@ version = "0.2.0"
 edition = "2021"
 
 [workspace]
-members = ["tools/testgen"]
+members = ["host", "tools/testgen"]
 exclude = ["zisk-programs"]
 resolver = "2"
 
 [workspace.dependencies]
 precomp-arith-eq = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
 precomp-arith-eq-384 = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
 # precomp-arith-eq = { path = "../zisk/precompiles/arith_eq" }
 # precomp-arith-eq-384 = { path = "../zisk/precompiles/arith_eq_384" }
+# zisk-sdk = { path = "../zisk/sdk" }
 
-clap = "4.5.50"
+anyhow = "1.0"
+clap = { version = "4.5.50", features = ["derive"] }
 env = "1.0.1"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 hex = "0.4"
 num-bigint = "0.4"
 num-traits = "0.2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tokio = { version = "1.21", default-features = false, features = [
+    "rt",
+    "rt-multi-thread",
+    "macros",
+] }
