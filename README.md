@@ -1,54 +1,56 @@
 # ZisK Test Vectors
 
-Test vectors, benchmark programs, and tooling for the [ZisK zkVM](https://github.com/0xPolygonHermez/zisk).
+Test vectors and benchmark programs for the [ZisK zkVM](https://github.com/0xPolygonHermez/zisk).
 
 ## Structure
 
 ```
 zisk-testvectors/
-├── zisk-programs/ # Guest programs (run inside zkVM)
-│ ├── keccak/ # Keccak hash tests
-│ ├── sha256/ # SHA256 tests
-│ ├── bn254/ # BN254 pairing tests
-│ ├── bls12_381/ # BLS12-381 tests
-│ ├── secp256k1/ # ECDSA/Schnorr tests
-│ └── ...
+├── host/              # Host runner
+├── guests/            # Guest programs (run inside ZisK)
 ├── tools/
-│ └── testgen/ # Generates syscall test programs
-├── eth-client/ # Ethereum client test vectors
+│   └── testgen/       # Generates syscall test programs
+├── eth-client/        # Ethereum client test vectors
 └── pessimistic-proof/ # Pessimistic proof tests
 ```
 
 ## Prerequisites
 
-- Rust (stable toolchain)
-- [ZisK](https://github.com/0xPolygonHermez/zisk) for building guest programs
+- [Rust](https://rust-lang.org/tools/install/) (stable toolchain)
+- [ZisK](https://github.com/0xPolygonHermez/zisk) installed for guest builds
 
 ## Quick Start
 
-### Build Guest Programs
+The [`host`](host/) crate is the main entry point. It compiles every guest
+under [`guests/`](guests/) and runs them against their inputs.
 
 ```bash
-cd zisk-programs
-cargo-zisk build --release
+# Run every guest under the assembly backend
+cargo run -p host --release
+
+# Run only blake2 + keccak under the emulator
+cargo run -p host --release -- -l -i blake2,keccak
+
+# Verify constraints (proving key required)
+cargo run -p host --release -- \
+    -a verify-constraints \
+    -k /path/to/proving-key
 ```
 
-Produces ELF binaries in `target/elf/riscv64ima-zisk-zkvm-elf/release/`.
+See [`host/README.md`](host/README.md) for the full CLI reference and
+the per-program input convention.
 
-### Run Tests with Emulator
+To skip rebuilding guests when iterating on host code:
 
-Use the ZisK emulator to run guest programs:
 ```bash
-cd zisk-programs
-ziskemu --elf target/elf/riscv64ima-zisk-zkvm-elf/release/keccak \
-        --inputs keccak/inputs/input_keccakf_1.bin -X
+SKIP_GUEST_BUILD=1 cargo build -p host
 ```
 
 ## Tools
 
 ### testgen
 
-Generates comprehensive test programs for ZisK syscalls:
+Generates test programs for ZisK syscalls:
 
 ```bash
 # Generate all tests (full suite)
