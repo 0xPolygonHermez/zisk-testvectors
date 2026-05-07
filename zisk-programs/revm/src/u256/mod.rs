@@ -1,10 +1,12 @@
-mod checked;
+mod add;
 mod common;
-mod overflow;
-mod saturating;
-mod wrapping;
+mod div;
+mod modular;
+mod mul;
+mod pow;
 
-pub use checked::checked_tests;
-pub use overflow::overflowing_tests;
-pub use saturating::saturating_tests;
-pub use wrapping::wrapping_tests;
+pub use add::add_tests;
+pub use div::div_tests;
+pub use modular::modular_tests;
+pub use mul::mul_tests;
+pub use pow::pow_tests;

@@ -24,7 +24,7 @@ use modexp::modexp_tests;
 use secp256k1::{ecrecover_precompile_tests, ecrecover_tx_tests};
 use secp256r1::p256_verify_tests;
 use sha256::sha256_tests;
-use u256::{checked_tests, overflowing_tests, saturating_tests, wrapping_tests};
+use u256::{add_tests, div_tests, modular_tests, mul_tests, pow_tests};
 
 use guest_reth::CustomEvmCrypto;
 
@@ -35,10 +35,11 @@ fn main() {
 
     // TODO: It does not work with hints [Not Implemented]
     // U256
-    checked_tests();
-    overflowing_tests();
-    saturating_tests();
-    wrapping_tests();
+    add_tests();
+    div_tests();
+    modular_tests();
+    mul_tests();
+    pow_tests();
 
     // Hashes
     blake2f_tests(&reth_crypto);
