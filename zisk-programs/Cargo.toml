@@ -19,14 +19,11 @@ members = [
 ]
 resolver = "2"
 
-[profile.dev]
-debug = 0  # No debug info to prevent linker overflow
-
 [profile.release]
 opt-level = 3
-
-[profile.bench]
-opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
 
 [workspace.dependencies]
 ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
