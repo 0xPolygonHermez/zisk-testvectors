@@ -1,0 +1,30 @@
+[package]
+name = "revm"
+version = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+hex.workspace = true
+num-bigint.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+ziskos.workspace = true
+
+revm.workspace = true
+
+alloy-primitives = { workspace = true, features = ["native-keccak"] }
+alloy-consensus = { workspace = true, features = ["crypto-backend"] }
+
+ruint.workspace = true
+
+guest-reth.workspace = true
+
+[features]
+# Force the u256 wrappers to use the ruint fallback even when targeting zisk
+ruint-fallback = []
+# Wrap every u256 function with ziskos profiling functions
+profile = []
+
+[lints]
+workspace = true

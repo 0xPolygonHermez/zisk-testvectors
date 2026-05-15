@@ -4,48 +4,55 @@ edition = "2021"
 
 [workspace]
 members = [
-    "add256/program",
-    "arith_eq_384_gen/program",
-    "arith_eq_gen/program",
-    "bls12_381/program",
-    "bn254/program",
+    "blake2/program",
+    "bls12_381",
+    "bn254",
     "diagnostic/program",
-    "fcall/program",
-    "fcall_msb/program",
     "keccak/program",
-    "sha256/program",
+    "modexp",
     "poseidon2/program",
-    "modexp/program",
-    "secp256k1/program",
-    "secp256r1/program",
-    "revm/program",
-    "blake2/program"
+    "revm",
+    "secp256k1",
+    "secp256r1",
+    "sha256/program",
+    "uint256",
 ]
 resolver = "2"
 
-[profile.dev]
-debug = 0  # No debug info to prevent linker overflow
-
 [profile.release]
 opt-level = 3
-
-[profile.bench]
-opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
 
 [workspace.dependencies]
-ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
-zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
-precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", tag = "v0.16.0" }
+ziskos = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
+zisk-sdk = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
+precompiles-helpers = { git = "https://github.com/0xPolygonHermez/zisk.git", branch = "pre-develop-0.17.0" }
 # ziskos = { path = "../../zisk/ziskos/entrypoint" }
 # zisk-sdk = { path = "../../zisk/sdk" }
 # precompiles-helpers = { path = "../../zisk/precompiles/helpers" }
 
+guest-reth = { git = "https://github.com/0xPolygonHermez/zisk-eth-client.git", branch = "develop-0.8.0" }
+# guest-reth = { path = "../../../../patches/zisk-eth-client/crates/guest-reth" }
+
+revm = { version = "34.0.0", default-features = false }
+
+alloy-primitives = { version = "1.5.6", default-features = false }
+alloy-consensus = { version = "1.7.3", default-features = false }
+
+ruint = { version = "1", default-features = false }
+
+hex = "0.4"
+num-bigint = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 rand = "0.8"
 
 # This is needed for revm to work
 [patch."https://github.com/paradigmxyz/stateless.git"]
-stateless = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git", branch = "zisk/68cd8e73" }
-# stateless = { path = "../zisk-patch-stateless/crates/stateless" }
+stateless = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git", branch = "zisk/ed189a5" }
+tries = { git = "https://github.com/0xPolygonHermez/zisk-patch-stateless.git", branch = "zisk/ed189a5" }
 
 [workspace.lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))'] }
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_vendor, values("zisk"))', 'cfg(zisk_hints)'] }

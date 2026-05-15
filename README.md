@@ -1,57 +1,67 @@
-# Zisk Test Vectors
+# ZisK Test Vectors
 
-Test vectors, benchmark programs, and tooling for the [Zisk zkVM](https://github.com/0xPolygonHermez/zisk).
+Test vectors, benchmark programs, and tooling for the [ZisK zkVM](https://github.com/0xPolygonHermez/zisk).
+
+## Structure
+
+```
+zisk-testvectors/
+├── zisk-programs/ # Guest programs (run inside zkVM)
+│ ├── keccak/ # Keccak hash tests
+│ ├── sha256/ # SHA256 tests
+│ ├── bn254/ # BN254 pairing tests
+│ ├── bls12_381/ # BLS12-381 tests
+│ ├── secp256k1/ # ECDSA/Schnorr tests
+│ └── ...
+├── tools/
+│ └── testgen/ # Generates syscall test programs
+├── eth-client/ # Ethereum client test vectors
+└── pessimistic-proof/ # Pessimistic proof tests
+```
 
 ## Prerequisites
 
 - Rust (stable toolchain)
 - [ZisK](https://github.com/0xPolygonHermez/zisk) for building guest programs
 
-## Building
+## Quick Start
 
-### Guest Programs
+### Build Guest Programs
 
 ```bash
 cd zisk-programs
-
 cargo-zisk build --release
 ```
 
-This produces ELF binaries in `target/riscv64ima-zisk-zkvm-elf/release/`.
+Produces ELF binaries in `target/elf/riscv64ima-zisk-zkvm-elf/release/`.
 
-### Host Tools
+### Run Tests with Emulator
 
-```bash
-cargo build --release
-```
-
-## Running Tests
-
-Use the Zisk emulator to run guest programs:
-
+Use the ZisK emulator to run guest programs:
 ```bash
 cd zisk-programs
-
-ziskemu --elf target/riscv64ima-zisk-zkvm-elf/release/keccak \
+ziskemu --elf target/elf/riscv64ima-zisk-zkvm-elf/release/keccak \
         --inputs keccak/inputs/input_keccakf_1.bin -X
 ```
 
 ## Tools
 
-### program_gen
+### testgen
 
-Generates test programs for precompiles (arith_eq, keccak, sha256, etc.):
-
-```bash
-cargo run --release -p program_gen -- --help
-```
-
-### prover_killers
-
-Generates stress tests from JSON input files (e.g., modexp edge cases):
+Generates comprehensive test programs for ZisK syscalls:
 
 ```bash
-cargo run --release -p prover_killers -- --help
+# Generate all tests (full suite)
+cargo run --release -p testgen
+
+# Generate minimal test set (faster)
+cargo run --release -p testgen -- --minimal
+
+# Limit tests per category
+cargo run --release -p testgen -- -n 10
+
+# Custom output directory
+cargo run --release -p testgen -- -o /path/to/output
 ```
 
 ## License
