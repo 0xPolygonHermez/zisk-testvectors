@@ -1,6 +1,0 @@
-using /workspace/output/riscof_work/rv64i_m/M/src/mulw-01.S/ref/Reference-sail_c_simulator.signature for test-signature output.
-HTIF located at 0x8000a000
-begin_signature: 0x8000c110
-end_signature: 0x8000d850
-Entry point: 0x80000000
-SUCCESS
