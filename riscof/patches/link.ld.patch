@@ -1,0 +1,49 @@
+--- a/zisk/env/link.ld
++++ b/zisk/env/link.ld
+@@ -1,20 +1,38 @@
+ OUTPUT_ARCH( "riscv" )
+ ENTRY(rvtest_entry_point)
+ 
++/* Explicit program headers, so the code segment is PF_X only (no PF_R).
++   ZisK loads a PF_X|PF_R segment twice -- transpiled as instructions and again
++   as ROM read-only data -- and warns about it. These tests keep no read-only
++   data in ROM (test data, the signature area and .tohost all live in RAM), so
++   an execute-and-not-read code segment is both correct and faster.
++   FLAGS values follow zisk_linker_script.ld: 1 = X, 4 = R, 6 = RW. */
++PHDRS
++{
++  text PT_LOAD FLAGS(1);
++  data PT_LOAD FLAGS(6);
++}
++
+ SECTIONS
+ {
+   . = 0x80000000;
+-  .text.init : { *(.text.init) }
++  .text.init : { *(.text.init) } :text
+   . = ALIGN(0x1000);
+-  .text : { *(.text) }
+-  .rodata : { *(.rodata .rodata.*)}
++  .text : { *(.text) } :text
++  .rodata : { *(.rodata .rodata.*)} :text
+   . = 0xa0010000;
+   . = ALIGN(0x1000);
+-  .tohost : { *(.tohost) }
++  .tohost : { *(.tohost) } :data
+   . = ALIGN(0x1000);
+-  .data : { *(.data) }
+-  .data.string : { *(.data.string)}
+-  .bss : { *(.bss) }
++  .data : { *(.data) } :data
++  .data.string : { *(.data.string)} :data
++  .bss : { *(.bss) } :data
+   _end = .;
+-}
+ 
++  /* .rodata shares the X-only code segment, which ZisK never populates as
++     readable ROM: a non-empty .rodata would silently read as zeros. No test in
++     the suite emits any, so fail the link instead of producing a broken ELF.
++     If one ever does, give .rodata its own `PT_LOAD FLAGS(4)` segment. */
++  ASSERT(SIZEOF(.rodata) == 0,
++         "riscof/zisk: .rodata is not empty; it needs its own PF_R segment")
++}

@@ -26,12 +26,37 @@ ZisK does not implement those extensions.
 disabled because ZisK does not implement the traps they exercise
 (misaligned-access / `ebreak` / `ecall`).
 
+## Program headers: the code segment is `PF_X` only
+
+The ELFs carry two `PT_LOAD` segments: the code at `0x80000000` (`PF_X`, no
+`PF_R`) and the data at `0xa0010000` (`PF_RW`). ZisK loads a `PF_X | PF_R`
+("execute-and-read") code segment **twice** — transpiled as instructions, and
+again as ROM read-only data — and prints a warning that `PF_X`-only is faster.
+None of these tests keep read-only data in ROM (test data, the signature area
+and `.tohost` all live in RAM; no ELF has a `.rodata` section, and no ELF has a
+data symbol in the ROM window), so an execute-and-not-read code segment is both
+correct and cheaper.
+
+This comes from the `PHDRS` block in [`env/link.ld`](env/link.ld) (flag values
+follow ZisK's own `ziskbuild/zisk_linker_script.ld`: `1 = X`, `4 = R`, `6 = RW`).
+Because the script assigns `.rodata` to the X-only segment, it also asserts that
+`.rodata` is empty — a future test that emits read-only data must be given its
+own `PT_LOAD FLAGS(4)` segment rather than reading zeros at run time.
+
+The committed set was retrofitted rather than relinked, with
+[`tools/elf_x_only.py`](tools/elf_x_only.py), which clears `PF_R` on the
+executable `PT_LOAD` of each `my.elf` and touches nothing else (one byte per
+file). A fresh RISCOF run with `env/link.ld` produces the same ELFs directly:
+relinking a test both ways yields images that differ only in that `p_flags`
+byte, and identical signatures.
+
 ## Memory-layout dependency (important)
 
 The DUT ELFs are **not** built with `cargo-zisk`. They are compiled from the
 `riscv-arch-test` assembly sources with `riscv64-unknown-elf-gcc`, a linker
-script (`link.ld`, entry `0x80000000`), and the ZisK compliance macros
-(`model_test.h`). Two absolute addresses are baked into `model_test.h` and
+script ([`env/link.ld`](env/link.ld), entry `0x80000000`), and the ZisK
+compliance macros (`model_test.h`). Two absolute addresses are baked into
+`model_test.h` and
 **must match the ZisK emulator's memory map** (`zisk` repo, `core/src/mem.rs`):
 
 | Purpose | Constant (`core/src/mem.rs`) | Value | Used in `model_test.h` |
@@ -47,7 +72,8 @@ then fails. If you change the memory map in `zisk`, recompute the two addresses
 and regenerate (below).
 
 > The public `hermeznetwork/ziskof:latest` image ships an outdated
-> `model_test.h` (arch-id `0xa0008f12`) and a `RV64IMA`-only `zisk_isa.yaml`.
+> `model_test.h` (arch-id `0xa0008f12`), a `RV64IMA`-only `zisk_isa.yaml`, and a
+> `link.ld` without a `PHDRS` block (so its code segment comes out `PF_X | PF_R`).
 > The patched copies used to generate this set live in [`env/`](env/); the diffs
 > against the image are in [`patches/`](patches/). The `zisk_isa.yaml` ISA string
 > now enables the bit-manipulation extensions
@@ -77,6 +103,7 @@ Prerequisites: Docker, and a checkout of the `zisk` repo.
    docker run --rm \
      -v <zisk>/target/release/ziskemu:/program:ro \
      -v "$RISCOF/env/model_test.h:/workspace/zisk/env/model_test.h:ro" \
+     -v "$RISCOF/env/link.ld:/workspace/zisk/env/link.ld:ro" \
      -v "$RISCOF/env/zisk_isa.yaml:/workspace/zisk/zisk_isa.yaml:ro" \
      -v "$OUT:/workspace/output" \
      hermeznetwork/ziskof:latest
@@ -95,6 +122,9 @@ Prerequisites: Docker, and a checkout of the `zisk` repo.
       "$OUT/riscof_work/rv64i_m/C/src/cebreak-01.S/dut/my.elf.disabled"
    # the newer suite emits ref disassembly files the repo does not track:
    find "$OUT/riscof_work" -name '*.disass' -delete
+   # sanity check: with env/link.ld mounted the code segments are already PF_X
+   # only, so this must report "0 modified" (it retrofits them otherwise):
+   "$RISCOF/tools/elf_x_only.py" $(find "$OUT/riscof_work" -name 'my.elf*')
    ```
 
 4. Verify every ELF passes exactly as the CI does, then copy over `riscof_work/`:
@@ -138,6 +168,10 @@ full patched files that step 2 mounts.
 - [`patches/model_test.h.patch`](patches/model_test.h.patch)
   - signature destination `la t2, tohost` → `li t2, 0xa0410000` (`OUTPUT_ADDR`)
   - arch-id read `li t1, 0xa0008f12` → `li t1, 0xa040f890` (`ARCH_ID_CSR_ADDR`)
+- [`patches/link.ld.patch`](patches/link.ld.patch)
+  - adds a `PHDRS` block so the code segment is `PF_X` only instead of
+    `PF_X | PF_R` (see the program-headers section above), plus the `.rodata`
+    emptiness assert
 - [`patches/zisk_isa.yaml.patch`](patches/zisk_isa.yaml.patch)
   - `ISA: RV64IMA` → `RV64IMAFDCZicsr_Zba_Zbb_Zbc_Zbkb_Zbkc_Zbkx_Zbs` (adds C/D/F
     and the Zb* bit-manipulation coverage)
