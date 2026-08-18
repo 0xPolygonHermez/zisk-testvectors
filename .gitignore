@@ -1,3 +1,6 @@
 target
 **/build
 tmp
+
+# riscof Sail execution logs (huge, not needed by CI)
+riscof/riscof_work/**/*.log

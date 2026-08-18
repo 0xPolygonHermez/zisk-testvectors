@@ -1,0 +1,20 @@
+--- a/zisk/env/model_test.h	2026-07-05 08:20:00.575463627 +0200
++++ b/zisk/env/model_test.h	2026-07-05 08:22:11.249171572 +0200
+@@ -19,7 +19,7 @@
+ #define RVMODEL_HALT                                                          \
+     la t0, begin_signature;                                                     \
+     la t1, end_signature; \
+-    la t2, tohost; \
++    li t2, 0xa0410000; \
+     sub t3, t1, t0; \
+     srai t3, t3, 2; \
+     sw t3, 0(t2); \
+@@ -32,7 +32,7 @@
+     addi t0, t0, 4;    \
+     j next;   \
+   end: \
+-    li t1, 0xa0008f12; \
++    li t1, 0xa040f890; \
+     lw t0, (t1); \
+     li   t1, ARCH_ID_ZISK; \
+     beq t0, t1, zisk_exit; \
