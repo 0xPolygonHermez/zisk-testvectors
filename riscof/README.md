@@ -50,6 +50,23 @@ file). A fresh RISCOF run with `env/link.ld` produces the same ELFs directly:
 relinking a test both ways yields images that differ only in that `p_flags`
 byte, and identical signatures.
 
+## Exit code: `RVMODEL_HALT` exits with 0
+
+ZisK ends an execution as failed when its exit call (`ecall` with `a7 = 93`)
+carries a nonzero exit code in `a0`, and refuses to prove it. The ZisK exit path
+of `RVMODEL_HALT` used to leave `a0` as the test left it, so most tests ended as
+failed; [`env/model_test.h`](env/model_test.h) now sets `li a0, 0` before the
+`ecall`.
+
+The committed set was retrofitted with
+[`tools/elf_exit_code_zero.py`](tools/elf_exit_code_zero.py) rather than
+regenerated. In each ELF, the `j loop` that follows the QEMU exit store (never
+reached under QEMU, since that store ends the run) becomes `li a0, 0` of the same
+size, and the `beq` that selects the ZisK path is retargeted to it, so ZisK runs
+`li a0, 0; li a7, 93; ecall`. Nothing moves and no other byte changes; the
+reference signatures are unaffected. A fresh RISCOF run with `env/model_test.h`
+puts the `li a0, 0` at the start of `zisk_exit` instead, with the same effect.
+
 ## Memory-layout dependency (important)
 
 The DUT ELFs are **not** built with `cargo-zisk`. They are compiled from the
@@ -125,6 +142,9 @@ Prerequisites: Docker, and a checkout of the `zisk` repo.
    # sanity check: with env/link.ld mounted the code segments are already PF_X
    # only, so this must report "0 modified" (it retrofits them otherwise):
    "$RISCOF/tools/elf_x_only.py" $(find "$OUT/riscof_work" -name 'my.elf*')
+   # likewise, with env/model_test.h mounted RVMODEL_HALT already exits with 0,
+   # so this must report "0 modified" too:
+   "$RISCOF/tools/elf_exit_code_zero.py" $(find "$OUT/riscof_work" -name 'my.elf*')
    ```
 
 4. Verify every ELF passes exactly as the CI does, then copy over `riscof_work/`:
@@ -168,6 +188,7 @@ full patched files that step 2 mounts.
 - [`patches/model_test.h.patch`](patches/model_test.h.patch)
   - signature destination `la t2, tohost` → `li t2, 0xa0410000` (`OUTPUT_ADDR`)
   - arch-id read `li t1, 0xa0008f12` → `li t1, 0xa040f890` (`ARCH_ID_CSR_ADDR`)
+  - `li a0, 0` before the ZisK exit `ecall`, so the exit code is 0 (see above)
 - [`patches/link.ld.patch`](patches/link.ld.patch)
   - adds a `PHDRS` block so the code segment is `PF_X` only instead of
     `PF_X | PF_R` (see the program-headers section above), plus the `.rodata`

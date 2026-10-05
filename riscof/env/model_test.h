@@ -42,6 +42,7 @@
     sw t1, 0(t0); \
     j loop; \
   zisk_exit: \
+    li   a0, 0; \
     li   a7, 93; \
     ecall; \
   loop: \

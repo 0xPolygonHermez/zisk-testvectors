@@ -18,3 +18,11 @@
      lw t0, (t1); \
      li   t1, ARCH_ID_ZISK; \
      beq t0, t1, zisk_exit; \
+@@ -42,6 +42,7 @@
+     sw t1, 0(t0); \
+     j loop; \
+   zisk_exit: \
++    li   a0, 0; \
+     li   a7, 93; \
+     ecall; \
+   loop: \
