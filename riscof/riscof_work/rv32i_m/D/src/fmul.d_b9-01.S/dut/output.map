@@ -8,22 +8,22 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-LOAD /tmp/cckOoJJa.o
-                0x0000000080000000                . = 0x80000000
+LOAD /tmp/ccduXK4j.o
+                0x0000000090000000                . = 0x90000000
 
-.text.init      0x0000000080000000    0x250f2
+.text.init      0x0000000090000000    0x250ec
  *(.text.init)
- .text.init     0x0000000080000000    0x250f2 /tmp/cckOoJJa.o
-                0x0000000080000000                rvtest_entry_point
-                0x0000000080000000                rvtest_init
-                0x0000000080000178                rvtest_code_begin
-                0x0000000080025020                rvtest_code_end
-                0x0000000080025020                cleanup_epilogs
-                0x0000000080026000                . = ALIGN (0x1000)
+ .text.init     0x0000000090000000    0x250ec /tmp/ccduXK4j.o
+                0x0000000090000000                rvtest_entry_point
+                0x0000000090000000                rvtest_init
+                0x0000000090000178                rvtest_code_begin
+                0x0000000090025020                rvtest_code_end
+                0x0000000090025020                cleanup_epilogs
+                0x0000000090026000                . = ALIGN (0x1000)
 
-.text           0x0000000080026000        0x0
+.text           0x0000000090026000        0x0
  *(.text)
- .text          0x0000000080026000        0x0 /tmp/cckOoJJa.o
+ .text          0x0000000090026000        0x0 /tmp/ccduXK4j.o
 
 .rodata
  *(.rodata .rodata.*)
@@ -32,14 +32,14 @@ LOAD /tmp/cckOoJJa.o
 
 .tohost         0x00000000a0010000      0x108
  *(.tohost)
- .tohost        0x00000000a0010000      0x108 /tmp/cckOoJJa.o
+ .tohost        0x00000000a0010000      0x108 /tmp/ccduXK4j.o
                 0x00000000a0010000                tohost
                 0x00000000a0010100                fromhost
                 0x00000000a0011000                . = ALIGN (0x1000)
 
 .data           0x00000000a0011000    0x13220
  *(.data)
- .data          0x00000000a0011000    0x13220 /tmp/cckOoJJa.o
+ .data          0x00000000a0011000    0x13220 /tmp/ccduXK4j.o
                 0x00000000a0011000                rvtest_data_begin
                 0x00000000a001b000                begin_regstate
                 0x00000000a001b000                rvtest_data_end
@@ -52,32 +52,33 @@ LOAD /tmp/cckOoJJa.o
 
 .bss            0x00000000a0024220        0x0
  *(.bss)
- .bss           0x00000000a0024220        0x0 /tmp/cckOoJJa.o
+ .bss           0x00000000a0024220        0x0 /tmp/ccduXK4j.o
                 0x00000000a0024220                _end = .
+                0x0000000000000001                ASSERT ((SIZEOF (.rodata) == 0x0), riscof/zisk: .rodata is not empty; it needs its own PF_R segment)
 OUTPUT(my.elf elf64-littleriscv)
 
 .riscv.attributes
                 0x0000000000000000       0x31
  .riscv.attributes
-                0x0000000000000000       0x31 /tmp/cckOoJJa.o
+                0x0000000000000000       0x31 /tmp/ccduXK4j.o
 
 .debug_line     0x0000000000000000     0x3738
- .debug_line    0x0000000000000000     0x3738 /tmp/cckOoJJa.o
+ .debug_line    0x0000000000000000     0x3738 /tmp/ccduXK4j.o
 
 .debug_line_str
                 0x0000000000000000       0x88
  .debug_line_str
-                0x0000000000000000       0x88 /tmp/cckOoJJa.o
+                0x0000000000000000       0x88 /tmp/ccduXK4j.o
 
 .debug_info     0x0000000000000000       0x2a
- .debug_info    0x0000000000000000       0x2a /tmp/cckOoJJa.o
+ .debug_info    0x0000000000000000       0x2a /tmp/ccduXK4j.o
 
 .debug_abbrev   0x0000000000000000       0x14
- .debug_abbrev  0x0000000000000000       0x14 /tmp/cckOoJJa.o
+ .debug_abbrev  0x0000000000000000       0x14 /tmp/ccduXK4j.o
 
 .debug_aranges  0x0000000000000000       0x30
  .debug_aranges
-                0x0000000000000000       0x30 /tmp/cckOoJJa.o
+                0x0000000000000000       0x30 /tmp/ccduXK4j.o
 
 .debug_str      0x0000000000000000       0x94
- .debug_str     0x0000000000000000       0x94 /tmp/cckOoJJa.o
+ .debug_str     0x0000000000000000       0x94 /tmp/ccduXK4j.o

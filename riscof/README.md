@@ -28,7 +28,7 @@ disabled because ZisK does not implement the traps they exercise
 
 ## Program headers: the code segment is `PF_X` only
 
-The ELFs carry two `PT_LOAD` segments: the code at `0x80000000` (`PF_X`, no
+The ELFs carry two `PT_LOAD` segments: the code at `0x90000000` (`PF_X`, no
 `PF_R`) and the data at `0xa0010000` (`PF_RW`). ZisK loads a `PF_X | PF_R`
 ("execute-and-read") code segment **twice** — transpiled as instructions, and
 again as ROM read-only data — and prints a warning that `PF_X`-only is faster.
@@ -71,9 +71,9 @@ puts the `li a0, 0` at the start of `zisk_exit` instead, with the same effect.
 
 The DUT ELFs are **not** built with `cargo-zisk`. They are compiled from the
 `riscv-arch-test` assembly sources with `riscv64-unknown-elf-gcc`, a linker
-script ([`env/link.ld`](env/link.ld), entry `0x80000000`), and the ZisK
-compliance macros (`model_test.h`). Two absolute addresses are baked into
-`model_test.h` and
+script ([`env/link.ld`](env/link.ld), entry `0x90000000`), and the ZisK
+compliance macros (`model_test.h`). The code origin in `link.ld` and two absolute
+addresses baked into `model_test.h`
 **must match the ZisK emulator's memory map** (`zisk` repo, `core/src/mem.rs`):
 
 | Purpose | Constant (`core/src/mem.rs`) | Value | Used in `model_test.h` |
@@ -81,16 +81,24 @@ compliance macros (`model_test.h`). Two absolute addresses are baked into
 | ZisK arch-id marker | `ARCH_ID_CSR_ADDR = CSR_ADDR + ARCH_ID_CSR*8` | `0xa040f890` | `RVMODEL_HALT` reads it and compares to `ARCH_ID_ZISK` to choose the `ecall` exit path |
 | Signature output | `OUTPUT_ADDR = SYS_ADDR + SYS_SIZE` | `0xa0410000` | `RVMODEL_HALT` copies the signature region here; `ziskemu -f` reads it back |
 
-These values move whenever `SYS_ADDR` changes. `SYS_ADDR = RAM_ADDR +
+The two `model_test.h` addresses move whenever `SYS_ADDR` changes. `SYS_ADDR = RAM_ADDR +
 STACK_SIZE`, so introducing/resizing the stack region shifts both. When they
 drift, the tests fall through to the QEMU-style halt (`sw` to `0x100000`), which
 is outside the ZisK writable section and **panics the emulator** — every test
 then fails. If you change the memory map in `zisk`, recompute the two addresses
 and regenerate (below).
 
+The code itself must also sit inside ZisK's ROM window, which starts at
+`ROM_ADDR` (`0x90000000`; it was `0x80000000` until the input region grew to
+2 GB at `0x10000000`). `link.ld` places the code there with `. = 0x90000000;`.
+Code addresses are baked into each ELF, so a ROM move needs a relink, not just
+a retrofit; the reference signatures do not depend on where the DUT code is
+linked and stay the same.
+
 > The public `hermeznetwork/ziskof:latest` image ships an outdated
 > `model_test.h` (arch-id `0xa0008f12`), a `RV64IMA`-only `zisk_isa.yaml`, and a
-> `link.ld` without a `PHDRS` block (so its code segment comes out `PF_X | PF_R`).
+> `link.ld` linked at the old ROM origin `0x80000000` and without a `PHDRS` block
+> (so its code segment comes out `PF_X | PF_R`).
 > The patched copies used to generate this set live in [`env/`](env/); the diffs
 > against the image are in [`patches/`](patches/). The `zisk_isa.yaml` ISA string
 > now enables the bit-manipulation extensions
@@ -180,6 +188,18 @@ image (or a local run) to reproduce them:
   commit `b91f98f3` (see `commit_id` in `test_list.yaml`); the `B`/`K` sources at
   that commit were used so the new tests match the rest of the set.
 
+### Note: relinking the committed set without Docker
+
+The `0x90000000` set was produced without the image, by replaying the committed
+[`riscof_work/Makefile.DUT-zisk`](riscof_work/Makefile.DUT-zisk): the same
+compiler flags and sources, with the `/workspace/...` paths remapped to a local
+`riscv-arch-test` checkout and to [`env/`](env/), the `/program` run dropped,
+and `-ffile-prefix-map` added so the DWARF paths still read `/workspace/...`.
+That Makefile predates `rv64i_m/{B,K}`, so those 50 tests were compiled with the
+local `ziskof` plugins (see the note above). The reference signatures were kept:
+they do not depend on where the DUT is linked. Steps 3–4 then apply unchanged
+(`emulate_all.sh`: 704 passed, 0 failed).
+
 ## The patches
 
 See [`patches/`](patches/) for the unified diffs, and [`env/`](env/) for the
@@ -190,6 +210,8 @@ full patched files that step 2 mounts.
   - arch-id read `li t1, 0xa0008f12` → `li t1, 0xa040f890` (`ARCH_ID_CSR_ADDR`)
   - `li a0, 0` before the ZisK exit `ecall`, so the exit code is 0 (see above)
 - [`patches/link.ld.patch`](patches/link.ld.patch)
+  - code origin `0x80000000` → `0x90000000` (`ROM_ADDR`, see the memory-layout
+    section above)
   - adds a `PHDRS` block so the code segment is `PF_X` only instead of
     `PF_X | PF_R` (see the program-headers section above), plus the `.rodata`
     emptiness assert

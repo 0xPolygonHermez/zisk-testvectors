@@ -1,4 +1,6 @@
 
+There are no discarded input sections
+
 Memory Configuration
 
 Name             Origin             Length             Attributes
@@ -6,29 +8,21 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-LOAD /tmp/ccTuzNyL.o
-                0x0000000080000000                . = 0x80000000
+LOAD /tmp/cc5Vt1yi.o
+                0x0000000090000000                . = 0x90000000
 
-.note.gnu.build-id
-                0x0000000080000000       0x24
- .note.gnu.build-id
-                0x0000000080000000       0x24 /tmp/ccTuzNyL.o
-
-.text.init      0x0000000080000040     0x7820
+.text.init      0x0000000090000000     0x7820
  *(.text.init)
- .text.init     0x0000000080000040     0x7820 /tmp/ccTuzNyL.o
-                0x0000000080000040                rvtest_entry_point
-                0x0000000080000040                rvtest_init
-                0x00000000800003d0                rvtest_code_begin
-                0x00000000800077d0                rvtest_code_end
-                0x0000000080008000                . = ALIGN (0x1000)
+ .text.init     0x0000000090000000     0x7820 /tmp/cc5Vt1yi.o
+                0x0000000090000000                rvtest_entry_point
+                0x0000000090000000                rvtest_init
+                0x0000000090000390                rvtest_code_begin
+                0x0000000090007790                rvtest_code_end
+                0x0000000090008000                . = ALIGN (0x1000)
 
-.text           0x0000000080008000        0x0
+.text           0x0000000090008000        0x0
  *(.text)
- .text          0x0000000080008000        0x0 /tmp/ccTuzNyL.o
-
-.rela.dyn       0x0000000080008000        0x0
- .rela.got      0x0000000080008000        0x0 /tmp/ccTuzNyL.o
+ .text          0x0000000090008000        0x0 /tmp/cc5Vt1yi.o
 
 .rodata
  *(.rodata .rodata.*)
@@ -37,14 +31,14 @@ LOAD /tmp/ccTuzNyL.o
 
 .tohost         0x00000000a0010000      0x108
  *(.tohost)
- .tohost        0x00000000a0010000      0x108 /tmp/ccTuzNyL.o
+ .tohost        0x00000000a0010000      0x108 /tmp/cc5Vt1yi.o
                 0x00000000a0010000                tohost
                 0x00000000a0010100                fromhost
                 0x00000000a0011000                . = ALIGN (0x1000)
 
 .data           0x00000000a0011000     0x1290
  *(.data)
- .data          0x00000000a0011000     0x1290 /tmp/ccTuzNyL.o
+ .data          0x00000000a0011000     0x1290 /tmp/cc5Vt1yi.o
                 0x00000000a0011000                rvtest_data_begin
                 0x00000000a0011010                rvtest_data_end
                 0x00000000a0011100                begin_regstate
@@ -52,45 +46,38 @@ LOAD /tmp/ccTuzNyL.o
                 0x00000000a0011210                begin_signature
                 0x00000000a0012290                end_signature
 
-.got            0x00000000a0012290       0x48
- .got           0x00000000a0012290       0x48 /tmp/ccTuzNyL.o
-                0x00000000a0012290                _GLOBAL_OFFSET_TABLE_
-
-.got.plt        0x00000000a00122d8       0x10
- .got.plt       0x00000000a00122d8       0x10 /tmp/ccTuzNyL.o
-
 .data.string
  *(.data.string)
 
-.bss            0x00000000a00122e8        0x0
+.bss            0x00000000a0012290        0x0
  *(.bss)
- .bss           0x00000000a00122e8        0x0 /tmp/ccTuzNyL.o
-                0x00000000a00122e8                _end = .
+ .bss           0x00000000a0012290        0x0 /tmp/cc5Vt1yi.o
+                0x00000000a0012290                _end = .
+                0x0000000000000001                ASSERT ((SIZEOF (.rodata) == 0x0), riscof/zisk: .rodata is not empty; it needs its own PF_R segment)
 OUTPUT(my.elf elf64-littleriscv)
 
 .riscv.attributes
                 0x0000000000000000       0x22
  .riscv.attributes
-                0x0000000000000000       0x22 /tmp/ccTuzNyL.o
+                0x0000000000000000       0x22 /tmp/cc5Vt1yi.o
 
 .debug_line     0x0000000000000000      0xcba
- .debug_line    0x0000000000000000      0xcba /tmp/ccTuzNyL.o
+ .debug_line    0x0000000000000000      0xcba /tmp/cc5Vt1yi.o
 
 .debug_line_str
-                0x0000000000000000      0x114
+                0x0000000000000000       0xb7
  .debug_line_str
-                0x0000000000000000      0x114 /tmp/ccTuzNyL.o
-                                        0x11e (size before relaxing)
+                0x0000000000000000       0xb7 /tmp/cc5Vt1yi.o
 
 .debug_info     0x0000000000000000       0x2a
- .debug_info    0x0000000000000000       0x2a /tmp/ccTuzNyL.o
+ .debug_info    0x0000000000000000       0x2a /tmp/cc5Vt1yi.o
 
 .debug_abbrev   0x0000000000000000       0x14
- .debug_abbrev  0x0000000000000000       0x14 /tmp/ccTuzNyL.o
+ .debug_abbrev  0x0000000000000000       0x14 /tmp/cc5Vt1yi.o
 
 .debug_aranges  0x0000000000000000       0x30
  .debug_aranges
-                0x0000000000000000       0x30 /tmp/ccTuzNyL.o
+                0x0000000000000000       0x30 /tmp/cc5Vt1yi.o
 
-.debug_str      0x0000000000000000      0x120
- .debug_str     0x0000000000000000      0x120 /tmp/ccTuzNyL.o
+.debug_str      0x0000000000000000       0xc3
+ .debug_str     0x0000000000000000       0xc3 /tmp/cc5Vt1yi.o

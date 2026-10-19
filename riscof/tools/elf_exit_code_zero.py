@@ -101,6 +101,12 @@ def patch(path):
     syms = symbols(data)
     zisk_exit, qemu_exit = syms['zisk_exit'], syms['qemu_exit']
     z = file_offset(data, zisk_exit)
+    # Built with env/model_test.h: zisk_exit already starts with `li a0, 0`.
+    for size, li in ((4, LI_A0_0), (2, C_LI_A0_0)):
+        fmt = '<I' if size == 4 else '<H'
+        if struct.unpack_from(fmt, data, z)[0] == li and \
+                struct.unpack_from('<II', data, z + size) == (LI_A7_93, ECALL):
+            return False
     if struct.unpack_from('<II', data, z) != (LI_A7_93, ECALL):
         raise SystemExit(f'{path}: zisk_exit is not "li a7, 93; ecall"')
 
