@@ -8,76 +8,76 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-LOAD /tmp/ccqiy8xl.o
-                0x0000000090000000                . = 0x90000000
+LOAD /tmp/cc2ppoDU.o
+                0x00000000a8000000                . = 0xa8000000
 
-.text.init      0x0000000090000000     0x7820
+.text.init      0x00000000a8000000     0x781c
  *(.text.init)
- .text.init     0x0000000090000000     0x7820 /tmp/ccqiy8xl.o
-                0x0000000090000000                rvtest_entry_point
-                0x0000000090000000                rvtest_init
-                0x0000000090000390                rvtest_code_begin
-                0x0000000090007780                rvtest_code_end
-                0x0000000090008000                . = ALIGN (0x1000)
+ .text.init     0x00000000a8000000     0x781c /tmp/cc2ppoDU.o
+                0x00000000a8000000                rvtest_entry_point
+                0x00000000a8000000                rvtest_init
+                0x00000000a8000390                rvtest_code_begin
+                0x00000000a8007780                rvtest_code_end
+                0x00000000a8008000                . = ALIGN (0x1000)
 
-.text           0x0000000090008000        0x0
+.text           0x00000000a8008000        0x0
  *(.text)
- .text          0x0000000090008000        0x0 /tmp/ccqiy8xl.o
+ .text          0x00000000a8008000        0x0 /tmp/cc2ppoDU.o
 
 .rodata
  *(.rodata .rodata.*)
-                0x00000000a0010000                . = 0xa0010000
-                0x00000000a0010000                . = ALIGN (0x1000)
+                0x00000000c0010000                . = 0xc0010000
+                0x00000000c0010000                . = ALIGN (0x1000)
 
-.tohost         0x00000000a0010000      0x108
+.tohost         0x00000000c0010000      0x108
  *(.tohost)
- .tohost        0x00000000a0010000      0x108 /tmp/ccqiy8xl.o
-                0x00000000a0010000                tohost
-                0x00000000a0010100                fromhost
-                0x00000000a0011000                . = ALIGN (0x1000)
+ .tohost        0x00000000c0010000      0x108 /tmp/cc2ppoDU.o
+                0x00000000c0010000                tohost
+                0x00000000c0010100                fromhost
+                0x00000000c0011000                . = ALIGN (0x1000)
 
-.data           0x00000000a0011000     0x1290
+.data           0x00000000c0011000     0x1290
  *(.data)
- .data          0x00000000a0011000     0x1290 /tmp/ccqiy8xl.o
-                0x00000000a0011000                rvtest_data_begin
-                0x00000000a0011010                rvtest_data_end
-                0x00000000a0011100                begin_regstate
-                0x00000000a0011200                end_regstate
-                0x00000000a0011210                begin_signature
-                0x00000000a0012290                end_signature
+ .data          0x00000000c0011000     0x1290 /tmp/cc2ppoDU.o
+                0x00000000c0011000                rvtest_data_begin
+                0x00000000c0011010                rvtest_data_end
+                0x00000000c0011100                begin_regstate
+                0x00000000c0011200                end_regstate
+                0x00000000c0011210                begin_signature
+                0x00000000c0012290                end_signature
 
 .data.string
  *(.data.string)
 
-.bss            0x00000000a0012290        0x0
+.bss            0x00000000c0012290        0x0
  *(.bss)
- .bss           0x00000000a0012290        0x0 /tmp/ccqiy8xl.o
-                0x00000000a0012290                _end = .
+ .bss           0x00000000c0012290        0x0 /tmp/cc2ppoDU.o
+                0x00000000c0012290                _end = .
                 0x0000000000000001                ASSERT ((SIZEOF (.rodata) == 0x0), riscof/zisk: .rodata is not empty; it needs its own PF_R segment)
 OUTPUT(my.elf elf64-littleriscv)
 
 .riscv.attributes
                 0x0000000000000000       0x29
  .riscv.attributes
-                0x0000000000000000       0x29 /tmp/ccqiy8xl.o
+                0x0000000000000000       0x29 /tmp/cc2ppoDU.o
 
 .debug_line     0x0000000000000000      0xcba
- .debug_line    0x0000000000000000      0xcba /tmp/ccqiy8xl.o
+ .debug_line    0x0000000000000000      0xcba /tmp/cc2ppoDU.o
 
 .debug_line_str
-                0x0000000000000000       0xb5
+                0x0000000000000000       0x7c
  .debug_line_str
-                0x0000000000000000       0xb5 /tmp/ccqiy8xl.o
+                0x0000000000000000       0x7c /tmp/cc2ppoDU.o
 
 .debug_info     0x0000000000000000       0x2a
- .debug_info    0x0000000000000000       0x2a /tmp/ccqiy8xl.o
+ .debug_info    0x0000000000000000       0x2a /tmp/cc2ppoDU.o
 
 .debug_abbrev   0x0000000000000000       0x14
- .debug_abbrev  0x0000000000000000       0x14 /tmp/ccqiy8xl.o
+ .debug_abbrev  0x0000000000000000       0x14 /tmp/cc2ppoDU.o
 
 .debug_aranges  0x0000000000000000       0x30
  .debug_aranges
-                0x0000000000000000       0x30 /tmp/ccqiy8xl.o
+                0x0000000000000000       0x30 /tmp/cc2ppoDU.o
 
-.debug_str      0x0000000000000000       0xc1
- .debug_str     0x0000000000000000       0xc1 /tmp/ccqiy8xl.o
+.debug_str      0x0000000000000000       0x8b
+ .debug_str     0x0000000000000000       0x8b /tmp/cc2ppoDU.o

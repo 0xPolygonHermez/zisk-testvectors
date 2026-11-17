@@ -19,7 +19,7 @@
 #define RVMODEL_HALT                                                          \
     la t0, begin_signature;                                                     \
     la t1, end_signature; \
-    li t2, 0xa0410000; \
+    li t2, 0xC0410000; \
     sub t3, t1, t0; \
     srai t3, t3, 2; \
     sw t3, 0(t2); \
@@ -32,7 +32,7 @@
     addi t0, t0, 4;    \
     j next;   \
   end: \
-    li t1, 0xa040f890; \
+    li t1, 0xC040F890; \
     lw t0, (t1); \
     li   t1, ARCH_ID_ZISK; \
     beq t0, t1, zisk_exit; \

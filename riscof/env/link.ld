@@ -15,12 +15,12 @@ PHDRS
 
 SECTIONS
 {
-  . = 0x90000000;
+  . = 0xA8000000;
   .text.init : { *(.text.init) } :text
   . = ALIGN(0x1000);
   .text : { *(.text) } :text
   .rodata : { *(.rodata .rodata.*)} :text
-  . = 0xa0010000;
+  . = 0xC0010000;
   . = ALIGN(0x1000);
   .tohost : { *(.tohost) } :data
   . = ALIGN(0x1000);
